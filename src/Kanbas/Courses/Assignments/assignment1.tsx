@@ -8,7 +8,7 @@ export default function Assignment1() {
           A1 - ENV + HTML
         </a>
         <br />
-        Multiple Modules | Not available until May 6 at 12:00 AM | Due May 13 at 11:59pm | 100 pts
+        Multiple Modules | <strong>Not available until</strong> May 6 at 12:00 AM | <strong>Due</strong> May 13 at 11:59pm | 100 pts
       </li>
     );
 }

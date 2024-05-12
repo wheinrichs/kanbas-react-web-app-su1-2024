@@ -8,7 +8,7 @@ export default function Assignment6() {
           A6 - MongoDB & Mongoose
         </a>
         <br />
-        Multiple Modules | Not available until June 10 at 12:00 AM | Due June 17 at 11:59pm | 100 pts
+        Multiple Modules | <strong>Not available until</strong> June 10 at 12:00 AM | <strong>Due</strong> June 17 at 11:59pm | 100 pts
       </li>
     );
 }

@@ -8,7 +8,7 @@ export default function Assignment5() {
           A5 - Authentication
         </a>
         <br />
-        Multiple Modules | Not available until June 3 at 12:00 AM | Due June 10 at 11:59pm | 100 pts
+        Multiple Modules | <strong>Not available until</strong> June 3 at 12:00 AM | <strong>Due</strong> June 10 at 11:59pm | 100 pts
       </li>
     );
 }

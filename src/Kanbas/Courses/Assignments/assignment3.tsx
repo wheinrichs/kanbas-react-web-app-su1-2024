@@ -8,7 +8,7 @@ export default function Assignment3() {
           A3 - JSON and Datatypes
         </a>
         <br />
-        Multiple Modules | Not available until May 20 at 12:00 AM | Due May 27 at 11:59pm | 100 pts
+        Multiple Modules | <strong>Not available until</strong> May 20 at 12:00 AM | <strong>Due</strong> May 27 at 11:59pm | 100 pts
       </li>
     );
 }

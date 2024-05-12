@@ -8,7 +8,7 @@ export default function Assignment4() {
           A4 - Client/Server & REST
         </a>
         <br />
-        Multiple Modules | Not available until May 27 at 12:00 AM | Due June 3 at 11:59pm | 100 pts
+        Multiple Modules | <strong>Not available until</strong> May 27 at 12:00 AM | <strong>Due</strong> June 3 at 11:59pm | 100 pts
       </li>
     );
 }
