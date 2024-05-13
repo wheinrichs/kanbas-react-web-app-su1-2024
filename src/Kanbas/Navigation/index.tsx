@@ -12,7 +12,8 @@ export default function KanbasNavigation() {
         </a>
       </li>
       <li>
-        <a id="wd-course-link" href="#/Kanbas/Courses">
+        {/* REPLACE THIS WITH THE COURSE LINK IN FUTURE ASSIGNMENTS */}
+        <a id="wd-course-link" href="#/Kanbas/Dashboard">
           Courses
         </a>
       </li>
