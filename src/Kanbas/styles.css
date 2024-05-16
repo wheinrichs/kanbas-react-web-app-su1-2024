@@ -10,3 +10,24 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
 .course-card-width {
     width: 300px !important;
 }
+
+.btn-secondary {
+    --bs-btn-color: #000;
+    --bs-btn-bg: #c7cdd1;
+    --bs-btn-border-color: #c7cdd1;
+    --bs-btn-hover-color: #fff;
+  }
+  .bg-secondary {
+    background-color: #c7cdd1 !important;
+  }
+  .border-gray {
+    border: 1px solid gray;
+  }
+  
+  .btn-tertiary {
+    --bs-btn-color: black !important; 
+    --bs-btn-bg: rgb(187, 194, 199) !important;
+    --bs-btn-border-color: #c7cdd1 !important;
+    --bs-btn-hover-color: black !important;
+    --bs-btn-hover-bg: gray !important;
+  }
