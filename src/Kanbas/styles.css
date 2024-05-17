@@ -31,3 +31,9 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
     --bs-btn-hover-color: black !important;
     --bs-btn-hover-bg: gray !important;
   }
+
+  .assignment-list {
+    color:black;
+    background-color: white;
+    border-left: 3px solid green !important;
+  }
