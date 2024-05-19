@@ -37,3 +37,11 @@ body * {  font-family: Arial, Helvetica, sans-serif;  }
     background-color: white;
     border-left: 3px solid green !important;
   }
+
+  .everyone-chip {
+    width: 130px;
+    height: 30px;
+    border-radius: 4px;
+    padding-left: 12px;
+    background-color: lightgrey;
+  }
