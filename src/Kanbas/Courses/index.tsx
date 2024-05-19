@@ -4,6 +4,7 @@ import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
+import Grades from "./Grades";
 
 export default function Courses() {
   return (
@@ -21,6 +22,7 @@ export default function Courses() {
             <Route path="Modules" element={<Modules />} />
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:id" element={<AssignmentEditor />} />
+            <Route path="Grades" element={<Grades />} />
           </Routes>
         </div>
       </div>
