@@ -67,14 +67,14 @@ export default function ModulesControls() {
 
       <button
         id="wd-view-progress"
-        className="btn btn-lg btn- me-1 float-end btn-tertiary"
+        className="btn btn-lg btn- me-1 float-end btn-secondary"
       >
         View Progress
       </button>
 
       <button
         id="wd-add-module-btn"
-        className="btn btn-lg me-1 float-end btn-tertiary"
+        className="btn btn-lg me-1 float-end btn-secondary"
       >
         Collapse All
       </button>

@@ -17,10 +17,10 @@ export default function AssignmentTitle() {
             ASSIGNMENTS
           </h4>
         </div>
-        <div className="col-auto border border-light pt-1 pb-1 rounded-pill">
+        <div className="col-auto border border-dark-subtle pt-1 pb-1 rounded-pill">
             40% of Total
         </div>
-        <div className="col-auto align-items-center fs-4 text-light">
+        <div className="col-auto align-items-center fs-4 text-muted">
             <FiPlus />
             <IoEllipsisVertical />
         </div>

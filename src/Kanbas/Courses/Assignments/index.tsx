@@ -39,7 +39,7 @@ export default function Assignments() {
         </div>
       </div>
 
-      <ul className="list-group rounded-0">
+      <ul className="list-group rounded-0 border-0 border-grey">
         <li className="list-group-item bg-secondary p-3">
           <AssignmentTitle />
         </li>

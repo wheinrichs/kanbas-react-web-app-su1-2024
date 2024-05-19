@@ -9,17 +9,17 @@ export default function Modules() {
       <ModulesControls />
       <br />
       <br />
-      <br/>
+      <br />
       <br />
       <ul id="wd-modules" className="list-group rounded-0">
-        <li className="wd-module list-group-item p-0 mb-5 ds-5 gorder-gray">
-          <div className="wd-title p-3 ps-2 bg-secondary-grey">
+        <li className="wd-module list-group-item p-0 mb-5 ds-5 border-grey">
+          <div className="wd-title p-3 ps-2 bg-secondary">
             <BsGripVertical />
             Week 1, Lecture 1 - Course Introduction, Syllabus, Agenda
             <ModuleControlButtons />
           </div>
 
-          <ul className="wd-lessons list-group rounded-0">
+          <ul className="wd-lessons list-group rounded-0 border-start border-3 border-success">
             <li className="wd-lesson list-group-item p-3 ps-1">
               <BsGripVertical />
               <span className="wd-title">LEARNING OBJECTIVES</span>
@@ -77,14 +77,14 @@ export default function Modules() {
           </ul>
         </li>
 
-        <li className="wd-module list-group-item p-0 mb-5 ds-5 gorder-gray">
-          <div className="wd-title p-3 ps-2 bg-secondary-grey">
+        <li className="wd-module list-group-item p-0 mb-5 ds-5 border-grey">
+          <div className="wd-title p-3 ps-2 bg-secondary">
             <BsGripVertical />
             Week 1, Lecture 2 - Formatting User Interfaces with HTML
             <ModuleControlButtons />
           </div>
 
-          <ul className="wd-lessons list-group rounded-0">
+          <ul className="wd-lessons list-group rounded-0 border-start border-3 border-success">
             <li className="wd-lesson list-group-item p-3 ps-1">
               <BsGripVertical />
               <span className="wd-title ">LEARNING OBJECTIVES</span>
