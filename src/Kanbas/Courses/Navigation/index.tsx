@@ -14,6 +14,7 @@ export default function CoursesNavigation() {
       <a id="wd-course-modules-link" href="#/Kanbas/Courses/1234/Modules" className="list-group-item text-danger border border-0">
         Modules
       </a>
+
       <a
         id="wd-course-piazza-link"
         href="#/Kanbas/Courses/1234/Piazza"
@@ -21,6 +22,7 @@ export default function CoursesNavigation() {
       >
         Piazza
       </a>
+
       <a
         id="wd-course-zoom-link"
         href="#/Kanbas/Courses/1234/Zoom"
@@ -28,6 +30,7 @@ export default function CoursesNavigation() {
       >
         Zoom
       </a>
+
       <a
         id="wd-course-quizzes-link"
         href="#/Kanbas/Courses/1234/Assignments"
@@ -35,6 +38,7 @@ export default function CoursesNavigation() {
       >
         Assignments
       </a>
+
       <a
         id="wd-course-assignments-link"
         href="#/Kanbas/Courses/1234/Quizzes"
@@ -42,6 +46,7 @@ export default function CoursesNavigation() {
       >
         Quizzes
       </a>
+      
       <a
         id="wd-course-grades-link"
         href="#/Kanbas/Courses/1234/Grades"

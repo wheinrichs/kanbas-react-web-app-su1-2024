@@ -6,12 +6,12 @@ import Assignment5 from "./assignment5";
 import Assignment6 from "./assignment6";
 import { FiPlus } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
-
+import AssignmentTitle from "./AssignmentTitle";
 
 export default function Assignments() {
   return (
     <div id="wd-assignments">
-      <div className="row">
+      <div className="row mb-4">
         <div className="input-group ms-2 col">
           <span className="input-group-text">
             <CiSearch />
@@ -40,36 +40,56 @@ export default function Assignments() {
       </div>
 
       <ul className="list-group rounded-0">
-        <li className="list-item bg-secondary">
-        <h3 id="wd-assignments-title">
-          ASSIGNMENTS 40% of Total <button>+</button>
-        </h3>
+        <li className="list-group-item bg-secondary p-3">
+          <AssignmentTitle />
         </li>
-        <ul id="wd-assignment-list" className="list-group rounded-0 assignment-list">
-          <li className="list-group-item">
+
+        <div
+          id="wd-assignment-list"
+          className="list-group rounded-0 assignment-list"
+        >
+          <a
+            className="wd-assignment-link list-group-item list-group-item-action"
+            href="#/Kanbas/Courses/1234/Assignments/123"
+          >
             <Assignment1 />
-          </li>
+          </a>
 
-          <li className="list-group-item">
-          <Assignment2 />
-          </li>
+          <a
+            className="wd-assignment-link list-group-item list-group-item-action"
+            href="#/Kanbas/Courses/1234/Assignments/123"
+          >
+            <Assignment2 />
+          </a>
 
-          <li className="list-group-item">
-          <Assignment3 />
-          </li>
+          <a
+            className="wd-assignment-link list-group-item list-group-item-action"
+            href="#/Kanbas/Courses/1234/Assignments/123"
+          >
+            <Assignment3 />
+          </a>
 
-          <li className="list-group-item">
-          <Assignment4 />
-          </li>
+          <a
+            className="wd-assignment-link list-group-item list-group-item-action"
+            href="#/Kanbas/Courses/1234/Assignments/123"
+          >
+            <Assignment4 />
+          </a>
 
-          <li className="list-group-item">
-          <Assignment5 />
-          </li>
+          <a
+            className="wd-assignment-link list-group-item list-group-item-action"
+            href="#/Kanbas/Courses/1234/Assignments/123"
+          >
+            <Assignment5 />
+          </a>
 
-          <li className="list-group-item">
-          <Assignment6 />
-          </li>
-        </ul>
+          <a
+            className="wd-assignment-link list-group-item list-group-item-action"
+            href="#/Kanbas/Courses/1234/Assignments/123"
+          >
+            <Assignment6 />
+          </a>
+        </div>
       </ul>
     </div>
   );
