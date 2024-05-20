@@ -12,11 +12,11 @@ export default function Assignments() {
   return (
     <div id="wd-assignments">
       <div className="row mb-4">
-        <div className="input-group ms-2 col">
-          <span className="input-group-text">
+        <div className="input-group ms-2 col border rounded-3">
+          <label htmlFor="assignment-search" className="input-group-text border-0 bg-transparent">
             <CiSearch />
-          </span>
-          <input type="text" className="form-control" placeholder="Search..." />
+          </label>
+          <input type="text" className="form-control border-0" id="assignment-search" placeholder="Search..." />
         </div>
         <div className="col-auto">
           <button
@@ -30,7 +30,7 @@ export default function Assignments() {
 
           <button
             id="wd-add-assignment-group"
-            className="btn btn-md btn-danger float-end"
+            className="btn btn-md btn-secondary float-end"
             type="button"
           >
             <FiPlus className="fs-5 me-1 mb-1" />
