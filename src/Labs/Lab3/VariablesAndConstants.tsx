@@ -8,6 +8,7 @@ export default function VariablesAndConstants() {
         functionScoped = { functionScoped }<br/>
         blockScoped = { blockScoped }<br/>
         constant1 = { constant1 }<br/>
+        <hr />
       </div>
    );}
    

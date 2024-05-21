@@ -20,6 +20,8 @@ export default function BooleanVariables() {
       true4 = {true4 + ""} <br />
       true5 = {true5 + ""} <br />
       false3 = {false3 + ""} <br />
+      <hr />
+
     </div>
   );
 }

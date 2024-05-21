@@ -13,6 +13,8 @@ export default function LegacyFunctions() {
       <br />
       add(2, 4) = {add(2, 4)}
       <br />
+      <hr />
+
     </div>
   );
 }

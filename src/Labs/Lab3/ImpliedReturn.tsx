@@ -9,6 +9,8 @@ export default function ImpliedReturn() {
       fourTimesFive = {fourTimesFive}
       <br />
       multiply(4, 5) = {multiply(4, 5)}
+      <hr />
+
     </div>
   );
 }
