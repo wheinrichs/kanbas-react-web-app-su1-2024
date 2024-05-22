@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 
 export default function Assignments() {
   const { cid } = useParams();
+
   const courseAssignments = assignments.filter(
     (assignment) => assignment.course === cid
   );
