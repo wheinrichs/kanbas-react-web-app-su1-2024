@@ -39,7 +39,15 @@ export default function GradeTable() {
                     {student.firstName} {student.lastName}
                   </td>
                   {courseAssignments.map((assignment) => (
-                   <td>{grades.find((grade) => student._id === grade.student && grade.assignment === assignment._id)?.grade}</td>
+                    <td>
+                      {
+                        grades.find(
+                          (grade) =>
+                            student._id === grade.student &&
+                            grade.assignment === assignment._id
+                        )?.grade
+                      }
+                    </td>
                   ))}
                 </tr>
               ))}
