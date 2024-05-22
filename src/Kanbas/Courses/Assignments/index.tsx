@@ -7,16 +7,33 @@ import Assignment6 from "./assignment6";
 import { FiPlus } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
 import AssignmentTitle from "./AssignmentTitle";
+import { useParams } from "react-router";
+import { assignments } from "../../Database";
+import GripAndPencil from "./GripAndPencil";
+import LessonControlButtons from "../Modules/LessonControlButtons";
+import { Link } from "react-router-dom";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const courseAssignments = assignments.filter(
+    (assignment) => assignment.course === cid
+  );
   return (
     <div id="wd-assignments">
       <div className="row mb-4">
         <div className="input-group ms-2 col border rounded-3">
-          <label htmlFor="assignment-search" className="input-group-text border-0 bg-transparent">
+          <label
+            htmlFor="assignment-search"
+            className="input-group-text border-0 bg-transparent"
+          >
             <CiSearch />
           </label>
-          <input type="text" className="form-control border-0" id="assignment-search" placeholder="Search..." />
+          <input
+            type="text"
+            className="form-control border-0"
+            id="assignment-search"
+            placeholder="Search..."
+          />
         </div>
         <div className="col-auto">
           <button
@@ -43,52 +60,35 @@ export default function Assignments() {
         <li className="list-group-item bg-secondary p-3">
           <AssignmentTitle />
         </li>
-
         <div
           id="wd-assignment-list"
           className="list-group rounded-0 assignment-list"
         >
-          <a
-            className="wd-assignment-link list-group-item list-group-item-action"
-            href="#/Kanbas/Courses/1234/Assignments/123"
-          >
-            <Assignment1 />
-          </a>
-
-          <a
-            className="wd-assignment-link list-group-item list-group-item-action"
-            href="#/Kanbas/Courses/1234/Assignments/123"
-          >
-            <Assignment2 />
-          </a>
-
-          <a
-            className="wd-assignment-link list-group-item list-group-item-action"
-            href="#/Kanbas/Courses/1234/Assignments/123"
-          >
-            <Assignment3 />
-          </a>
-
-          <a
-            className="wd-assignment-link list-group-item list-group-item-action"
-            href="#/Kanbas/Courses/1234/Assignments/123"
-          >
-            <Assignment4 />
-          </a>
-
-          <a
-            className="wd-assignment-link list-group-item list-group-item-action"
-            href="#/Kanbas/Courses/1234/Assignments/123"
-          >
-            <Assignment5 />
-          </a>
-
-          <a
-            className="wd-assignment-link list-group-item list-group-item-action"
-            href="#/Kanbas/Courses/1234/Assignments/123"
-          >
-            <Assignment6 />
-          </a>
+          {courseAssignments &&
+            courseAssignments.map((assignment) => (
+              <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} key={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                className="wd-assignment-link list-group-item list-group-item-action"
+              >
+                <div className="list-group-item list-group-item-action border-0">
+                  <div className="wd-assignment-list-item row align-items-center">
+                    <div className="col-auto fs-4 ps-0">
+                      <GripAndPencil />
+                    </div>
+                    <div className="col">
+                      <h5>
+                        <strong>{assignment._id}</strong>
+                      </h5>
+                      <span className="text-danger">Multiple Modules </span>|{" "}
+                      <strong>Not available until</strong> May 6 at 12:00 AM |{" "}
+                      <strong>Due</strong> May 13 at 11:59pm | 100 pts
+                    </div>
+                    <div className="col-auto pe-0">
+                      <LessonControlButtons />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
         </div>
       </ul>
     </div>
