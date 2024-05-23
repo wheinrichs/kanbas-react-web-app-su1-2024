@@ -20,7 +20,6 @@ export default function Assignments() {
     (assignment) => assignment.course === cid
   );
 
-
   return (
     <div id="wd-assignments">
       <div className="row mb-4">
@@ -69,7 +68,9 @@ export default function Assignments() {
         >
           {courseAssignments &&
             courseAssignments.map((assignment) => (
-              <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`} key={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+              <Link
+                to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
+                key={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
                 className="wd-assignment-link list-group-item list-group-item-action"
               >
                 <div className="list-group-item list-group-item-action border-0">
@@ -82,8 +83,13 @@ export default function Assignments() {
                         <strong>{assignment._id}</strong>
                       </h5>
                       <span className="text-danger">Multiple Modules </span>|{" "}
-                      <strong>Not available until</strong> {new Date(assignment.available_date).toUTCString()} |{" "}
-                      <strong>Due</strong> {new Date(assignment.due_date).toUTCString()} | {assignment.points} pts
+                      <strong>Not available until</strong>{" "}
+                      {new Date(assignment.available_date).toLocaleDateString()}{" "}
+                      {new Date(assignment.available_date).toLocaleTimeString()}{" "}
+                      | <strong>Due</strong>{" "}
+                      {new Date(assignment.due_date).toLocaleDateString()}{" "}
+                      {new Date(assignment.due_date).toLocaleTimeString()} |{" "}
+                      {assignment.points} pts
                     </div>
                     <div className="col-auto pe-0">
                       <LessonControlButtons />
