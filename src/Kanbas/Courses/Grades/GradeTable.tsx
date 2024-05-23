@@ -25,7 +25,7 @@ export default function GradeTable() {
                 courseAssignments.map((assignment) => (
                   <td>
                     {assignment._id} <br />
-                    Out of 100
+                    Out of {assignment.points}
                   </td>
                 ))}
             </tr>

@@ -2,6 +2,17 @@ import EveryoneChip from "./EveryoneChip";
 import { useParams } from "react-router";
 import { Location } from "react-router";
 import { assignments } from "../../Database";
+import { Link } from "react-router-dom";
+
+function formatDate(date: Date) {
+  // Get the year, month, and day from the Date object
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, "0");
+
+  // Construct the string in yyyy-mm-dd format
+  return `${year}-${month}-${day}`;
+}
 
 export default function AssignmentEditor() {
   const { cid, id } = useParams();
@@ -27,8 +38,7 @@ export default function AssignmentEditor() {
               rows={5}
               className="form-control mb-4"
             >
-              The assignment is available online Submit a link to the landing
-              page of
+              {assignment.description}
             </textarea>
           </div>
 
@@ -39,11 +49,15 @@ export default function AssignmentEditor() {
                   htmlFor="wd-points"
                   className="float-end form-label mb-0"
                 >
-                  Points
+                  Assignment
                 </label>
               </div>
               <div className="col">
-                <input id="wd-points" className="form-control" value={100} />
+                <input
+                  id="wd-points"
+                  className="form-control"
+                  value={assignment.points}
+                />
               </div>
             </div>
 
@@ -203,7 +217,7 @@ export default function AssignmentEditor() {
                     className="form-control mb-2"
                     id="wd-due-date"
                     min="2024-05-10"
-                    value="2024-05-13"
+                    value={formatDate(new Date(assignment.due_date))}
                   ></input>
                   <div className="row">
                     <div className="col">
@@ -223,7 +237,7 @@ export default function AssignmentEditor() {
                         type="date"
                         className="form-control"
                         id="wd-available-from"
-                        value="2024-05-06"
+                        value={formatDate(new Date(assignment.available_date))}
                       />
                     </div>
                     <div className="col">
@@ -232,7 +246,7 @@ export default function AssignmentEditor() {
                         className="form-control"
                         id="wd-available-until"
                         min="2024-05-06"
-                        value="2024-05-20"
+                        value={formatDate(new Date(assignment.due_date))}
                       />
                     </div>
                   </div>
@@ -243,10 +257,21 @@ export default function AssignmentEditor() {
             <hr />
 
             <div className="d-flex justify-content-end">
-              <button className="btn btn-light rounded-1 border border-grey">
+              <Link
+                key={`/Kanbas/Courses/${cid}/Assignments`}
+                to={`/Kanbas/Courses/${cid}/Assignments`}
+                className={`btn btn-light rounded-1 border border-grey border`}
+              >
                 Cancel
-              </button>
-              <button className="btn btn-danger rounded-1 ms-2">Save</button>{" "}
+              </Link>
+              <Link
+                key={`/Kanbas/Courses/${cid}/Assignments`}
+                to={`/Kanbas/Courses/${cid}/Assignments`}
+                className={`btn btn-danger rounded-1 ms-2`}
+              >
+                Save
+              </Link>
+              
             </div>
           </div>
         </div>

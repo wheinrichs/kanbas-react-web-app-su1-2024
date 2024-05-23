@@ -19,6 +19,8 @@ export default function Assignments() {
   const courseAssignments = assignments.filter(
     (assignment) => assignment.course === cid
   );
+
+
   return (
     <div id="wd-assignments">
       <div className="row mb-4">
@@ -80,8 +82,8 @@ export default function Assignments() {
                         <strong>{assignment._id}</strong>
                       </h5>
                       <span className="text-danger">Multiple Modules </span>|{" "}
-                      <strong>Not available until</strong> May 6 at 12:00 AM |{" "}
-                      <strong>Due</strong> May 13 at 11:59pm | 100 pts
+                      <strong>Not available until</strong> {new Date(assignment.available_date).toUTCString()} |{" "}
+                      <strong>Due</strong> {new Date(assignment.due_date).toUTCString()} | {assignment.points} pts
                     </div>
                     <div className="col-auto pe-0">
                       <LessonControlButtons />
