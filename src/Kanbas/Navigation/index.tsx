@@ -19,7 +19,7 @@ export default function KanbasNavigation() {
   ];
 
   return (
-    <div id="wd-kanbas-navigation" className="list-group rounded-0 h-100">
+    <div id="wd-kanbas-navigation" className="list-group rounded-0 h-100 ">
       <a
         id="wd-neu-link"
         target="_blank"
