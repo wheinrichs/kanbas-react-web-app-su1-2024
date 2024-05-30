@@ -1,4 +1,5 @@
 import Headings from "./Headings";
+import Quiz from "./Quiz";
 
 export default function Lab1() {
   return (
@@ -300,6 +301,7 @@ export default function Lab1() {
       <br />
       <a href="https://github.com/CS5520Summer2024Feinberg/individual-wheinrichs">Click here</a> to access my GitHub repository
       <br />
+      <hr/>
     </div>
   );
 }
