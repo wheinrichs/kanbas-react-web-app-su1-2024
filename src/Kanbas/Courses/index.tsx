@@ -7,10 +7,9 @@ import AssignmentEditor from "./Assignments/Editor";
 import Grades from "./Grades";
 import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
-import { courses } from "../Database";
 
 
-export default function Courses() {
+export default function Courses({ courses }: {courses: any[];}) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
