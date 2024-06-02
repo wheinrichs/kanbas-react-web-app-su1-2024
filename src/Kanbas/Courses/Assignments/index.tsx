@@ -1,24 +1,30 @@
-import Assignment1 from "./assignment1";
-import Assignment2 from "./assignment2";
-import Assignment3 from "./assignment3";
-import Assignment4 from "./assignment4";
-import Assignment5 from "./assignment5";
-import Assignment6 from "./assignment6";
 import { FiPlus } from "react-icons/fi";
 import { CiSearch } from "react-icons/ci";
 import AssignmentTitle from "./AssignmentTitle";
 import { useParams } from "react-router";
-import { assignments } from "../../Database";
 import GripAndPencil from "./GripAndPencil";
-import LessonControlButtons from "../Modules/LessonControlButtons";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { FaTrash } from "react-icons/fa";
+import AssignmentControlButtons from "./AssignmentControlButtons";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
   const { cid } = useParams();
 
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const dispatch = useDispatch();
+
   const courseAssignments = assignments.filter(
-    (assignment) => assignment.course === cid
+    (assignment: any) => assignment.course === cid
   );
+
+  let new_assignmnet_id;
+  let delete_assignment_id: string;
+  const createAssignmentID = () => {
+    new_assignmnet_id = new Date().getTime().toString();
+    return null;
+  };
 
   return (
     <div id="wd-assignments">
@@ -38,14 +44,20 @@ export default function Assignments() {
           />
         </div>
         <div className="col-auto">
-          <button
-            id="wd-add-assignment"
-            className="btn btn-md btn-danger float-end ms-1 me-1"
-            type="button"
+          <div>{createAssignmentID()}</div>
+          <Link
+            to={`/Kanbas/Courses/${cid}/Assignments/${new_assignmnet_id}`}
+            key={`/Kanbas/Courses/${cid}/Assignments/${new_assignmnet_id}`}
           >
-            <FiPlus className="fs-5 me-1 mb-1" />
-            Assignment
-          </button>
+            <button
+              id="wd-add-assignment"
+              className="btn btn-md btn-danger float-end ms-1 me-1"
+              type="button"
+            >
+              <FiPlus className="fs-5 me-1 mb-1" />
+              Assignment
+            </button>
+          </Link>
 
           <button
             id="wd-add-assignment-group"
@@ -67,7 +79,7 @@ export default function Assignments() {
           className="list-group rounded-0 assignment-list"
         >
           {courseAssignments &&
-            courseAssignments.map((assignment) => (
+            courseAssignments.map((assignment: any) => (
               <Link
                 to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
                 key={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
@@ -80,7 +92,7 @@ export default function Assignments() {
                     </div>
                     <div className="col">
                       <h5>
-                        <strong>{assignment._id}</strong>
+                        <strong>{assignment.title}</strong>
                       </h5>
                       <span className="text-danger">Multiple Modules </span>|{" "}
                       <strong>Not available until</strong>{" "}
@@ -92,7 +104,18 @@ export default function Assignments() {
                       {assignment.points} pts
                     </div>
                     <div className="col-auto pe-0">
-                      <LessonControlButtons />
+                      <FaTrash
+                        className="text-danger me-2 fs-4"
+                        data-bs-toggle="modal"
+                        data-bs-target="#wd-delete-assignment-dialog"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          {
+                            delete_assignment_id = assignment._id;
+                          }
+                        }}
+                      />
+                      <AssignmentControlButtons />
                     </div>
                   </div>
                 </div>
@@ -100,6 +123,48 @@ export default function Assignments() {
             ))}
         </div>
       </ul>
+      
+      <div
+        id="wd-delete-assignment-dialog"
+        className="modal fade"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5">Confirm Delete? </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div className="modal-body">
+              Are you sure you want to delete this assignment?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancel{" "}
+              </button>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                className="btn btn-danger"
+                onClick={() => {
+                  dispatch(deleteAssignment(delete_assignment_id));
+                }}
+              >
+                Delete{" "}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
