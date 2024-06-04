@@ -1,5 +1,4 @@
 import Headings from "./Headings";
-import Quiz from "./Quiz";
 
 export default function Lab1() {
   return (

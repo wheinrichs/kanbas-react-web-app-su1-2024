@@ -68,7 +68,7 @@ export default function AssignmentEditor() {
                   htmlFor="wd-points"
                   className="float-end form-label mb-0"
                 >
-                  Assignment
+                  Points
                 </label>
               </div>
               <div className="col">
