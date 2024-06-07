@@ -7,7 +7,9 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaTrash } from "react-icons/fa";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as client from "./client";
+import { useEffect } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -15,10 +17,14 @@ export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
 
-  const courseAssignments = assignments.filter(
-    (assignment: any) => assignment.course === cid
-  );
-
+  const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  }
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+    
   let new_assignmnet_id;
   let delete_assignment_id: string;
   const createAssignmentID = () => {
@@ -78,8 +84,8 @@ export default function Assignments() {
           id="wd-assignment-list"
           className="list-group rounded-0 assignment-list"
         >
-          {courseAssignments &&
-            courseAssignments.map((assignment: any) => (
+          {assignments &&
+            assignments.map((assignment: any) => (
               <Link
                 to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}
                 key={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}

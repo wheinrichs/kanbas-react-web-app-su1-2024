@@ -4,6 +4,8 @@ import { Location } from "react-router";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as client from "./client";
+
 import { addAssignment } from "./reducer";
 
 function formatDate(date: Date) {
@@ -20,21 +22,34 @@ export default function AssignmentEditor() {
   const { cid, id } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
-  const [assignment, assignmentSet] = useState(assignments.find(
-    (assignment: any) => assignment._id === id && assignment.course === cid
-  )
-    ? assignments.find(
-        (assignment: any) => assignment._id === id && assignment.course === cid
-      )
-    : {
-        _id: id,
-        title: "",
-        course: cid,
-        points: "",
-        available_date: "",
-        due_date: "",
-        description:"",
-      });
+  // Sets the assignment = to a new assignment if the ID isn't in the list otherwise sets it to the current assignment
+  const [assignment, assignmentSet] = useState(
+    assignments.find(
+      (assignment: any) => assignment._id === id && assignment.course === cid
+    )
+      ? assignments.find(
+          (assignment: any) =>
+            assignment._id === id && assignment.course === cid
+        )
+      : {
+          _id: id,
+          title: "",
+          course: cid,
+          points: "",
+          available_date: "",
+          due_date: "",
+          description: "",
+        }
+  );
+
+  const addServerAndLocalAssignment = async (assignment: any) => {
+    const serverCreatedAssignment = assignments.find(
+      (a: any) => a._id === id && a.course === cid
+    )
+      ? await client.updateAssignment(id as string, assignment)
+      : await client.addAssignment(cid as string, assignment);
+    dispatch(addAssignment(assignment));
+  };
 
   return (
     <div id="wd-assignments-editor" className="ms-1">
@@ -48,14 +63,18 @@ export default function AssignmentEditor() {
               id="wd-name"
               value={assignment.title}
               className="form-control mb-3"
-              onChange={(e) => assignmentSet({...assignment, title: e.target.value })}
+              onChange={(e) =>
+                assignmentSet({ ...assignment, title: e.target.value })
+              }
             />
             <textarea
               id="wd-description"
               cols={45}
               rows={5}
               className="form-control mb-4"
-              onChange={(e) => assignmentSet({...assignment, description: e.target.value })}
+              onChange={(e) =>
+                assignmentSet({ ...assignment, description: e.target.value })
+              }
             >
               {assignment.description}
             </textarea>
@@ -76,7 +95,9 @@ export default function AssignmentEditor() {
                   id="wd-points"
                   className="form-control"
                   value={assignment.points}
-                  onChange={(e) => assignmentSet({...assignment, points: e.target.value })}
+                  onChange={(e) =>
+                    assignmentSet({ ...assignment, points: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -238,9 +259,10 @@ export default function AssignmentEditor() {
                     id="wd-due-date"
                     min="2024-05-10"
                     value={formatDate(new Date(assignment.due_date))}
-                    onChange={(e) => assignmentSet({...assignment, due_date: e.target.value })}
+                    onChange={(e) =>
+                      assignmentSet({ ...assignment, due_date: e.target.value })
+                    }
                   ></input>
-                  
                   <div className="row">
                     <div className="col">
                       <label htmlFor="wd-available-from">
@@ -260,7 +282,12 @@ export default function AssignmentEditor() {
                         className="form-control"
                         id="wd-available-from"
                         value={formatDate(new Date(assignment.available_date))}
-                        onChange={(e) => assignmentSet({...assignment, available_date: e.target.value })}
+                        onChange={(e) =>
+                          assignmentSet({
+                            ...assignment,
+                            available_date: e.target.value,
+                          })
+                        }
                       ></input>
                     </div>
                     <div className="col">
@@ -270,9 +297,13 @@ export default function AssignmentEditor() {
                         id="wd-available-until"
                         min="2024-05-06"
                         value={formatDate(new Date(assignment.available_until))}
-                        onChange={(e) => assignmentSet({...assignment, available_until: e.target.value })}
-                      >
-                        </input>
+                        onChange={(e) =>
+                          assignmentSet({
+                            ...assignment,
+                            available_until: e.target.value,
+                          })
+                        }
+                      ></input>
                     </div>
                   </div>
                 </div>
@@ -293,7 +324,9 @@ export default function AssignmentEditor() {
                 key={`/Kanbas/Courses/${cid}/Assignments`}
                 to={`/Kanbas/Courses/${cid}/Assignments`}
                 className={`btn btn-danger rounded-1 ms-2`}
-                onClick= {() => {dispatch(addAssignment(assignment))}}
+                onClick={() => {
+                  addServerAndLocalAssignment(assignment);
+                }}
               >
                 Save
               </Link>
