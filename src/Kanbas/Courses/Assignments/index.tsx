@@ -24,6 +24,11 @@ export default function Assignments() {
   useEffect(() => {
     fetchAssignments();
   }, []);
+
+  const deleteAssignmentServerClient = async (aid: any) => {
+    await client.deleteAssignment(aid);
+    dispatch(deleteAssignment(aid));
+  }
     
   let new_assignmnet_id;
   let delete_assignment_id: string;
@@ -162,7 +167,8 @@ export default function Assignments() {
                 data-bs-dismiss="modal"
                 className="btn btn-danger"
                 onClick={() => {
-                  dispatch(deleteAssignment(delete_assignment_id));
+
+                  deleteAssignmentServerClient(delete_assignment_id);
                 }}
               >
                 Delete{" "}
