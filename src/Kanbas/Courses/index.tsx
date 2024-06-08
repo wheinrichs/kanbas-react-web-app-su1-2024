@@ -7,6 +7,7 @@ import AssignmentEditor from "./Assignments/Editor";
 import Grades from "./Grades";
 import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
+import Quizzes from "./Quiz";
 
 
 export default function Courses({ courses }: {courses: any[];}) {
@@ -38,6 +39,7 @@ export default function Courses({ courses }: {courses: any[];}) {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:id" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
+            <Route path="Quizzes" element={<Quizzes />} />
           </Routes>
         </div>
       </div>
