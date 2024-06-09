@@ -9,6 +9,8 @@ const modulesSlice = createSlice({
   reducers: {
     setModules: (state, action) => {
       state.modules = action.payload;
+      console.log(state.modules);
+
     },
 
     addModule: (state, { payload: module }) => {

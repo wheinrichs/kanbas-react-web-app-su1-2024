@@ -4,7 +4,7 @@ import EditorQuizDetails from "./EditorQuizDetails";
 import EditorQuestions from "./EditorQuestions";
 
 export default function Editor() {
-  const { cid, id } = useParams();
+  const { cid, qid } = useParams();
   const { pathname } = useLocation();
 
   return (
@@ -51,6 +51,20 @@ export default function Editor() {
         >
           <EditorQuestions />
         </div>
+        <hr />
+      <button
+        id="cancel_edit_quiz"
+        className="btn btn-lg btn- me-1 btn-secondary"
+      >
+        Cancel
+      </button>
+
+      <button
+        id="save_edit_quiz"
+        className="btn btn-lg btn-danger me-1"
+      >
+        Save
+      </button>
       </div>
     </div>
   );
