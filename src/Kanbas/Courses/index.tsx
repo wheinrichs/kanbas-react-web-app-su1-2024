@@ -8,6 +8,8 @@ import Grades from "./Grades";
 import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
 import Quizzes from "./Quiz";
+import Editor from "./Quiz/Editor";
+import QuizTake from "./Quiz/QuizTake";
 
 
 export default function Courses({ courses }: {courses: any[];}) {
@@ -40,6 +42,8 @@ export default function Courses({ courses }: {courses: any[];}) {
             <Route path="Assignments/:id" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
             <Route path="Quizzes" element={<Quizzes />} />
+            <Route path="Quizzes/:id" element={<QuizTake />} />
+            <Route path="Quizzes/Editor/:id" element={<Editor />} />
           </Routes>
         </div>
       </div>
