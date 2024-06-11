@@ -1,4 +1,4 @@
-import Editor from "./Editor";
+import Editor from "./Editor/Editor";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 

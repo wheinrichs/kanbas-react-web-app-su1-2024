@@ -6,7 +6,8 @@
     "title": "Sample title",
     "points": "15",
     "question": "What is the time?",
-    "choices": ["eleven", "noon", "two"]
+    "choices": ["eleven", "noon", "two"],
+    "answers": ["eleven", "noon"]
   }, 
   {
     "quiz_id" : "9876",
@@ -15,7 +16,9 @@
     "title": "Second title",
     "points": "35",
     "question": "What is the day?",
-    "choices": ["5th", "7th", "9th"]
+    "choices": ["5th", "7th", "9th"],
+    "answers": ["7th"]
+
   }, 
   {
     "quiz_id" : "9876",
@@ -24,7 +27,9 @@
     "title": "Third title",
     "points": "90",
     "question": "What is the year?",
-    "choices": ["1995", "2002", "2024"]
+    "choices": ["1995", "2002", "2024"],
+    "answers": ["2024"]
+
   },
   {
     "quiz_id" : "8726",
@@ -33,6 +38,8 @@
     "title": "This is for a different quiz",
     "points": "10000",
     "question": "This shouldn't show up",
-    "choices": ["32", "354", "hjdf"]
+    "choices": ["32", "354", "hjdf"],
+    "answers": ["32"]
+
   }
 ]

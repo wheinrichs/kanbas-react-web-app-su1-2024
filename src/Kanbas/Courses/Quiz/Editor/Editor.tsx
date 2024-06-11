@@ -1,7 +1,7 @@
 import { useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import EditorQuizDetails from "./EditorQuizDetails";
-import EditorQuestions from "./EditorQuestions";
+import EditorQuestions from "./QuestionEditor/EditorQuestions";
 
 export default function Editor() {
   const { cid, qid } = useParams();

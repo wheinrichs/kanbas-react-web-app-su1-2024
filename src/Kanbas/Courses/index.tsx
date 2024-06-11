@@ -8,7 +8,7 @@ import Grades from "./Grades";
 import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
 import Quizzes from "./Quiz";
-import Editor from "./Quiz/Editor";
+import Editor from "./Quiz/Editor/Editor";
 import QuizTake from "./Quiz/QuizTake";
 
 
