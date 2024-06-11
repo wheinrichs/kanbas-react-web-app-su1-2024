@@ -40,11 +40,11 @@ export default function TOC() {
         </a>
       </li>
       
-      {/* <li className="nav-item">
+      <li className="nav-item">
         <a id="wd-a4" href="#/Labs/Exam" className={`nav-link ${pathname.includes("Exam") ? "active" : ""}`}>
           Exam
         </a>
-      </li> */}
+      </li>
 
       <li className="nav-item">
         <a id="wd-k" href="#/Kanbas" className={`nav-link ${pathname.includes("Kanbas") ? "active" : ""}`}>
