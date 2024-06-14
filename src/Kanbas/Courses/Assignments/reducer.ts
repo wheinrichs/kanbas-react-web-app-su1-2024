@@ -22,7 +22,7 @@ const assignmentsSlice = createSlice({
             ...state.assignments,
             { ...assignment},
           ] as any;
-    },
+        },
 
     deleteAssignment: (state, { payload: assignment_id }) => {
       state.assignments = state.assignments.filter(

@@ -9,6 +9,8 @@ import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
 import Quizzes from "./Quiz";
 import PeopleTable from "./People/Table";
+import Editor from "./Quiz/Editor/Editor";
+import QuizTake from "./Quiz/QuizTake";
 
 
 export default function Courses({ courses }: {courses: any[];}) {
@@ -43,6 +45,8 @@ export default function Courses({ courses }: {courses: any[];}) {
             <Route path="Quizzes" element={<Quizzes />} />
             <Route path="People" element={<PeopleTable />} />
             <Route path="People/:uid" element={<PeopleTable />} />
+            <Route path="Quizzes/:id" element={<QuizTake />} />
+            <Route path="Quizzes/Editor/:qid" element={<Editor />} />
           </Routes>
         </div>
       </div>
