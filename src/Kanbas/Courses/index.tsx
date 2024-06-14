@@ -9,6 +9,7 @@ import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
 import Quizzes from "./Quiz";
 import PeopleTable from "./People/Table";
+import Account from "../Account";
 
 
 export default function Courses({ courses }: {courses: any[];}) {

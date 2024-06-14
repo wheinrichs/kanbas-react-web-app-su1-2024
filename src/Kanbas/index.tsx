@@ -9,6 +9,7 @@ import * as client from "./Courses/client";
 import { useEffect, useState } from "react";
 import store from "./store";
 import { Provider } from "react-redux";
+import Account from "./Account";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -27,18 +28,17 @@ export default function Kanbas() {
     startDate: "2023-09-10",
     endDate: "2023-12-15",
     description: "New Description",
-    image: "reactjs.jpeg"
+    image: "reactjs.jpeg",
   });
 
   const addNewCourse = async () => {
     const newCourse = await client.createCourse(course);
-    setCourses([ ...courses, newCourse ]);
+    setCourses([...courses, newCourse]);
   };
 
   const deleteCourse = async (courseId: string) => {
     await client.deleteCourse(courseId);
-    setCourses(courses.filter(
-      (c) => c._id !== courseId));
+    setCourses(courses.filter((c) => c._id !== courseId));
   };
 
   const updateCourse = async () => {
@@ -53,7 +53,6 @@ export default function Kanbas() {
       })
     );
   };
-
 
   return (
     <Provider store={store}>
@@ -86,6 +85,7 @@ export default function Kanbas() {
                 path="Courses/:cid/*"
                 element={<Courses courses={courses} />}
               />
+              <Route path="/Account/*" element={<Account />} />
             </Routes>
           </div>
         </div>
