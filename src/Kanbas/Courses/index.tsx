@@ -8,6 +8,7 @@ import Grades from "./Grades";
 import DropdownIndexCourse from "./Navigation/DropdownIndexCourse";
 import { RxDragHandleHorizontal } from "react-icons/rx";
 import Quizzes from "./Quiz";
+import PeopleTable from "./People/Table";
 
 
 export default function Courses({ courses }: {courses: any[];}) {
@@ -40,6 +41,8 @@ export default function Courses({ courses }: {courses: any[];}) {
             <Route path="Assignments/:id" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
             <Route path="Quizzes" element={<Quizzes />} />
+            <Route path="People" element={<PeopleTable />} />
+            <Route path="People/:uid" element={<PeopleTable />} />
           </Routes>
         </div>
       </div>

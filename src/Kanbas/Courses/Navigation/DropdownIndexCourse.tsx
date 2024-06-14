@@ -52,6 +52,14 @@ export default function DropdownIndexCourse() {
       >
         Grades
       </a>
+
+      <a
+        id="wd-course-people-link"
+        href="#/Kanbas/Courses/1234/people"
+        className="list-group-item border text-danger border-0"
+      >
+        People
+      </a>
         </div>
     )
 }
