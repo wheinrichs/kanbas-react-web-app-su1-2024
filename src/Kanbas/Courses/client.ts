@@ -9,6 +9,8 @@ export const fetchAllCourses = async () => {
 
 export const createCourse = async (course: any) => {
     const response = await axios.post(COURSES_API, course);
+    console.log(response.data);
+
     return response.data;
   };
   

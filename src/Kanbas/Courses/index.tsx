@@ -11,7 +11,6 @@ import Quizzes from "./Quiz";
 import PeopleTable from "./People/Table";
 import Editor from "./Quiz/Editor/Editor";
 import QuizTake from "./Quiz/QuizTake";
-import Account from "../Account";
 
 
 
