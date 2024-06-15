@@ -90,7 +90,7 @@ export default function Kanbas() {
                   element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>}
                 />
                 <Route path="/Account/*" element={<Account />} />
-              </Routes>
+              </Routes> 
             </div>
           </div>
         </div>
