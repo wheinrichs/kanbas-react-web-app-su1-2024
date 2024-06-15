@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import store from "./store";
 import { Provider } from "react-redux";
 import Account from "./Account";
+import Session from "./Account/Session";
+import { PiCursorText } from "react-icons/pi";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -56,40 +59,42 @@ export default function Kanbas() {
 
   return (
     <Provider store={store}>
-      <div id="wd-kanbas" className="h-100">
-        {/* <h1>Kanbas</h1> */}
-        <div className="d-flex flex-row h-100">
-          <div className="d-none d-md-block bg-black">
-            <KanbasNavigation />
-          </div>
-          <div className="flex-fill p-4 overflow-auto">
-            <div className="d-block d-md-none">
-              <DropdownIndex />
+      <Session>
+        <div id="wd-kanbas" className="h-100">
+          {/* <h1>Kanbas</h1> */}
+          <div className="d-flex flex-row h-100">
+            <div className="d-none d-md-block bg-black">
+              <KanbasNavigation />
             </div>
-            <Routes>
-              <Route path="/" element={<Navigate to="Dashboard" />} />
-              <Route
-                path="Dashboard"
-                element={
-                  <Dashboard
-                    courses={courses}
-                    course={course}
-                    setCourse={setCourse}
-                    addNewCourse={addNewCourse}
-                    deleteCourse={deleteCourse}
-                    updateCourse={updateCourse}
-                  />
-                }
-              />
-              <Route
-                path="Courses/:cid/*"
-                element={<Courses courses={courses} />}
-              />
-              <Route path="/Account/*" element={<Account />} />
-            </Routes>
+            <div className="flex-fill p-4 overflow-auto">
+              <div className="d-block d-md-none">
+                <DropdownIndex />
+              </div>
+              <Routes>
+                <Route path="/" element={<Navigate to="Dashboard" />} />
+                <Route
+                  path="Dashboard"
+                  element={<ProtectedRoute>
+                    <Dashboard
+                      courses={courses}
+                      course={course}
+                      setCourse={setCourse}
+                      addNewCourse={addNewCourse}
+                      deleteCourse={deleteCourse}
+                      updateCourse={updateCourse}
+                    /></ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="Courses/:cid/*"
+                  element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>}
+                />
+                <Route path="/Account/*" element={<Account />} />
+              </Routes>
+            </div>
           </div>
         </div>
-      </div>
+      </Session>
     </Provider>
   );
 }

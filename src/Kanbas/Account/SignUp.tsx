@@ -1,16 +1,30 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as client from "./client";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "./reducer";
+
 export default function Signup() {
   const [user, setUser] = useState<any>({});
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const signup = async () => {
-    await client.signup(user);
-    navigate("/Kanbas/Account/Profile");
+    try {
+      const currentUser = await client.signup(user);
+      dispatch(setCurrentUser(currentUser));
+      navigate("/Kanbas/Account/Profile");
+    } catch (err: any) {
+      setError(err.response.data.message);
+    }
+
   };
   return (
     <div>
       <h1>Sign up</h1>
+      {error && <div className="alert alert-danger">{error}</div>}
+
       <input value={user.username} onChange={(e) => setUser({ ...user, username: e.target.value })}
              className="form-control mb-2" placeholder="username" />
       <input value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} type="password"
