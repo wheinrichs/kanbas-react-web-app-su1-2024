@@ -16,7 +16,7 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState("");
 
   const fetchModules = async () => {
-    const modules = await client.findModulesForCourse(cid as string);
+    const modules = await client.findModulesForCourse(cid as any);
     dispatch(setModules(modules));
   };
   useEffect(() => {
@@ -26,9 +26,10 @@ export default function Modules() {
   const createModule = async (module: any) => {
     const newModule = await client.createModule(cid as string, module);
     dispatch(addModule(newModule));
+
   };
 
-  const removeModule = async (moduleId: string) => {
+  const removeModule = async (moduleId: any) => {
     await client.deleteModule(moduleId);
     dispatch(deleteModule(moduleId));
   };
@@ -37,7 +38,6 @@ export default function Modules() {
     const status = await client.updateModule(module);
     dispatch(updateModule(module));
   };
-
 
   return (
     <div>
