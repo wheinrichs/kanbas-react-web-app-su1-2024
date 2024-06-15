@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as client from "./client";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser } from "./reducer";
 
 export default function Signin() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
   const [credentials, setCredentials] = useState<any>({});
   const [error, setError] = useState("");
   
