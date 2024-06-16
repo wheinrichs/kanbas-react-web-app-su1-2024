@@ -2,9 +2,16 @@ import { useDispatch } from "react-redux";
 import { cancelEditQuizQuestion, updateQuizQuestion } from "../../reducer";
 import MultipleChoiceEditor from "./MultipleChoiceEditor";
 import { useParams } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import TrueFalseEditor from "./TrueFalseEditor";
 
-export default function EditorSingleQuestion({questionParam, resetQuestion} : {questionParam : any, resetQuestion : () => void}) {
+export default function EditorSingleQuestion({
+  questionParam,
+  resetQuestion,
+}: {
+  questionParam: any;
+  resetQuestion: () => void;
+}) {
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
 
@@ -13,6 +20,15 @@ export default function EditorSingleQuestion({questionParam, resetQuestion} : {q
   const [arrayCorrectAnswerIndex, setArrayCorrectAnswerIndex] = useState(
     [] as any
   );
+
+  useEffect(() => {
+    console.log("using effect");
+    if (questionParam.answers && questionParam.choices) {
+      setArrayCorrectAnswerIndex(questionParam.choices.map((q: any, qi: any) => 
+        questionParam.answers.includes(q) ? qi.toString() : "").filter((q: any) => q !== ""));
+
+    }
+  }, []);
 
   // This function updates the questions question type and it is rendered in the conditionalQuestionRendering function
   const setQuestionType = (questionToRender: any) => {
@@ -27,19 +43,30 @@ export default function EditorSingleQuestion({questionParam, resetQuestion} : {q
     // Update the local question
     setQuestion({
       ...questionToRender,
-      type: (document.getElementById("questionType") as HTMLInputElement)
-        .value,
-    })
+      type: (document.getElementById("questionType") as HTMLInputElement).value,
+    });
   };
 
   // THis function checks the questions type and renders the appropriate elements
   const conditionalQuestionRendering = () => {
     if (question.type === "multiple") {
       return (
-        <MultipleChoiceEditor question={question} setQuestion={setQuestion} answerArray={arrayCorrectAnswerIndex} setAnswerArray={setArrayCorrectAnswerIndex}/>
+        <MultipleChoiceEditor
+          question={question}
+          setQuestion={setQuestion}
+          answerArray={arrayCorrectAnswerIndex}
+          setAnswerArray={setArrayCorrectAnswerIndex}
+        />
       );
     } else if (question.type === "trueFalse") {
-      return;
+      return (
+        <TrueFalseEditor
+          question={question}
+          setQuestion={setQuestion}
+          answerArray={arrayCorrectAnswerIndex}
+          setAnswerArray={setArrayCorrectAnswerIndex}
+        />
+      );
     }
   };
 
@@ -51,21 +78,26 @@ export default function EditorSingleQuestion({questionParam, resetQuestion} : {q
           arrayCorrectAnswerIndex.includes(ai.toString())
         ),
       });
-      dispatch(updateQuizQuestion({ ...question, answers: question.choices.filter((a: any, ai: any) =>
-        arrayCorrectAnswerIndex.includes(ai.toString())), editing: false }));
+      dispatch(
+        updateQuizQuestion({
+          ...question,
+          answers: question.choices.filter((a: any, ai: any) =>
+            arrayCorrectAnswerIndex.includes(ai.toString())
+          ),
+          editing: false,
+        })
+      );
       resetQuestion();
-    }
-    else {
+    } else {
       dispatch(updateQuizQuestion({ ...question, editing: false }));
       resetQuestion();
     }
   };
 
   const localCancelEditQuizQuestion = (questionToCancel: any) => {
-    dispatch(cancelEditQuizQuestion(questionToCancel.question_id))
+    dispatch(cancelEditQuizQuestion(questionToCancel.question_id));
     resetQuestion();
-  }
-
+  };
 
   return (
     <div>
@@ -87,7 +119,7 @@ export default function EditorSingleQuestion({questionParam, resetQuestion} : {q
               id="questionType"
               onChange={() => setQuestionType(question)}
             >
-              <option defaultValue="multiple" value="multiple">Multiple Choice</option>
+              <option value="multiple">Multiple Choice</option>
               <option value="trueFalse">True False</option>
               <option value="fillIn">Fill in the blank</option>
             </select>
@@ -128,9 +160,7 @@ export default function EditorSingleQuestion({questionParam, resetQuestion} : {q
           <button
             id="cancel_edit_quiz"
             className="btn btn-lg btn- me-1 btn-secondary"
-            onClick={() =>
-              localCancelEditQuizQuestion(question)
-            }
+            onClick={() => localCancelEditQuizQuestion(question)}
           >
             Cancel
           </button>

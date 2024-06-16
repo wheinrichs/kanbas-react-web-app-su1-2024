@@ -1,9 +1,6 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { updateQuizQuestion } from "../../reducer";
+import { useEffect } from "react";
 
-export default function MultipleChoiceEditor({
+export default function TrueFalseEditor({
   question,
   setQuestion,
   answerArray,
@@ -14,25 +11,6 @@ export default function MultipleChoiceEditor({
   answerArray: any;
   setAnswerArray: (answeArrayr: any) => void;
 }) {
-  const addNewAnswer = () => {
-    let newChoices = [];
-    if (question.choices) {
-      newChoices = [...question.choices, ""];
-    } else {
-      newChoices = [""];
-    }
-    setQuestion({ ...question, choices: newChoices });
-  };
-
-  const updateAnswer = (answer_index: any, choice: any) => {
-    setQuestion({
-      ...question,
-      choices: question.choices.map((a: any, ai: any) =>
-        ai === answer_index ? choice : a
-      ),
-    });
-  };
-
   const setCorrectAnswer = (e: any, a: any) => {
     if (e.target.checked) {
       setAnswerArray([...answerArray, e.target.value] as any);
@@ -42,7 +20,11 @@ export default function MultipleChoiceEditor({
       );
     }
   };
-  console.log("answer array is: ", answerArray);
+
+  useEffect(() => {
+    console.log("using effect");
+    setQuestion({ ...question, choices: ["true", "false"] });
+  }, []);
 
   return (
     <div>
@@ -58,24 +40,14 @@ export default function MultipleChoiceEditor({
                   type="checkbox"
                   value={qai}
                   checked={answerArray.includes(qai.toString())}
-                  onClick={(e) => {
+                  onChange={(e) => {
                     setCorrectAnswer(e, qa);
                   }}
                 ></input>
-
-                <input
-                  className="form-control"
-                  onChange={(e) => {
-                    updateAnswer(qai, e.target.value);
-                  }}
-                  value={qa}
-                ></input>
+                {qa}
               </div>
             </li>
           ))}
-        <button className="text-danger" onClick={addNewAnswer}>
-          + Add Another choice
-        </button>
       </ul>
     </div>
   );
