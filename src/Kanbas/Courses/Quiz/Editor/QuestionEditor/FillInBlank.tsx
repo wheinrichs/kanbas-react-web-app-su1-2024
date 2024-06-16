@@ -15,27 +15,41 @@ export default function FillInBlank({
   setAnswerArray: (answeArrayr: any) => void;
 }) {
 
-  const addNewAnswer = () => {
+  const addNewAnswer = (index: any) => {
     let newChoices = [];
-    if (question.choices) {
-      newChoices = [...question.choices, ""];
-    } else {
-      newChoices = [""];
+    let subChoices = [];
+    // Adding a sub choice
+    if (question.choices && index < question.choices.length) {
+      console.log("Adding a sub choice")
+
+      subChoices = [...question.choices[index], ""];
+      newChoices = [...question.choices];
+      newChoices[index] = subChoices;
+      console.log("New choices: ", newChoices);
+    } 
+    // Adding a new choice at the end
+    else if (question.choices) {
+      console.log("Adding a fresh choice")
+      subChoices = [""];
+      newChoices = [...question.choices, subChoices];
+    } 
+    // Adding the first choice
+    else {
+      console.log("Adding a first choice")
+
+      newChoices = [[""]];
     }
-    console.log("New CHoice: ", newChoices);
     setQuestion({ ...question, choices: newChoices });
-    setAnswerArray(newChoices.map((a: any, ai: any) => ai.toString()))
+    setAnswerArray(newChoices.map((a: any, ai: any) => ai.toString()));
   };
 
-  const addNewAlternateAnswer = () => {
-
-  };
-
-  const updateAnswer = (answer_index: any, choice: any) => {
+  const updateAnswer = (answer_index: any, subAnswerIndex: any, data: any) => {
+    let subQuestionList = [...question.choices[answer_index]]
+    subQuestionList[subAnswerIndex] = data;
     setQuestion({
       ...question,
       choices: question.choices.map((a: any, ai: any) =>
-        ai === answer_index ? choice : a
+        ai === answer_index ? subQuestionList : a
       ),
     });
   };
@@ -43,7 +57,6 @@ export default function FillInBlank({
   console.log("choice array is: ", question.choices);
   console.log("answer array is: ", answerArray);
   console.log("question answer array is: ", question.answers);
-
 
   return (
     <div>
@@ -53,25 +66,49 @@ export default function FillInBlank({
         {question.choices &&
           question.choices.map((qa: any, qai: any) => (
             <li className="list-group-item">
+              {question.choices[qai].map((qas: any, qasi: any) => (
               <div className="d-flex align-items-center">
                 <input
-                  className="form-control"
+                  className="form-control mb-2"
                   onChange={(e) => {
-                    updateAnswer(qai, e.target.value);
+                    updateAnswer(qai, qasi, e.target.value);
                   }}
-                  value={qa}
+                  value={qas}
                 ></input>
               </div>
-              <div className="align-items-center">
-                <button className="text-danger m-2" onClick={addNewAlternateAnswer}>
+              ))}
+              <div className="d-flex align-items-center">
+                <button
+                  className="text-danger m-2"
+                  onClick={() => {
+                    addNewAnswer(qai);
+                  }}
+                >
                   + Add Alternate Answer
                 </button>
               </div>
             </li>
           ))}
-        <button className="text-danger" onClick={addNewAnswer}>
-          + Add Another choice
-        </button>
+        {question.choices && (
+          <button
+            className="text-danger"
+            onClick={() => {
+              addNewAnswer(question.choices.length);
+            }}
+          >
+            + Add Another choice
+          </button>
+        )}
+        {!question.choices && (
+          <button
+            className="text-danger"
+            onClick={() => {
+              addNewAnswer(0);
+            }}
+          >
+            + Add Another choice
+          </button>
+        )}
       </ul>
     </div>
   );

@@ -77,8 +77,7 @@ export default function EditorQuestions() {
     dispatch(editQuizQuestion(questionToEdit.question_id));
   };
 
-  console.log(quiz_questions);
-
+  console.log("QUESTIONS OBJECT IS: ", quiz_questions)
   return (
     <div>
       <ul className="list-group mt-3">

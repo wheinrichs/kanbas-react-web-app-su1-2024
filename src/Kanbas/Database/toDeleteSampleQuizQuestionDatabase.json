@@ -11,6 +11,26 @@
   }, 
   {
     "quiz_id" : "9876",
+    "question_id": "421233",
+    "type": "fillIn",
+    "title": "Sample title",
+    "points": "15",
+    "question": "What is the time?",
+    "choices": [["eleven", "11"], ["two"], ["three", "3"]],
+    "answers": [["eleven", "11"], ["two"], ["three", "3"]]
+  }, 
+  {
+    "quiz_id" : "9876",
+    "question_id": "421232",
+    "type": "trueFalse",
+    "title": "Sample title",
+    "points": "15",
+    "question": "What is the time?",
+    "choices": ["true", "false"],
+    "answers": ["true"]
+  }, 
+  {
+    "quiz_id" : "9876",
     "question_id": "123",
     "type": "multiple",
     "title": "Second title",
