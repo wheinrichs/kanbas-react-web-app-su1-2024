@@ -3,7 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { updateQuizQuestion } from "../../reducer";
 
-export default function MultipleChoiceEditor( { question, setQuestion } : { question: any, setQuestion: (question: any) => void }) {
+export default function MultipleChoiceEditor({
+  question,
+  setQuestion,
+  answerArray,
+  setAnswerArray,
+}: {
+  question: any;
+  setQuestion: (question: any) => void;
+  answerArray: any;
+  setAnswerArray: (answeArrayr: any) => void;
+}) {
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
 
@@ -18,8 +28,6 @@ export default function MultipleChoiceEditor( { question, setQuestion } : { ques
   const addNewAnswer = () => {
     let newChoices = [];
     if (question.choices) {
-      console.log("on second");
-
       newChoices = [...question.choices, ""];
     } else {
       newChoices = [""];
@@ -43,17 +51,21 @@ export default function MultipleChoiceEditor( { question, setQuestion } : { ques
         answers: [answer],
       });
     } else if (question.answers.includes(answer)) {
-
       setQuestion({
         ...question,
         answers: question.answers.filter((i: any) => i !== answer),
       });
-
     } else {
       setQuestion({
         ...question,
         answers: [...question.answers, answer],
       });
+    }
+  };
+
+  const setCorrectAnswer = (e: any, a: any) => {
+    if (e.target.checked) {
+      setAnswerArray([...answerArray, e.target.value] as any);
     }
   };
 
@@ -69,10 +81,10 @@ export default function MultipleChoiceEditor( { question, setQuestion } : { ques
                 <input
                   className="form-check-input me-2"
                   type="checkbox"
-
-                  checked={question.answers && question.answers.includes(qa)}                  
-                  onChange={() => {
-                    toggleCorrectAnswer(qa);
+                  value={qai}
+                  //checked={question.answers && question.answers.includes(qa)}
+                  onChange={(e) => {
+                    setCorrectAnswer(e, qa);
                   }}
                 ></input>
 

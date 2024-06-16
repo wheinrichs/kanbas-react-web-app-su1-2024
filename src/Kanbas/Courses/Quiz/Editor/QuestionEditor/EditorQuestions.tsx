@@ -84,7 +84,7 @@ export default function EditorQuestions() {
       <ul className="list-group mt-3">
         {quiz_questions &&
           quiz_questions.map((q: any, i: any) => 
-            q.editing ? <EditorSingleQuestion {...q} />
+            q.editing ? <EditorSingleQuestion questionParam={{...q}} resetQuestion={resetQuestion} />
           :  (
             <li className="list-group-item">
               <div className="d-flex flex-row">
