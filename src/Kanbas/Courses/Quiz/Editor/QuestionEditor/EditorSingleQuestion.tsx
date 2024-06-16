@@ -4,6 +4,7 @@ import MultipleChoiceEditor from "./MultipleChoiceEditor";
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import TrueFalseEditor from "./TrueFalseEditor";
+import FillInBlank from "./FillInBlank";
 
 export default function EditorSingleQuestion({
   questionParam,
@@ -68,10 +69,23 @@ export default function EditorSingleQuestion({
         />
       );
     }
+    else if (question.type === "fillIn") {
+      return (
+        <FillInBlank
+          question={question}
+          setQuestion={setQuestion}
+          answerArray={arrayCorrectAnswerIndex}
+          setAnswerArray={setArrayCorrectAnswerIndex}
+        />
+      );
+    }
   };
 
   const updateLocalServerQuestion = (question: any) => {
     if (arrayCorrectAnswerIndex && question.choices) {
+      console.log("first", arrayCorrectAnswerIndex)
+      console.log("second", question.choices)
+
       setQuestion({
         ...question,
         answers: question.choices.filter((a: any, ai: any) =>
