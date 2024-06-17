@@ -21,7 +21,7 @@ export default function Quizzes() {
     const newQuiz = await client.createQuiz(quiz);
     setQuiz(newQuiz);
     dispatch(addQuiz(newQuiz));
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${quiz}`);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${newQuiz._id}`);
   };
 
   const fetchQuizzes = async () => {
