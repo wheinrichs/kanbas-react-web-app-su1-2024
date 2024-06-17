@@ -1,14 +1,40 @@
+import { useDispatch, useSelector } from "react-redux";
 import Editor from "./Editor/Editor";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { addQuiz, setQuizzes } from "./reducer";
+import * as client from "./client";
+import { useEffect, useState } from "react";
+
 
 export default function Quizzes() {
   const { cid } = useParams();
-  let new_quiz_id;
-  const create_new_id = () => {
-    new_quiz_id = new Date().getTime().toString();
-    return null;
+  const navigate = useNavigate()
+  const { quizzes } = useSelector((state: any) => state.quizReducer);
+  const [quiz, setQuiz] = useState({
+    title: "",
+    points: "",
+    courseID: cid,
+  })
+  const dispatch = useDispatch();
+  const createNewQuizLocalAndServer = async () => {
+    const newQuiz = await client.createQuiz(quiz);
+    setQuiz(newQuiz);
+    dispatch(addQuiz(newQuiz));
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${quiz}`);
   };
+
+  const fetchQuizzes = async () => {
+    const newQuizzes = await client.fetchQuizzesByCourse(cid);
+    dispatch(setQuizzes(newQuizzes));
+  }
+
+  useEffect(() => {
+    fetchQuizzes();
+  }, []);
+  
+  console.log(quizzes);
+
   return (
     <div>
       <h1>Quiz Section</h1>
@@ -16,14 +42,12 @@ export default function Quizzes() {
       
       {/* I'm just creating a button here to nav to the editor screen, feel free to move around */}
       <div>
-        <div>{create_new_id()}</div>
-        <Link
+        <button
           className="btn btn-danger"
-          to={`/Kanbas/Courses/${cid}/Quizzes/Editor/${new_quiz_id}`}
-          key={`/Kanbas/Courses/${cid}/Quizzes/Editor/${new_quiz_id}`}
+          onClick={() => createNewQuizLocalAndServer()}
         >
           + Quiz
-        </Link>
+        </button>
       </div>
     </div>
   );
