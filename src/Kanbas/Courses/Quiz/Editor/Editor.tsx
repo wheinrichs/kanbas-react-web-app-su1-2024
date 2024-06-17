@@ -2,10 +2,33 @@ import { useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import EditorQuizDetails from "./EditorQuizDetails";
 import EditorQuestions from "./QuestionEditor/EditorQuestions";
+import { useEffect, useState } from "react";
+import * as client from "./client"
+import { useDispatch } from "react-redux";
 
 export default function Editor() {
   const { cid, qid } = useParams();
   const { pathname } = useLocation();
+  const [currentQuiz, setCurrentQuiz] = useState({});
+
+  // Need to pass this state variable to keep track of questions you need to remove if the user clicks cancel
+  const [questionsToAdd, setQuestionsToAdd] = useState({});
+
+  const saveLocalAndServerQuiz = async () => {
+    const newQuiz = client.updateQuiz(qid, currentQuiz);
+    setCurrentQuiz(newQuiz);
+  }
+
+  const fetchCurrentQuiz = async () => {
+    const newFetchedQuiz = await client.fetchQuiz(qid);
+    setCurrentQuiz(newFetchedQuiz);
+  }
+
+  useEffect(() => {
+    fetchCurrentQuiz();
+  }, []);
+
+  console.log(currentQuiz);
 
   return (
     <div>
@@ -62,6 +85,7 @@ export default function Editor() {
       <button
         id="save_edit_quiz"
         className="btn btn-lg btn-danger me-1"
+        onClick={saveLocalAndServerQuiz}
       >
         Save
       </button>
