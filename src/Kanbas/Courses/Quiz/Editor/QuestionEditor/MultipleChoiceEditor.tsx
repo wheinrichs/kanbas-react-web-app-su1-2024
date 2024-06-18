@@ -42,14 +42,26 @@ export default function MultipleChoiceEditor({
   };
 
   const removeAnswerOption = (choice: any, choice_index: any) => {
+    // If you remove an answer from the list and it shifts all the indexes the answer array is wrong
     if(answerArray.includes(choice_index.toString())) {
-      setAnswerArray(
-        answerArray.filter((ans: any) => ans !== choice_index.toString()) as any
-      );
+      const tempAnswers = question.choices.filter((choice: any, choiceIndex: any) => answerArray.includes(choiceIndex.toString()));
+      const tempAnswerArray = [] as any;
+      let newChoices = [];
+      newChoices = question.choices.filter((q: any) => q !== choice);
+      setQuestion({ ...question, choices: newChoices });
+
+      for(let i = 0; i < newChoices.length; i++) {
+        if(tempAnswers.includes(newChoices[i])){
+          tempAnswerArray.push(i.toString());
+        }
+      }
+      setAnswerArray(tempAnswerArray);
     }
-    let newChoices = [];
-    newChoices = question.choices.filter((q: any) => q !== choice);
-    setQuestion({ ...question, choices: newChoices });
+    else{
+      let newChoices = [];
+      newChoices = question.choices.filter((q: any) => q !== choice);
+      setQuestion({ ...question, choices: newChoices });
+    }
   }
 
   return (

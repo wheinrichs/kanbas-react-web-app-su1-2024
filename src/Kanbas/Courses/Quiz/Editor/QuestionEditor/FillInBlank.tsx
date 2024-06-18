@@ -50,6 +50,28 @@ export default function FillInBlank({
     });
   };
 
+  const removeAnswerOption = (choice: any, choice_index: any) => {
+    // If you remove an answer from the list and it shifts all the indexes the answer array is wrong
+    if(answerArray.includes(choice_index.toString())) {
+      const tempAnswers = question.choices.filter((choice: any, choiceIndex: any) => answerArray.includes(choiceIndex.toString()));
+      const tempAnswerArray = [] as any;
+      let newChoices = [];
+      newChoices = question.choices.filter((q: any) => q !== choice);
+      setQuestion({ ...question, choices: newChoices });
+
+      for(let i = 0; i < newChoices.length; i++) {
+        if(tempAnswers.includes(newChoices[i])){
+          tempAnswerArray.push(i.toString());
+        }
+      }
+      setAnswerArray(tempAnswerArray);
+    }
+    else{
+      let newChoices = [];
+      newChoices = question.choices.filter((q: any) => q !== choice);
+      setQuestion({ ...question, choices: newChoices });
+    }
+  }
 
   return (
     <div>
@@ -72,12 +94,20 @@ export default function FillInBlank({
               ))}
               <div className="d-flex align-items-center">
                 <button
-                  className="text-danger m-2"
+                  className="btn border border-black text-danger m-2"
                   onClick={() => {
                     addNewAnswer(qai);
                   }}
                 >
                   + Add Alternate Answer
+                </button>
+                <button
+                  className="btn btn-danger m-2"
+                  onClick={() => {
+                    removeAnswerOption(qa, qai);
+                  }}
+                >
+                  Delete Answer
                 </button>
               </div>
             </li>
