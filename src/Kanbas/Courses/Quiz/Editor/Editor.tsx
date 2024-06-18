@@ -11,7 +11,26 @@ export default function Editor() {
   const { cid, qid } = useParams();
   const navigate = useNavigate()
   const { pathname } = useLocation();
-  const [currentQuiz, setCurrentQuiz] = useState({});
+  const [currentQuiz, setCurrentQuiz] = useState({
+    // _id: new Date().getTime(),
+    // title: "",
+    // instructions: "",
+    // points: "",
+    // type: "",
+    // assignmentGroup: "",
+    // shuffle: true,
+    // timeLimit: true,
+    // time: "",
+    // attempts: false,
+    // dueDate: "",
+    // availableDate: "",
+    // untilDate: "",
+    // showCorrectAnswers: false,
+    // oneAtATime: true,
+    // webcam: false,
+    // lockAfter: false,
+    // accessCode: ""
+  });
 
   // Need to pass this state variable to keep track of questions you need to remove if the user clicks cancel
   const [questionsToAdd, setQuestionsToAdd] = useState({});
@@ -35,6 +54,8 @@ export default function Editor() {
   useEffect(() => {
     fetchCurrentQuiz();
   }, []);
+
+  console.log("current quiz is: ",currentQuiz);
 
   return (
     <div>
@@ -71,7 +92,7 @@ export default function Editor() {
           id="details_editor"
           role="tabpanel"
         >
-          <EditorQuizDetails />
+          <EditorQuizDetails quiz={currentQuiz} setQuiz={setCurrentQuiz}/>
         </div>
         <div
           className="tab-pane fade"

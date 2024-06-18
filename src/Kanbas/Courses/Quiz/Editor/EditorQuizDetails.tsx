@@ -2,33 +2,18 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import * as client from "./client";
 import { useEffect, useState } from "react";
 
-export default function EditorQuizDetails() {
+export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz: (q: any) => void}) {
   const { cid, qid } = useParams();
   // Need to make sure when adding a new quiz that the default values are correct (would involve getting obj from server)
-  const [quiz, setQuiz] = useState({
-    _id: new Date().getTime(),
-    title: "",
-    instructions: "",
-    points: "",
-    type: "",
-    assignmentGroup: "",
-    shuffle: true,
-    timeLimit: true,
-    time: "",
-    attempts: false,
-    dueDate: "",
-    availableDate: "",
-    untilDate: "",
-  });
 
-  const fetchCurrentQuiz = async () => {
-    const newFetchedQuiz = await client.fetchQuiz(qid);
-    setQuiz(newFetchedQuiz);
-  };
+//   const fetchCurrentQuiz = async () => {
+//     const newFetchedQuiz = await client.fetchQuiz(qid);
+//     setQuiz(newFetchedQuiz);
+//   };
 
-  useEffect(() => {
-    fetchCurrentQuiz();
-  }, []);
+//   useEffect(() => {
+//     fetchCurrentQuiz();
+//   }, []);
 
   function formatDate(date: Date) {
     // Get the year, month, and day from the Date object
@@ -80,6 +65,21 @@ export default function EditorQuizDetails() {
           </div>
         </div>
 
+        <div className="row align-items-center mt-4">
+          <label htmlFor={`points${quiz._id}`} className="col-3 text-end">
+            Points:
+          </label>
+          <div className="col-9">
+          <input
+            className="form-control"
+            id={`points${quiz._id}`}
+            value={quiz.points && quiz.points}
+            placeholder="Enter point total here"
+            onChange={(e) => setQuiz({ ...quiz, points: e.target.value })}
+          ></input>{" "}
+          </div>
+        </div>
+
         <div className="row mt-3 align-items-center">
           <label
             htmlFor={`assignmentGroup${quiz._id}`}
@@ -92,7 +92,7 @@ export default function EditorQuizDetails() {
               className="form-select me-3"
               id={`assignmentGroup${quiz._id}`}
               onChange={(e) =>
-                setQuiz({ ...quiz, assignmentGroup: e.target.value })
+                setQuiz({ ...quiz, assignment_group: e.target.value })
               }
               value={quiz.type}
             >
@@ -111,20 +111,80 @@ export default function EditorQuizDetails() {
             <input
               id={`shuffle${quiz._id}`}
               type="checkbox"
+              checked={quiz.shuffle}
               className="form-check-input me-2"
               onChange={(e) => setQuiz({ ...quiz, shuffle: e.target.checked })}
             ></input>
             <label className="form-check-label" htmlFor={`shuffle${quiz._id}`}>
               Shuffle Answers
             </label>
+            <br />
+
+            <input
+              id={`lcok${quiz._id}`}
+              type="checkbox"
+              checked={quiz.lock_after}
+              className="form-check-input me-2"
+              onChange={(e) =>
+                setQuiz({ ...quiz, lock_after: e.target.checked })
+              }
+            ></input>
+            <label className="form-check-label" htmlFor={`lock${quiz._id}`}>
+              Lock Question After Answering
+            </label>
+            <br />
+
+            <input
+              id={`showCorrect${quiz._id}`}
+              type="checkbox"
+              checked={quiz.show_correct_answers}
+              className="form-check-input me-2"
+              onChange={(e) =>
+                setQuiz({ ...quiz, show_correct_answers: e.target.checked })
+              }
+            ></input>
+            <label className="form-check-label" htmlFor={`showCorrect${quiz._id}`}>
+              Show Correct Answers After Answering
+            </label>
+            <br />
+
+            <input
+              id={`webcam${quiz._id}`}
+              type="checkbox"
+              checked={quiz.webcam}
+              className="form-check-input me-2"
+              onChange={(e) => setQuiz({ ...quiz, webcam: e.target.checked })}
+            ></input>
+            <label className="form-check-label" htmlFor={`webcam${quiz._id}`}>
+              Webcam Required
+            </label>
+            <br />
+
+            <input
+              id={`oneAtATime${quiz._id}`}
+              type="checkbox"
+              checked={quiz.one_at_a_time}
+              className="form-check-input me-2"
+              onChange={(e) =>
+                setQuiz({ ...quiz, one_at_a_time: e.target.checked })
+              }
+            ></input>
+            <label
+              className="form-check-label"
+              htmlFor={`oneAtATime${quiz._id}`}
+            >
+              One Question At A Time
+            </label>
+
             <div className="d-flex flex-row align-items-center">
               <div className="me-3">
                 <input
                   id={`timeLimit${quiz._id}`}
                   type="checkbox"
+                  checked={quiz.time_limit}
                   className="form-check-input me-2"
                   onChange={(e) =>
-                    setQuiz({ ...quiz, timeLimit: e.target.checked })
+                    setQuiz({ ...quiz, time_limit: e.target.checked })
                   }
                 ></input>
                 <label
@@ -151,6 +211,7 @@ export default function EditorQuizDetails() {
             <input
               id={`attempts${quiz._id}`}
               type="checkbox"
+              checked={quiz.attempts}
               className="form-check-input me-2"
               onChange={(e) => setQuiz({ ...quiz, attempts: e.target.checked })}
             ></input>
@@ -163,7 +224,7 @@ export default function EditorQuizDetails() {
           <div className="col-3 text-end">Assign</div>
           <div className="col-9 border">
             <div className="ms-2">
-              <div className="mt-3 d-flex">
+              <div className="mt-3">
                 <label htmlFor={`due${quiz._id}`} className="form-label">
                   <strong>Due</strong>
                 </label>
@@ -171,9 +232,9 @@ export default function EditorQuizDetails() {
                   type="date"
                   className="form-control mb-2"
                   id={`due${quiz._id}`}
-                  value={formatDate(new Date(quiz.dueDate))}
+                  value={formatDate(new Date(quiz.due_date))}
                   onChange={(e) =>
-                    setQuiz({ ...quiz, dueDate: e.target.value })
+                    setQuiz({ ...quiz, due_date: e.target.value })
                   }
                 ></input>
                 <div className="row">
@@ -194,11 +255,11 @@ export default function EditorQuizDetails() {
                       type="date"
                       className="form-control"
                       id={`availableFrom${quiz._id}`}
-                      value={formatDate(new Date(quiz.availableDate))}
+                      value={formatDate(new Date(quiz.available_date))}
                       onChange={(e) =>
                         setQuiz({
                           ...quiz,
-                          availableDate: e.target.value,
+                          available_date: e.target.value,
                         })
                       }
                     ></input>
@@ -209,11 +270,11 @@ export default function EditorQuizDetails() {
                       className="form-control"
                       id={`availableUntil${quiz._id}`}
                       min="2024-05-06"
-                      value={formatDate(new Date(quiz.untilDate))}
+                      value={formatDate(new Date(quiz.until_date))}
                       onChange={(e) =>
                         setQuiz({
                           ...quiz,
-                          untilDate: e.target.value,
+                          until_date: e.target.value,
                         })
                       }
                     ></input>
@@ -221,6 +282,20 @@ export default function EditorQuizDetails() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div className="row align-items-center mt-4">
+          <label htmlFor={`accessCode${quiz._id}`} className="col-3 text-end">
+            Access Code:
+          </label>
+          <div className="col-9">
+          <input
+            className="form-control"
+            id={`accessCode${quiz._id}`}
+            value={quiz.access_code && quiz.access_code}
+            placeholder="Enter an access code"
+            onChange={(e) => setQuiz({ ...quiz, access_code: e.target.value })}
+          ></input>{" "}
           </div>
         </div>
       </div>
