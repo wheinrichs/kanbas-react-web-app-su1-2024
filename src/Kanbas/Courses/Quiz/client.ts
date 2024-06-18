@@ -14,3 +14,8 @@ export const fetchQuizzesByCourse = async (courseID: any) => {
     const response = await axios.get(`${REMOTE_SERVER}/api/quizzes/${courseID}`)
     return response.data;
 }
+
+export const fetchQuiz = async (qid: any) => {
+  const response = await axios.get(`${REMOTE_SERVER}/api/quizzes/byQID/${qid}`);
+  return response.data;
+};
