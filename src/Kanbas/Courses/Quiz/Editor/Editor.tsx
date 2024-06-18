@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import EditorQuizDetails from "./EditorQuizDetails";
 import EditorQuestions from "./QuestionEditor/EditorQuestions";
@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 
 export default function Editor() {
   const { cid, qid } = useParams();
+  const navigate = useNavigate()
   const { pathname } = useLocation();
   const [currentQuiz, setCurrentQuiz] = useState({});
 
@@ -17,6 +18,7 @@ export default function Editor() {
   const saveLocalAndServerQuiz = async () => {
     const newQuiz = client.updateQuiz(qid, currentQuiz);
     setCurrentQuiz(newQuiz);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   }
 
   const fetchCurrentQuiz = async () => {

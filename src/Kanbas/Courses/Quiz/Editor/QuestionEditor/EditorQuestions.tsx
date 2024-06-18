@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as client from "./client";
 import {
   addNewQuestion,
   cancelEditQuizQuestion,
@@ -18,8 +19,7 @@ export default function EditorQuestions() {
   const { cid, qid } = useParams();
 
   const [question, setQuestion] = useState({
-    quiz_id: qid,
-    question_id: new Date().getTime().toString(),
+    quizID: qid,
     type: "multiple",
     title: "",
     points: "",
@@ -29,8 +29,7 @@ export default function EditorQuestions() {
 
   const resetQuestion = () => {
     setQuestion({
-      quiz_id: qid,
-      question_id: new Date().getTime().toString(),
+      quizID: qid,
       type: "multiple",
       title: "",
       points: "",
@@ -43,14 +42,11 @@ export default function EditorQuestions() {
     (state: any) => state.quizReducer
   );
 
-  const fetchQuizQuestions = () => {
+  const fetchQuizQuestions = async () => {
     // Add database fetch
-    // Local fetch
-    dispatch(
-      setQuizQuestions(
-        db.quizQuestionsSample.filter((quiz) => quiz.quiz_id === qid)
-      )
-    );
+    const quizQuestionsNew = await client.fetchQuizQuestions(qid);
+    // Local set
+    dispatch(setQuizQuestions(quizQuestionsNew));
   };
 
   const fetchQuizzes = () => {
@@ -64,11 +60,12 @@ export default function EditorQuestions() {
     fetchQuizzes();
   }, []);
 
-  const addNewQuestionLocalServer = () => {
-    // Create a new ID for the question
-    // Add database add new question
+  const addNewQuestionLocalServer = async () => {
+    // DB add
+    const newQuestion = await client.addNeWQuizQuestion(cid, question)
+
     // Local add
-    dispatch(addNewQuestion({ ...question }));
+    dispatch(addNewQuestion(newQuestion));
     resetQuestion();
   };
 
@@ -77,7 +74,7 @@ export default function EditorQuestions() {
     dispatch(editQuizQuestion(questionToEdit.question_id));
   };
 
-  console.log("QUESTIONS OBJECT IS: ", quiz_questions)
+  console.log("Quiz questions are: ", quiz_questions)
   return (
     <div>
       <ul className="list-group mt-3">

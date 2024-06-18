@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import TrueFalseEditor from "./TrueFalseEditor";
 import FillInBlank from "./FillInBlank";
+import * as client from "./client"
 
 export default function EditorSingleQuestion({
   questionParam,
@@ -14,6 +15,7 @@ export default function EditorSingleQuestion({
   resetQuestion: () => void;
 }) {
   const dispatch = useDispatch();
+  // qid is the quiz id
   const { cid, qid } = useParams();
 
   const [question, setQuestion] = useState({ ...questionParam });
@@ -23,7 +25,6 @@ export default function EditorSingleQuestion({
   );
 
   useEffect(() => {
-    console.log("using effect");
     if (questionParam.answers && questionParam.choices) {
       setArrayCorrectAnswerIndex(questionParam.choices.map((q: any, qi: any) => 
         questionParam.answers.includes(q) ? qi.toString() : "").filter((q: any) => q !== ""));
@@ -81,29 +82,25 @@ export default function EditorSingleQuestion({
     }
   };
 
-  const updateLocalServerQuestion = (question: any) => {
+  const updateLocalServerQuestion = async (question: any) => {
     if (arrayCorrectAnswerIndex && question.choices) {
-      console.log("first", arrayCorrectAnswerIndex)
-      console.log("second", question.choices)
-
-      setQuestion({
+      const newQuestionToWrite = await client.updateQuizQuestion(qid, {
         ...question,
         answers: question.choices.filter((a: any, ai: any) =>
           arrayCorrectAnswerIndex.includes(ai.toString())
         ),
-      });
+      })
+      setQuestion(newQuestionToWrite);
       dispatch(
-        updateQuizQuestion({
-          ...question,
-          answers: question.choices.filter((a: any, ai: any) =>
-            arrayCorrectAnswerIndex.includes(ai.toString())
-          ),
-          editing: false,
-        })
+        updateQuizQuestion(newQuestionToWrite)
       );
       resetQuestion();
     } else {
-      dispatch(updateQuizQuestion({ ...question, editing: false }));
+
+      const newQuestionToWrite = await client.updateQuizQuestion(qid, { ...question, editing: false })
+      console.log("SECOND NEW QUESTION OBJ: ", newQuestionToWrite);
+
+      dispatch(updateQuizQuestion(newQuestionToWrite));
       resetQuestion();
     }
   };
