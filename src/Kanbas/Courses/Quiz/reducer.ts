@@ -30,7 +30,10 @@ const QuizzesSlice = createSlice({
 
     addNewQuestion: (state, { payload: question }) => {
       state.quiz_questions = [...state.quiz_questions, {...question} ] as any;
+    },
 
+    deleteQuizQuestion: (state, { payload: questionID }) => {
+      state.quiz_questions = state.quiz_questions.filter((q: any) => q._id !== questionID)
     },
 
     updateQuizQuestion: (state, {payload: question}) => {
@@ -39,7 +42,7 @@ const QuizzesSlice = createSlice({
   },
 });
 
-export const { setQuizQuestions, setQuizzes, addQuiz, editQuizQuestion, cancelEditQuizQuestion, addNewQuestion, updateQuizQuestion } =
+export const { setQuizQuestions, setQuizzes, addQuiz, editQuizQuestion, cancelEditQuizQuestion, addNewQuestion, updateQuizQuestion, deleteQuizQuestion } =
   QuizzesSlice.actions;
 
 export default QuizzesSlice.reducer;

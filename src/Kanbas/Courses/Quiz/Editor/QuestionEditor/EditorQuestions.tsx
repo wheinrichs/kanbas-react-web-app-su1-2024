@@ -4,12 +4,13 @@ import * as client from "./client";
 import {
   addNewQuestion,
   cancelEditQuizQuestion,
+  deleteQuizQuestion,
   editQuizQuestion,
   setQuizQuestions,
   updateQuizQuestion,
 } from "../../reducer";
 import { useParams } from "react-router";
-import { FaPencilAlt } from "react-icons/fa";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
 import EditorSingleQuestion from "./EditorSingleQuestion";
 
@@ -69,6 +70,13 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
     dispatch(editQuizQuestion(questionToEdit._id));
   };
 
+  const deleteExistingQuestion = async (questionToDelete: any) => {
+    const response = await client.deleteQuizQuestionsByQuestionID(questionToDelete._id);
+    setNewQuestionIDs(newQuestionIDs.filter((q: any) => q !== questionToDelete._id))
+    dispatch(deleteQuizQuestion(questionToDelete._id));
+    
+  }
+
   return (
     <div>
       <ul className="list-group mt-3">
@@ -84,6 +92,7 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
                 </div>
                 <div className="align-self-center">
                   <FaPencilAlt onClick={() => editExistingQuestion(q)} />
+                    <FaTrash className="ms-3" onClick={() => deleteExistingQuestion(q)} />
                 </div>
               </div>
             </li>

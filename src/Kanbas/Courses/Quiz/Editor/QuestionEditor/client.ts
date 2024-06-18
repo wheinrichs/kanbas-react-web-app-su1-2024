@@ -18,3 +18,8 @@ export const updateQuizQuestion = async (qid: any, question: any) => {
     const response = await axios.put(`${REMOTE_SERVER}/api/quizzes/${qid}/questions/${question._id}`, question);
     return response.data;
 }
+
+export const deleteQuizQuestionsByQuestionID = async ( questionID: any) => {
+    const response = await axios.delete(`${REMOTE_SERVER}/api/questions/${questionID}`);
+    return response.data;
+  }
