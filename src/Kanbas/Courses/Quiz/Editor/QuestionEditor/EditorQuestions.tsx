@@ -18,6 +18,7 @@ export default function EditorQuestions() {
   const { cid, qid } = useParams();
 
   const [question, setQuestion] = useState({
+    _id: new Date().getTime(),
     quizID: qid,
     type: "multiple",
     title: "",
@@ -28,6 +29,7 @@ export default function EditorQuestions() {
 
   const resetQuestion = () => {
     setQuestion({
+      _id: new Date().getTime(),
       quizID: qid,
       type: "multiple",
       title: "",
@@ -42,6 +44,7 @@ export default function EditorQuestions() {
   );
 
   const fetchQuizQuestions = async () => {
+    console.log("Fetching");
     // Add database fetch
     const quizQuestionsNew = await client.fetchQuizQuestions(qid);
     // Local set
@@ -63,7 +66,7 @@ export default function EditorQuestions() {
 
   const editExistingQuestion = (questionToEdit: any) => {
     setQuestion({ ...questionToEdit });
-    dispatch(editQuizQuestion(questionToEdit.question_id));
+    dispatch(editQuizQuestion(questionToEdit._id));
   };
 
   console.log("Quiz questions are: ", quiz_questions)

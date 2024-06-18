@@ -20,22 +20,18 @@ export default function FillInBlank({
     let subChoices = [];
     // Adding a sub choice
     if (question.choices && index < question.choices.length) {
-      console.log("Adding a sub choice")
 
       subChoices = [...question.choices[index], ""];
       newChoices = [...question.choices];
       newChoices[index] = subChoices;
-      console.log("New choices: ", newChoices);
     } 
     // Adding a new choice at the end
     else if (question.choices) {
-      console.log("Adding a fresh choice")
       subChoices = [""];
       newChoices = [...question.choices, subChoices];
     } 
     // Adding the first choice
     else {
-      console.log("Adding a first choice")
 
       newChoices = [[""]];
     }
@@ -54,9 +50,6 @@ export default function FillInBlank({
     });
   };
 
-  console.log("choice array is: ", question.choices);
-  console.log("answer array is: ", answerArray);
-  console.log("question answer array is: ", question.answers);
 
   return (
     <div>

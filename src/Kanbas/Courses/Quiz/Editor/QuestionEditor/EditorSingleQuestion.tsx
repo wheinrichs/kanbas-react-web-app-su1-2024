@@ -37,15 +37,15 @@ export default function EditorSingleQuestion({
     // Update the server question
     dispatch(
       updateQuizQuestion({
-        ...questionToRender,
-        type: (document.getElementById("questionType") as HTMLInputElement)
+        ...questionToRender, choices: [], answers: [],
+        type: (document.getElementById(`questionType${question._id}`) as HTMLInputElement)
           .value,
       })
     );
     // Update the local question
     setQuestion({
-      ...questionToRender,
-      type: (document.getElementById("questionType") as HTMLInputElement).value,
+      ...questionToRender, choices: [], answers: [], 
+      type: (document.getElementById(`questionType${question._id}`) as HTMLInputElement).value,
     });
   };
 
@@ -91,7 +91,6 @@ export default function EditorSingleQuestion({
         ),
       }
       const status = await client.updateQuizQuestion(qid, newQuestion)
-      console.log("this is a new question to write: ", newQuestion);
       setQuestion(newQuestion);
       dispatch(
         updateQuizQuestion(newQuestion)
@@ -99,16 +98,15 @@ export default function EditorSingleQuestion({
       resetQuestion();
     } else {
 
-      const newQuestionToWrite = await client.updateQuizQuestion(qid, { ...question, editing: false })
-      console.log("SECOND NEW QUESTION OBJ: ", newQuestionToWrite);
-
-      dispatch(updateQuizQuestion(newQuestionToWrite));
+      const status = await client.updateQuizQuestion(qid, { ...question, editing: false })
+      setQuestion({ ...question, editing: false });
+      dispatch(updateQuizQuestion({ ...question, editing: false }));
       resetQuestion();
     }
   };
 
   const localCancelEditQuizQuestion = (questionToCancel: any) => {
-    dispatch(cancelEditQuizQuestion(questionToCancel.question_id));
+    dispatch(cancelEditQuizQuestion(questionToCancel._id));
     resetQuestion();
   };
 
@@ -129,7 +127,7 @@ export default function EditorSingleQuestion({
 
             <select
               className="form-select me-3"
-              id="questionType"
+              id={`questionType${question._id}`}
               onChange={() => setQuestionType(question)}
             >
               <option value="multiple">Multiple Choice</option>

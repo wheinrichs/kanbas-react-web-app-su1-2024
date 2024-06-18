@@ -22,7 +22,6 @@ export default function TrueFalseEditor({
   };
 
   useEffect(() => {
-    console.log("using effect");
     setQuestion({ ...question, choices: ["true", "false"] });
   }, []);
 

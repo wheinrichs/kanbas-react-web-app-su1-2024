@@ -21,11 +21,11 @@ const QuizzesSlice = createSlice({
     },
 
     editQuizQuestion: (state, { payload: question_id }) => {
-      state.quiz_questions = state.quiz_questions.map((q: any) => q.question_id === question_id ? {...q, editing: true} : q) as any;
+      state.quiz_questions = state.quiz_questions.map((q: any) => q._id === question_id ? {...q, editing: true} : q) as any;
     },
 
     cancelEditQuizQuestion: (state, { payload: question_id }) => {
-      state.quiz_questions = state.quiz_questions.map((q: any) => q.question_id === question_id ? {...q, editing: false} : q) as any;
+      state.quiz_questions = state.quiz_questions.map((q: any) => q._id === question_id ? {...q, editing: false} : q) as any;
     },
 
     addNewQuestion: (state, { payload: question }) => {
@@ -34,7 +34,7 @@ const QuizzesSlice = createSlice({
     },
 
     updateQuizQuestion: (state, {payload: question}) => {
-      state.quiz_questions = state.quiz_questions.map((q: any) => q.question_id === question.question_id ? {...question} : q) as any;
+      state.quiz_questions = state.quiz_questions.map((q: any) => q._id === question._id ? {...question} : q) as any;
     },
   },
 });

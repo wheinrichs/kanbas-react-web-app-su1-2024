@@ -42,7 +42,6 @@ export default function MultipleChoiceEditor({
       );
     }
   };
-  console.log("answer array is: ", answerArray);
 
   return (
     <div>
