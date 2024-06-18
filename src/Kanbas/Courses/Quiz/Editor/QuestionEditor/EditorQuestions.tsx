@@ -13,7 +13,7 @@ import { FaPencilAlt } from "react-icons/fa";
 
 import EditorSingleQuestion from "./EditorSingleQuestion";
 
-export default function EditorQuestions() {
+export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {newQuestionIDs: any, setNewQuestionIDs: (q: any) => void}) {
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
 
@@ -60,6 +60,7 @@ export default function EditorQuestions() {
 
     // Local add
     dispatch(addNewQuestion(newQuestion));
+    setNewQuestionIDs([...newQuestionIDs, newQuestion._id])
     resetQuestion();
   };
 

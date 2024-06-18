@@ -11,26 +11,8 @@ export default function Editor() {
   const { cid, qid } = useParams();
   const navigate = useNavigate()
   const { pathname } = useLocation();
-  const [currentQuiz, setCurrentQuiz] = useState({
-    // _id: new Date().getTime(),
-    // title: "",
-    // instructions: "",
-    // points: "",
-    // type: "",
-    // assignmentGroup: "",
-    // shuffle: true,
-    // timeLimit: true,
-    // time: "",
-    // attempts: false,
-    // dueDate: "",
-    // availableDate: "",
-    // untilDate: "",
-    // showCorrectAnswers: false,
-    // oneAtATime: true,
-    // webcam: false,
-    // lockAfter: false,
-    // accessCode: ""
-  });
+  const [newQuestionIDs, setNewQuestionIDs] = useState([]);
+  const [currentQuiz, setCurrentQuiz] = useState({});
 
   // Need to pass this state variable to keep track of questions you need to remove if the user clicks cancel
   const [questionsToAdd, setQuestionsToAdd] = useState({});
@@ -42,6 +24,7 @@ export default function Editor() {
   }
 
   const cancelQuizEdit = async () => {
+    newQuestionIDs && newQuestionIDs.map((questionID) => {client.deleteQuizQuestionsByQuestionID(questionID)})
     const response = await client.deleteQuiz(qid);
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   }
@@ -99,7 +82,7 @@ export default function Editor() {
           id="questions_editor"
           role="tabpanel"
         >
-          <EditorQuestions />
+          <EditorQuestions newQuestionIDs={newQuestionIDs} setNewQuestionIDs={setNewQuestionIDs}/>
         </div>
         <hr />
       <button

@@ -11,6 +11,11 @@ export const fetchQuiz = async (qid: any) => {
   return response.data;
 };
 
+export const deleteQuizQuestionsByQuestionID = async ( questionID: any) => {
+  const response = await axios.delete(`${REMOTE_SERVER}/api/questions/${questionID}`);
+  return response.data;
+}
+
 export const deleteQuiz = async (qid: any) => {
   const response = await axios.delete(
     `${REMOTE_SERVER}/api/quizzes/${qid}`

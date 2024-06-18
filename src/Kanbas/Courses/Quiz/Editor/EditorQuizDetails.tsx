@@ -4,16 +4,6 @@ import { useEffect, useState } from "react";
 
 export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz: (q: any) => void}) {
   const { cid, qid } = useParams();
-  // Need to make sure when adding a new quiz that the default values are correct (would involve getting obj from server)
-
-//   const fetchCurrentQuiz = async () => {
-//     const newFetchedQuiz = await client.fetchQuiz(qid);
-//     setQuiz(newFetchedQuiz);
-//   };
-
-//   useEffect(() => {
-//     fetchCurrentQuiz();
-//   }, []);
 
   function formatDate(date: Date) {
     // Get the year, month, and day from the Date object
@@ -94,7 +84,7 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
               onChange={(e) =>
                 setQuiz({ ...quiz, assignment_group: e.target.value })
               }
-              value={quiz.type}
+              value={quiz.assignment_group}
             >
               <option value="quizzes">Quizzes</option>
               <option value="exams">Exams</option>
