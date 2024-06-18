@@ -44,7 +44,6 @@ export default function EditorQuestions() {
   );
 
   const fetchQuizQuestions = async () => {
-    console.log("Fetching");
     // Add database fetch
     const quizQuestionsNew = await client.fetchQuizQuestions(qid);
     // Local set

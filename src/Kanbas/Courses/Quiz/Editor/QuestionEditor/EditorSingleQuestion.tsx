@@ -129,6 +129,7 @@ export default function EditorSingleQuestion({
               className="form-select me-3"
               id={`questionType${question._id}`}
               onChange={() => setQuestionType(question)}
+              value={question.type}
             >
               <option value="multiple">Multiple Choice</option>
               <option value="trueFalse">True False</option>

@@ -35,6 +35,7 @@ export default function TrueFalseEditor({
             <li className="list-group-item">
               <div className="d-flex align-items-center">
                 <input
+                  id={`${question._id}.${qa}`}
                   className="form-check-input me-2"
                   type="checkbox"
                   value={qai}
@@ -43,7 +44,7 @@ export default function TrueFalseEditor({
                     setCorrectAnswer(e, qa);
                   }}
                 ></input>
-                {qa}
+                <label htmlFor={`${question._id}.${qa}`}>{qa}</label>
               </div>
             </li>
           ))}
