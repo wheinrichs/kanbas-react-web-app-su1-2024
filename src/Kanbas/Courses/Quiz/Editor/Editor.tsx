@@ -20,6 +20,12 @@ export default function Editor() {
   const saveLocalAndServerQuiz = async () => {
     const newQuiz = await client.updateQuiz(qid, currentQuiz);
     setCurrentQuiz(newQuiz);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details`);
+  }
+
+  const publishLocalAndServerQuiz = async () => {
+    const newQuiz = await client.updateQuiz(qid, currentQuiz);
+    setCurrentQuiz(newQuiz);
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   }
 
@@ -97,6 +103,15 @@ export default function Editor() {
         onClick={saveLocalAndServerQuiz}
       >
         Save
+      </button>
+
+
+      <button
+        id="save_edit_quiz"
+        className="btn btn-lg btn-danger me-1"
+        onClick={publishLocalAndServerQuiz}
+      >
+        Save & Publish
       </button>
       </div>
     </div>

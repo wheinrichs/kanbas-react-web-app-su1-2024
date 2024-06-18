@@ -17,6 +17,7 @@ import EditorSingleQuestion from "./EditorSingleQuestion";
 export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {newQuestionIDs: any, setNewQuestionIDs: (q: any) => void}) {
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
+  const [points, updatePoints] = useState(0);
 
   const [question, setQuestion] = useState({
     _id: new Date().getTime(),
@@ -74,15 +75,17 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
     const response = await client.deleteQuizQuestionsByQuestionID(questionToDelete._id);
     setNewQuestionIDs(newQuestionIDs.filter((q: any) => q !== questionToDelete._id))
     dispatch(deleteQuizQuestion(questionToDelete._id));
-    
   }
 
+  console.log(points)
   return (
     <div>
+      <h4 className="mt-3" >{`Total Quiz Points: ${points}`}</h4>
+
       <ul className="list-group mt-3">
         {quiz_questions &&
           quiz_questions.map((q: any, i: any) => 
-            q.editing ? <EditorSingleQuestion questionParam={{...q}} resetQuestion={resetQuestion} />
+            q.editing ? <EditorSingleQuestion questionParam={{...q}} resetQuestion={resetQuestion} points={points} setPoints={updatePoints} />
           :  (
             <li className="list-group-item">
               <div className="d-flex flex-row">

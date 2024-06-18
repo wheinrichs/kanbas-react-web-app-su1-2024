@@ -10,9 +10,13 @@ import * as client from "./client"
 export default function EditorSingleQuestion({
   questionParam,
   resetQuestion,
+  points,
+  setPoints,
 }: {
   questionParam: any;
   resetQuestion: () => void;
+  points: any;
+  setPoints: (p: any) => void;
 }) {
   const dispatch = useDispatch();
   // qid is the quiz id
@@ -83,6 +87,7 @@ export default function EditorSingleQuestion({
   };
 
   const updateLocalServerQuestion = async (question: any) => {
+    calculatePointTotals();
     if (arrayCorrectAnswerIndex && question.choices) {
       const newQuestion = {
         ...question, editing: false,
@@ -109,6 +114,15 @@ export default function EditorSingleQuestion({
     dispatch(cancelEditQuizQuestion(questionToCancel._id));
     resetQuestion();
   };
+
+  const calculatePointTotals = () => {
+    if(question.points) {
+      setPoints(parseInt(question.points) + points);
+    }
+    else {
+      setPoints(points);
+    }
+  }
 
   return (
     <div>
@@ -143,6 +157,7 @@ export default function EditorSingleQuestion({
               <input
                 id={`points${question.question_id}`}
                 className="form-control"
+                type="number"
                 value={question.points}
                 onChange={(e) =>
                   setQuestion({ ...question, points: e.target.value })
