@@ -36,8 +36,6 @@ export default function Editor() {
     fetchCurrentQuiz();
   }, []);
 
-  console.log(currentQuiz);
-
   return (
     <div>
       <ul className="nav nav-tabs" id="editor_navigator" role="tablist">

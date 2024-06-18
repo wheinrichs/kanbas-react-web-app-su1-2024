@@ -84,15 +84,17 @@ export default function EditorSingleQuestion({
 
   const updateLocalServerQuestion = async (question: any) => {
     if (arrayCorrectAnswerIndex && question.choices) {
-      const newQuestionToWrite = await client.updateQuizQuestion(qid, {
-        ...question,
+      const newQuestion = {
+        ...question, editing: false,
         answers: question.choices.filter((a: any, ai: any) =>
           arrayCorrectAnswerIndex.includes(ai.toString())
         ),
-      })
-      setQuestion(newQuestionToWrite);
+      }
+      const status = await client.updateQuizQuestion(qid, newQuestion)
+      console.log("this is a new question to write: ", newQuestion);
+      setQuestion(newQuestion);
       dispatch(
-        updateQuizQuestion(newQuestionToWrite)
+        updateQuizQuestion(newQuestion)
       );
       resetQuestion();
     } else {

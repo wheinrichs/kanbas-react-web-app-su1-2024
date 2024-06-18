@@ -11,7 +11,6 @@ import {
 import { useParams } from "react-router";
 import { FaPencilAlt } from "react-icons/fa";
 
-import * as db from "../../../../Database";
 import EditorSingleQuestion from "./EditorSingleQuestion";
 
 export default function EditorQuestions() {
@@ -49,15 +48,8 @@ export default function EditorQuestions() {
     dispatch(setQuizQuestions(quizQuestionsNew));
   };
 
-  const fetchQuizzes = () => {
-    // Add database fetch
-    // dispatch(setQuizzes(quizQuestions));
-    // Local fetch
-  };
-
   useEffect(() => {
     fetchQuizQuestions();
-    fetchQuizzes();
   }, []);
 
   const addNewQuestionLocalServer = async () => {
