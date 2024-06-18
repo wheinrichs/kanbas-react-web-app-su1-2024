@@ -15,8 +15,6 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
     return `${year}-${month}-${day}`;
   }
 
-  console.log(quiz);
-
   return (
     <div>
       <div className="container">
