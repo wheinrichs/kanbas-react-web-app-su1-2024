@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import * as client from "./client"
 import { useDispatch } from "react-redux";
 
+
 export default function Editor() {
   const { cid, qid } = useParams();
   const navigate = useNavigate()
@@ -16,8 +17,13 @@ export default function Editor() {
   const [questionsToAdd, setQuestionsToAdd] = useState({});
 
   const saveLocalAndServerQuiz = async () => {
-    const newQuiz = client.updateQuiz(qid, currentQuiz);
+    const newQuiz = await client.updateQuiz(qid, currentQuiz);
     setCurrentQuiz(newQuiz);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+  }
+
+  const cancelQuizEdit = async () => {
+    const response = await client.deleteQuiz(qid);
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   }
 
@@ -80,6 +86,7 @@ export default function Editor() {
       <button
         id="cancel_edit_quiz"
         className="btn btn-lg btn- me-1 btn-secondary"
+        onClick={() => cancelQuizEdit()}
       >
         Cancel
       </button>
