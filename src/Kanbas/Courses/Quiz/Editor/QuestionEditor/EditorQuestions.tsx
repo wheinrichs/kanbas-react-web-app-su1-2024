@@ -77,7 +77,6 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
     dispatch(deleteQuizQuestion(questionToDelete._id));
   }
 
-  console.log(points)
   return (
     <div>
       <h4 className="mt-3" >{`Total Quiz Points: ${points}`}</h4>

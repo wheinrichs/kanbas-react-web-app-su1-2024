@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { updateQuizQuestion } from "../../reducer";
+import { FaTrash } from "react-icons/fa";
+
 
 export default function MultipleChoiceEditor({
   question,
@@ -43,6 +41,17 @@ export default function MultipleChoiceEditor({
     }
   };
 
+  const removeAnswerOption = (choice: any, choice_index: any) => {
+    if(answerArray.includes(choice_index.toString())) {
+      setAnswerArray(
+        answerArray.filter((ans: any) => ans !== choice_index.toString()) as any
+      );
+    }
+    let newChoices = [];
+    newChoices = question.choices.filter((q: any) => q !== choice);
+    setQuestion({ ...question, choices: newChoices });
+  }
+
   return (
     <div>
       <h3>Answers:</h3>
@@ -69,6 +78,7 @@ export default function MultipleChoiceEditor({
                   }}
                   value={qa}
                 ></input>
+                <FaTrash className="ms-2" onClick={() => removeAnswerOption(qa, qai)}></FaTrash>
               </div>
             </li>
           ))}
