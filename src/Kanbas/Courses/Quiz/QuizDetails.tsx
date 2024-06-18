@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 
 
 export default function QuizDetails() {
-    const { cid, id } = useParams();
+    const { cid, qid } = useParams();
     const [quiz, setQuiz] = useState({});
 
     const fetchCurrentQuiz = async () => {
-        const newFetchedQuiz = await client.fetchQuiz(id);
+        const newFetchedQuiz = await client.fetchQuiz(qid);
         setQuiz(newFetchedQuiz);
       }
     
