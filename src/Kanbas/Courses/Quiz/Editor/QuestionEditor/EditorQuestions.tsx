@@ -15,8 +15,8 @@ import EditorSingleQuestion from "./EditorSingleQuestion";
 
 export default function EditorQuestions() {
   const dispatch = useDispatch();
-  const { cid, qid } = useParams();
-
+  const { cid } = useParams();
+  const qid = "9876";
   const [question, setQuestion] = useState({
     quiz_id: qid,
     question_id: new Date().getTime().toString(),
@@ -48,7 +48,7 @@ export default function EditorQuestions() {
     // Local fetch
     dispatch(
       setQuizQuestions(
-        db.quizQuestionsSample.filter((quiz) => quiz.quiz_id === qid)
+        db.quizQuestionsSample.filter((quizq) => quizq.quiz_id === qid)
       )
     );
   };
@@ -60,6 +60,7 @@ export default function EditorQuestions() {
   };
 
   useEffect(() => {
+    console.log(qid);
     fetchQuizQuestions();
     fetchQuizzes();
   }, []);
