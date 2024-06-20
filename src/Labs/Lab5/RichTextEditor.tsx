@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Editor, EditorState, RichUtils } from "draft-js";
+import { Editor, EditorState, RichUtils, ContentState } from "draft-js";
 import "draft-js/dist/Draft.css";
 import "./RichTextEditor.css"; // Import CSS file for styling
 
-const RichTextEditor: React.FC = () => {
+const RichTextEditor = ({initialData, setter, setterOGObject, propertyToWrite} : {initialData: any, propertyToWrite: any, setterOGObject: any, setter: (data: any) => void}) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+
+  const initialEditorState = EditorState.createWithContent(ContentState.createFromText(initialData));
 
   const handleKeyCommand = (command: string, editorState: EditorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -19,19 +21,14 @@ const RichTextEditor: React.FC = () => {
 
   const onChange = (newEditorState: EditorState) => {
     setEditorState(newEditorState);
+    setter({...setterOGObject, [propertyToWrite]: editorState.getCurrentContent().getPlainText()})
   };
 
   const handleInlineStyle = (style: string) => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, style));
   };
 
-  const getTextFromEditor = () => {
-    const contentState = editorState.getCurrentContent();
-    const plainText = contentState.getPlainText();
-    return plainText;
-  };
-
-  console.log(editorState.getCurrentContent().getPlainText());
+  // console.log(editorState.getCurrentContent().getPlainText());
 
   return (
     <div className="rich-text-editor">
@@ -177,11 +174,6 @@ const RichTextEditor: React.FC = () => {
           handleKeyCommand={handleKeyCommand}
           onChange={onChange}
         />
-      </div>
-      <div>
-        <button onClick={() => console.log(getTextFromEditor())}>
-          Get Text
-        </button>
       </div>
     </div>
   );

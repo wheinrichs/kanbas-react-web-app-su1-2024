@@ -30,7 +30,7 @@ export default function Lab5() {
         <HttpClient />
         <WorkingWithObjectsAsynchronously />
         <WorkingWithArraysAsynchronously />
-        <RichTextEditor />
+        <RichTextEditor setter={()=>{}} initialData={""} setterOGObject={{}} propertyToWrite={""}/>
       </div>
     );
   }

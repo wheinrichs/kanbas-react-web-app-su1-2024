@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router";
 import * as client from "./client";
 import { useEffect, useState } from "react";
+import RichTextEditor from "../../../../Labs/Lab5/RichTextEditor"
 
 export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz: (q: any) => void}) {
   const { cid, qid } = useParams();
@@ -27,12 +28,16 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
           ></input>
         </div>
         <div className="mt-3">Quiz Instructions:</div>
-        <textarea
+        
+        {/* <textarea
           className="form-control mt-1"
           value={quiz.instructions && quiz.instructions}
           placeholder="Enter instructions here"
           onChange={(e) => setQuiz({ ...quiz, instructions: e.target.value })}
-        ></textarea>
+        ></textarea> */}
+        <RichTextEditor initialData={quiz.instructions || ""} setter={setQuiz} setterOGObject={quiz} propertyToWrite={"instructions"}/>
+
+
 
         <div className="row mt-5 align-items-center">
           <label htmlFor={`quizType${quiz._id}`} className="col-3 text-end">

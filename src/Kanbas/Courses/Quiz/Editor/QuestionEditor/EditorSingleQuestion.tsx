@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import TrueFalseEditor from "./TrueFalseEditor";
 import FillInBlank from "./FillInBlank";
 import * as client from "./client"
+import RichTextEditor from "../../../../../Labs/Lab5/RichTextEditor";
 
 export default function EditorSingleQuestion({
   questionParam,
@@ -171,7 +172,7 @@ export default function EditorSingleQuestion({
           <label htmlFor="questionTextAreaID">
             <h4>Question</h4>
           </label>
-          <textarea
+          {/* <textarea
             id="questionTextAreaID"
             className="form-control"
             rows={7}
@@ -180,7 +181,8 @@ export default function EditorSingleQuestion({
             onChange={(e) =>
               setQuestion({ ...question, question: e.target.value })
             }
-          ></textarea>
+          ></textarea> */}
+          <RichTextEditor initialData={question.question || ""} setter={setQuestion} setterOGObject={question} propertyToWrite={"question"}/>
         </div>
         {conditionalQuestionRendering()}
         <div className="mt-3">
