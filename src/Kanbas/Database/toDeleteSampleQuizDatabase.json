@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "9876",
+    "title": "Sample title",
+    "total_points": "15",
+    "courseID": "12345",
+    "available_date": "1/28/2024 11:00 PM",
+    "due_date": "1/31/2024 11:00 PM"
+  },
+  {
+    "_id": "1234",
+    "title": "Sample title 2",
+    "total_points": "60",
+    "courseID": "12345",
+    "available_date": "1/28/2024 11:00 PM",
+    "due_date": "1/31/2024 11:00 PM"
+  }
+]

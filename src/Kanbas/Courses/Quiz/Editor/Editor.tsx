@@ -1,11 +1,48 @@
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import EditorQuizDetails from "./EditorQuizDetails";
 import EditorQuestions from "./QuestionEditor/EditorQuestions";
+import { useEffect, useState } from "react";
+import * as client from "./client"
+import { useDispatch } from "react-redux";
+
 
 export default function Editor() {
   const { cid, qid } = useParams();
+  const navigate = useNavigate()
   const { pathname } = useLocation();
+  const [newQuestionIDs, setNewQuestionIDs] = useState([]);
+  const [currentQuiz, setCurrentQuiz] = useState({});
+
+  // Need to pass this state variable to keep track of questions you need to remove if the user clicks cancel
+  const [questionsToAdd, setQuestionsToAdd] = useState({});
+
+  const saveLocalAndServerQuiz = async () => {
+    const newQuiz = await client.updateQuiz(qid, currentQuiz);
+    setCurrentQuiz(newQuiz);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details`);
+  }
+
+  const publishLocalAndServerQuiz = async () => {
+    const newQuiz = await client.updateQuiz(qid, currentQuiz);
+    setCurrentQuiz(newQuiz);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+  }
+
+  const cancelQuizEdit = async () => {
+    newQuestionIDs && newQuestionIDs.map((questionID) => {client.deleteQuizQuestionsByQuestionID(questionID)})
+    const response = await client.deleteQuiz(qid);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+  }
+
+  const fetchCurrentQuiz = async () => {
+    const newFetchedQuiz = await client.fetchQuiz(qid);
+    setCurrentQuiz(newFetchedQuiz);
+  }
+
+  useEffect(() => {
+    fetchCurrentQuiz();
+  }, []);
 
   return (
     <div>
@@ -42,19 +79,20 @@ export default function Editor() {
           id="details_editor"
           role="tabpanel"
         >
-          <EditorQuizDetails />
+          <EditorQuizDetails quiz={currentQuiz} setQuiz={setCurrentQuiz}/>
         </div>
         <div
           className="tab-pane fade"
           id="questions_editor"
           role="tabpanel"
         >
-          <EditorQuestions />
+          <EditorQuestions newQuestionIDs={newQuestionIDs} setNewQuestionIDs={setNewQuestionIDs}/>
         </div>
         <hr />
       <button
         id="cancel_edit_quiz"
         className="btn btn-lg btn- me-1 btn-secondary"
+        onClick={() => cancelQuizEdit()}
       >
         Cancel
       </button>
@@ -62,8 +100,18 @@ export default function Editor() {
       <button
         id="save_edit_quiz"
         className="btn btn-lg btn-danger me-1"
+        onClick={saveLocalAndServerQuiz}
       >
         Save
+      </button>
+
+
+      <button
+        id="save_edit_quiz"
+        className="btn btn-lg btn-danger me-1"
+        onClick={publishLocalAndServerQuiz}
+      >
+        Save & Publish
       </button>
       </div>
     </div>

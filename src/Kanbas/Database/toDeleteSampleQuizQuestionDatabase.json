@@ -1,7 +1,7 @@
 [
   {
     "quiz_id" : "9876",
-    "question_id": "421234",
+    "_id": "421234",
     "type": "multiple",
     "title": "Sample title",
     "points": "15",
@@ -11,7 +11,27 @@
   }, 
   {
     "quiz_id" : "9876",
-    "question_id": "123",
+    "_id": "421233",
+    "type": "fillIn",
+    "title": "Sample title",
+    "points": "15",
+    "question": "What is the time?",
+    "choices": [["eleven", "11"], ["two"], ["three", "3"]],
+    "answers": [["eleven", "11"], ["two"], ["three", "3"]]
+  }, 
+  {
+    "quiz_id" : "9876",
+    "_id": "421232",
+    "type": "trueFalse",
+    "title": "Sample title",
+    "points": "15",
+    "question": "What is the time?",
+    "choices": ["true", "false"],
+    "answers": ["true"]
+  }, 
+  {
+    "quiz_id" : "9876",
+    "_id": "123",
     "type": "multiple",
     "title": "Second title",
     "points": "35",
@@ -22,7 +42,7 @@
   }, 
   {
     "quiz_id" : "9876",
-    "question_id": "45678",
+    "_id": "45678",
     "type": "multiple",
     "title": "Third title",
     "points": "90",
@@ -33,7 +53,7 @@
   },
   {
     "quiz_id" : "8726",
-    "question_id": "4668732",
+    "_id": "4668732",
     "type": "multiple",
     "title": "This is for a different quiz",
     "points": "10000",

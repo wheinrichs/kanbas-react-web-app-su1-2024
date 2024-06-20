@@ -5,6 +5,7 @@ import WorkingWithObjects from "./WorkingWithObjects";
 import WorkingWithObjectsModule from "./WorkingWithObjectsModule";
 import WorkingWithArrays from "./WorkingWithArrays";
 import HttpClient from "./HttpClient";
+import RichTextEditor from "./RichTextEditor";
 import WorkingWithObjectsAsynchronously from "./WorkingWithObjectsAsynchronously";
 import WorkingWithArraysAsynchronously from "./WorkingWithArraysAsynchronously";
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
@@ -29,6 +30,7 @@ export default function Lab5() {
         <HttpClient />
         <WorkingWithObjectsAsynchronously />
         <WorkingWithArraysAsynchronously />
+        <RichTextEditor setter={()=>{}} initialData={""} setterOGObject={{}} propertyToWrite={""}/>
       </div>
     );
   }

@@ -1,25 +1,20 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
-import { updateQuizQuestion } from "../../reducer";
+import { FaTrash } from "react-icons/fa";
 
-export default function MultipleChoiceEditor( { question, setQuestion } : { question: any, setQuestion: (question: any) => void }) {
-  const dispatch = useDispatch();
-  const { cid, qid } = useParams();
 
-  const { quiz_questions, quizzes } = useSelector(
-    (state: any) => state.quizReducer
-  );
-
-  // const [question, setQuestion] = useState({
-  //   ...quiz_questions.find((q: any) => q.question_id === question.question_id),
-  // });
-
+export default function MultipleChoiceEditor({
+  question,
+  setQuestion,
+  answerArray,
+  setAnswerArray,
+}: {
+  question: any;
+  setQuestion: (question: any) => void;
+  answerArray: any;
+  setAnswerArray: (answeArrayr: any) => void;
+}) {
   const addNewAnswer = () => {
     let newChoices = [];
     if (question.choices) {
-      console.log("on second");
-
       newChoices = [...question.choices, ""];
     } else {
       newChoices = [""];
@@ -36,26 +31,38 @@ export default function MultipleChoiceEditor( { question, setQuestion } : { ques
     });
   };
 
-  const toggleCorrectAnswer = (answer: any) => {
-    if (question.answers === undefined) {
-      setQuestion({
-        ...question,
-        answers: [answer],
-      });
-    } else if (question.answers.includes(answer)) {
-
-      setQuestion({
-        ...question,
-        answers: question.answers.filter((i: any) => i !== answer),
-      });
-
+  const setCorrectAnswer = (e: any, a: any) => {
+    if (e.target.checked) {
+      setAnswerArray([...answerArray, e.target.value] as any);
     } else {
-      setQuestion({
-        ...question,
-        answers: [...question.answers, answer],
-      });
+      setAnswerArray(
+        answerArray.filter((ans: any) => ans !== e.target.value) as any
+      );
     }
   };
+
+  const removeAnswerOption = (choice: any, choice_index: any) => {
+    // If you remove an answer from the list and it shifts all the indexes the answer array is wrong
+    if(answerArray.includes(choice_index.toString())) {
+      const tempAnswers = question.choices.filter((choice: any, choiceIndex: any) => answerArray.includes(choiceIndex.toString()));
+      const tempAnswerArray = [] as any;
+      let newChoices = [];
+      newChoices = question.choices.filter((q: any) => q !== choice);
+      setQuestion({ ...question, choices: newChoices });
+
+      for(let i = 0; i < newChoices.length; i++) {
+        if(tempAnswers.includes(newChoices[i])){
+          tempAnswerArray.push(i.toString());
+        }
+      }
+      setAnswerArray(tempAnswerArray);
+    }
+    else{
+      let newChoices = [];
+      newChoices = question.choices.filter((q: any) => q !== choice);
+      setQuestion({ ...question, choices: newChoices });
+    }
+  }
 
   return (
     <div>
@@ -69,14 +76,13 @@ export default function MultipleChoiceEditor( { question, setQuestion } : { ques
                 <input
                   className="form-check-input me-2"
                   type="checkbox"
-
-                  checked={question.answers && question.answers.includes(qa)}                  
-                  onChange={() => {
-                    toggleCorrectAnswer(qa);
+                  value={qai}
+                  checked={answerArray.includes(qai.toString())}
+                  onClick={(e) => {
+                    setCorrectAnswer(e, qa);
                   }}
                 ></input>
 
-                {/* THERE IS AN ISSUE WHERE AFTER YOU TYPE THE CHECKMARK COMES UNDONE */}
                 <input
                   className="form-control"
                   onChange={(e) => {
@@ -84,6 +90,7 @@ export default function MultipleChoiceEditor( { question, setQuestion } : { ques
                   }}
                   value={qa}
                 ></input>
+                <FaTrash className="ms-2" onClick={() => removeAnswerOption(qa, qai)}></FaTrash>
               </div>
             </li>
           ))}

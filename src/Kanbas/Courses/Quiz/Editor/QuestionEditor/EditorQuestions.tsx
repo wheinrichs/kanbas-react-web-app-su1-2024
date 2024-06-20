@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as client from "./client";
 import {
   addNewQuestion,
   cancelEditQuizQuestion,
+  deleteQuizQuestion,
   editQuizQuestion,
   setQuizQuestions,
   updateQuizQuestion,
 } from "../../reducer";
 import { useParams } from "react-router";
-import { FaPencilAlt } from "react-icons/fa";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
-import * as db from "../../../../Database";
 import EditorSingleQuestion from "./EditorSingleQuestion";
 
-export default function EditorQuestions() {
+export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {newQuestionIDs: any, setNewQuestionIDs: (q: any) => void}) {
   const dispatch = useDispatch();
-  const { cid } = useParams();
-  const qid = "9876";
+  const { cid, qid } = useParams();
+  const [points, updatePoints] = useState(0);
+
   const [question, setQuestion] = useState({
-    quiz_id: qid,
-    question_id: new Date().getTime().toString(),
+    _id: new Date().getTime(),
+    quizID: qid,
     type: "multiple",
     title: "",
     points: "",
@@ -29,8 +31,8 @@ export default function EditorQuestions() {
 
   const resetQuestion = () => {
     setQuestion({
-      quiz_id: qid,
-      question_id: new Date().getTime().toString(),
+      _id: new Date().getTime(),
+      quizID: qid,
       type: "multiple",
       title: "",
       points: "",
@@ -43,49 +45,49 @@ export default function EditorQuestions() {
     (state: any) => state.quizReducer
   );
 
-  const fetchQuizQuestions = () => {
+  const fetchQuizQuestions = async () => {
     // Add database fetch
-    // Local fetch
-    dispatch(
-      setQuizQuestions(
-        db.quizQuestionsSample.filter((quizq) => quizq.quiz_id === qid)
-      )
-    );
-  };
-
-  const fetchQuizzes = () => {
-    // Add database fetch
-    // dispatch(setQuizzes(quizQuestions));
-    // Local fetch
+    const quizQuestionsNew = await client.fetchQuizQuestions(qid);
+    // Local set
+    dispatch(setQuizQuestions(quizQuestionsNew));
   };
 
   useEffect(() => {
     console.log(qid);
     fetchQuizQuestions();
-    fetchQuizzes();
   }, []);
 
-  const addNewQuestionLocalServer = () => {
-    // Create a new ID for the question
-    // Add database add new question
+  const addNewQuestionLocalServer = async () => {
+    // DB add
+    const newQuestion = await client.addNeWQuizQuestion(cid, question)
+
     // Local add
-    dispatch(addNewQuestion({ ...question }));
+    dispatch(addNewQuestion(newQuestion));
+    setNewQuestionIDs([...newQuestionIDs, newQuestion._id])
     resetQuestion();
   };
 
   const editExistingQuestion = (questionToEdit: any) => {
     setQuestion({ ...questionToEdit });
-    dispatch(editQuizQuestion(questionToEdit.question_id));
+    dispatch(editQuizQuestion(questionToEdit._id));
   };
 
-  console.log(quiz_questions);
+  const deleteExistingQuestion = async (questionToDelete: any) => {
+    const response = await client.deleteQuizQuestionsByQuestionID(questionToDelete._id);
+    setNewQuestionIDs(newQuestionIDs.filter((q: any) => q !== questionToDelete._id))
+    dispatch(deleteQuizQuestion(questionToDelete._id));
+  }
+
+  console.log("Current questions are: ", quiz_questions);
 
   return (
     <div>
+      <h4 className="mt-3" >{`Total Quiz Points: ${points}`}</h4>
+
       <ul className="list-group mt-3">
         {quiz_questions &&
           quiz_questions.map((q: any, i: any) => 
-            q.editing ? <EditorSingleQuestion {...q} />
+            q.editing ? <EditorSingleQuestion questionParam={{...q}} resetQuestion={resetQuestion} points={points} setPoints={updatePoints} />
           :  (
             <li className="list-group-item">
               <div className="d-flex flex-row">
@@ -95,6 +97,7 @@ export default function EditorQuestions() {
                 </div>
                 <div className="align-self-center">
                   <FaPencilAlt onClick={() => editExistingQuestion(q)} />
+                    <FaTrash className="ms-3" onClick={() => deleteExistingQuestion(q)} />
                 </div>
               </div>
             </li>

@@ -35,9 +35,13 @@ export default function Modules() {
   };
 
   const saveModule = async (module: any) => {
-    const status = await client.updateModule(module);
     dispatch(updateModule(module));
   };
+
+  const updateModuleServer = async (module: any) => {
+    const status = await client.updateModule(module);
+    dispatch(updateModule(module));
+  }
 
   return (
     <div>
@@ -68,7 +72,7 @@ export default function Modules() {
                       }
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          saveModule({ ...module, editing: false });
+                          updateModuleServer({ ...module, editing: false });
                         }
                       }}
                       value={module.name}
