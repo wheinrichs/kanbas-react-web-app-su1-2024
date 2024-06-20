@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Editor, EditorState, RichUtils, ContentState } from "draft-js";
 import "draft-js/dist/Draft.css";
 import "./RichTextEditor.css"; // Import CSS file for styling
 
-const RichTextEditor = ({initialData, setter, setterOGObject, propertyToWrite} : {initialData: any, propertyToWrite: any, setterOGObject: any, setter: (data: any) => void}) => {
+const RichTextEditor = ({
+  initialData,
+  setter,
+  setterOGObject,
+  propertyToWrite,
+}: {
+  initialData: any;
+  propertyToWrite: any;
+  setterOGObject: any;
+  setter: (data: any) => void;
+}) => {
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
+    EditorState.createWithContent(ContentState.createFromText(initialData))
   );
 
-  const initialEditorState = EditorState.createWithContent(ContentState.createFromText(initialData));
+  const editorRef = useRef<Editor>(null); // Use useRef with Editor type
+
+  useEffect(() => {
+    // Focus the editor when the component mounts
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  }, []);
 
   const handleKeyCommand = (command: string, editorState: EditorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -21,17 +38,22 @@ const RichTextEditor = ({initialData, setter, setterOGObject, propertyToWrite} :
 
   const onChange = (newEditorState: EditorState) => {
     setEditorState(newEditorState);
-    setter({...setterOGObject, [propertyToWrite]: editorState.getCurrentContent().getPlainText()})
+    const contentState = newEditorState.getCurrentContent();
+    setter({ ...setterOGObject, [propertyToWrite]: contentState.getPlainText() });
   };
 
   const handleInlineStyle = (style: string) => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, style));
   };
 
-  // console.log(editorState.getCurrentContent().getPlainText());
+  const focusEditor = () => {
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  };
 
   return (
-    <div className="rich-text-editor">
+    <div className="rich-text-editor" onClick={focusEditor}>
       <div className="editor-toolbar">
         <button
           className="toolbar-button"
@@ -73,7 +95,7 @@ const RichTextEditor = ({initialData, setter, setterOGObject, propertyToWrite} :
           className="toolbar-button"
           onMouseDown={(e) => {
             e.preventDefault();
-            handleInlineStyle("MONOSPACE");
+            handleInlineStyle("CODE");
           }}
         >
           Monospace
@@ -166,10 +188,10 @@ const RichTextEditor = ({initialData, setter, setterOGObject, propertyToWrite} :
         >
           H6
         </button>
-        {/* Add more buttons for other formatting options */}
       </div>
-      <div className="editor-content">
+      <div className="editor-content" onClick={focusEditor}>
         <Editor
+          ref={editorRef}
           editorState={editorState}
           handleKeyCommand={handleKeyCommand}
           onChange={onChange}
