@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { addQuiz, setQuizzes } from "./reducer";
 import * as client from "./client";
 import { useEffect, useState } from "react";
+import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
 
 
 export default function Quizzes() {
@@ -48,6 +49,7 @@ export default function Quizzes() {
         >
           + Quiz
         </button>
+        <SampleInteractQuizGrade />
       </div>
     </div>
   );
