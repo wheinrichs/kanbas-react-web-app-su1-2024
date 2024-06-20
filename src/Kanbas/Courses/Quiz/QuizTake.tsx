@@ -3,6 +3,8 @@ import { useLocation, useParams } from "react-router";
 import * as db from "../../Database";
 import { setQuizQuestions } from "./reducer";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FaPencil } from "react-icons/fa6";
 
 export default function QuizTake() {
   const dispatch = useDispatch();
@@ -115,9 +117,7 @@ export default function QuizTake() {
   return (
     <div>
       <h1>
-        <b>
-          Quiz Title! Quiz ID: {qid} Quiz Title: {currentQuestion.title}
-        </b>
+        <b>{currentQuestion.title}</b>
       </h1>
       {/* TODO: add icons, like exclamation point logo, for style */}
       <div
@@ -153,7 +153,7 @@ export default function QuizTake() {
           }}
         >
           <h3>
-            <b>Question {currentQuestionNumber}</b>
+            <b>Question {currentQuestionNumber + 1}</b>
           </h3>
 
           <h4>{currentQuestion.points} pts</h4>
@@ -275,7 +275,10 @@ export default function QuizTake() {
           marginTop: "25px",
         }}
       >
-        Keep Editing This Quiz
+       <Link to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
+       style={{ color: "inherit", textDecoration: "none" }}>
+       <FaPencil></FaPencil> Keep Editing This Quiz
+       </Link>
       </div>
       <br></br>
       <h3>Questions</h3>
@@ -287,8 +290,20 @@ export default function QuizTake() {
             fontWeight: "bold",
           }}
         >
-          {/* // TODO: MAP LINKS HERE TO ALL THE QUESTIONS */}
-          Question 1{" "}
+          {quiz_questions.map((q: any, i: number) => (
+            <div style={{ marginLeft: "10px" }}>
+              <button
+                style={{
+                  border: "1px solid rgb(255, 255, 255)",
+                  backgroundColor: "rgb(255, 255, 255)",
+                }}
+                className = "text-danger"
+                onClick={() => setCurrentQuestionNumber(i)}
+              >
+                <b>Question {i + 1}</b>
+              </button>
+            </div>
+          ))}
         </span>
       </div>
     </div>
