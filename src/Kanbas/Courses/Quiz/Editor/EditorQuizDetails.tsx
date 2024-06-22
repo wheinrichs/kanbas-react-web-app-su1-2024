@@ -1,9 +1,15 @@
 import { useLocation, useNavigate, useParams } from "react-router";
 import * as client from "./client";
 import { useEffect, useState } from "react";
-import RichTextEditor from "../../../../Labs/Lab5/RichTextEditor"
+import RichTextEditor from "../../../../Labs/Lab5/RichTextEditor";
 
-export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz: (q: any) => void}) {
+export default function EditorQuizDetails({
+  quiz,
+  setQuiz,
+}: {
+  quiz: any;
+  setQuiz: (q: any) => void;
+}) {
   const { cid, qid } = useParams();
 
   function formatDate(date: Date) {
@@ -28,16 +34,19 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
           ></input>
         </div>
         <div className="mt-3">Quiz Instructions:</div>
-        
+
         {/* <textarea
           className="form-control mt-1"
           value={quiz.instructions && quiz.instructions}
           placeholder="Enter instructions here"
           onChange={(e) => setQuiz({ ...quiz, instructions: e.target.value })}
         ></textarea> */}
-        <RichTextEditor initialData={quiz.instructions || ""} setter={setQuiz} setterOGObject={quiz} propertyToWrite={"instructions"}/>
-
-
+        <RichTextEditor
+          initialData={quiz.instructions || ""}
+          setter={setQuiz}
+          setterOGObject={quiz}
+          propertyToWrite={"instructions"}
+        />
 
         <div className="row mt-5 align-items-center">
           <label htmlFor={`quizType${quiz._id}`} className="col-3 text-end">
@@ -63,13 +72,13 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
             Points:
           </label>
           <div className="col-9">
-          <input
-            className="form-control"
-            id={`points${quiz._id}`}
-            value={quiz.points && quiz.points}
-            placeholder="Enter point total here"
-            onChange={(e) => setQuiz({ ...quiz, points: e.target.value })}
-          ></input>{" "}
+            <input
+              className="form-control"
+              id={`points${quiz._id}`}
+              value={quiz.points && quiz.points}
+              placeholder="Enter point total here"
+              onChange={(e) => setQuiz({ ...quiz, points: e.target.value })}
+            ></input>{" "}
           </div>
         </div>
 
@@ -136,7 +145,10 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
                 setQuiz({ ...quiz, show_correct_answers: e.target.checked })
               }
             ></input>
-            <label className="form-check-label" htmlFor={`showCorrect${quiz._id}`}>
+            <label
+              className="form-check-label"
+              htmlFor={`showCorrect${quiz._id}`}
+            >
               Show Correct Answers After Answering
             </label>
             <br />
@@ -282,13 +294,15 @@ export default function EditorQuizDetails({quiz, setQuiz} : {quiz: any, setQuiz:
             Access Code:
           </label>
           <div className="col-9">
-          <input
-            className="form-control"
-            id={`accessCode${quiz._id}`}
-            value={quiz.access_code && quiz.access_code}
-            placeholder="Enter an access code"
-            onChange={(e) => setQuiz({ ...quiz, access_code: e.target.value })}
-          ></input>{" "}
+            <input
+              className="form-control"
+              id={`accessCode${quiz._id}`}
+              value={quiz.access_code && quiz.access_code}
+              placeholder="Enter an access code"
+              onChange={(e) =>
+                setQuiz({ ...quiz, access_code: e.target.value })
+              }
+            ></input>{" "}
           </div>
         </div>
       </div>
