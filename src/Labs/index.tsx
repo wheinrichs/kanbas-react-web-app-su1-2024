@@ -9,6 +9,7 @@ import Exam from "./Exam";
 
 import { Provider } from "react-redux";
 import store from "./store";
+import FinalProjectLanding from "./FinalProjectLanding";
 
 export default function Labs() {
   return (
@@ -25,7 +26,7 @@ export default function Labs() {
           <Route path="/Lab3/*" element={<Lab3 />} />
           <Route path="/Lab4/*" element={<Lab4 />} />
           <Route path="/Lab5/*" element={<Lab5 />} />
-
+          <Route path="/FinalProjectLanding/*" element={<FinalProjectLanding />} />
           <Route path="/Exam/*" element={<Exam />} /> 
         </Routes>
       </div>
