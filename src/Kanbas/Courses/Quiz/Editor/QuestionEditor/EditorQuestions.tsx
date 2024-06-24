@@ -53,6 +53,7 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
   };
 
   useEffect(() => {
+    console.log(qid);
     fetchQuizQuestions();
   }, []);
 
