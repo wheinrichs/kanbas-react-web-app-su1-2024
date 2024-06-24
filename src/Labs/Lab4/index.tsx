@@ -1,35 +1,38 @@
-import ArrayStateVariable from "./ArrayStateVariable";
-import BooleanStateVariables from "./BooleanStateVariables";
 import ClickEvent from "./ClickEvent";
-import Counter from "./Counter";
-import DateStateVariable from "./DateStateVariable";
-import EventObject from "./EventObject";
-import ObjectStateVariable from "./ObjectStateVariables";
-import ParentStateComponent from "./ParentStateComponent";
 import PassingDataOnEvent from "./PassingDataOnEvent";
 import PassingFunctions from "./PassingFunctions";
-import ReduxExamples from "./ReduxExamples";
+import EventObject from "./EventObject";
+import Counter from "./Counter";
+import BooleanStateVariables from "./BooLeanStateVariables";
 import StringStateVariables from "./StringStateVariables";
+import DateStateVariable from "./DateStateVariable";
+import ObjectStateVariable from "./ObjectStateVariable";
+import ArrayStateVariable from "./ArrayStateVariable";
+import ParentStateComponent from "./ParentStateComponent";
+import ReduxExamples from "./ReduceExamples";
+import TodoList from "./ReduceExamples/todos/TodoList";
 
 export default function Lab4() {
-    function sayHello() {
-        alert("Hello");
-    }
+  function sayHello() {
+    alert("Hello");
+  }
   return (
-    <div>
-      <h1>Lab 4</h1>
-      <ClickEvent />
-      <PassingDataOnEvent />
+    <div id="wd-passing-functions">
+      <h2>Lab 4</h2>
+      <ClickEvent/>
+      <PassingDataOnEvent/>
       <PassingFunctions theFunction={sayHello} />
-      <EventObject />
-      <Counter />
-      <BooleanStateVariables />
-      <StringStateVariables />
-      <DateStateVariable />
-      <ObjectStateVariable />
-      <ArrayStateVariable />
-      <ParentStateComponent />
-      <ReduxExamples />
+      <EventObject/>
+      <Counter/>
+      <BooleanStateVariables/>
+      <StringStateVariables/>
+      <DateStateVariable/>
+      <ObjectStateVariable/>
+      <ArrayStateVariable/>
+      <ParentStateComponent/>
+      <ReduxExamples/>
+      <TodoList/>
+
     </div>
   );
 }

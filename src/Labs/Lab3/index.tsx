@@ -1,103 +1,81 @@
-import Add from "./Add";
-import AddingAndRemovingToFromArrays from "./AddingAndRemovingToFromArrays";
-import ArrayIndexAndLength from "./ArrayIndexAndLength";
-import ArrowFunctions from "./ArrowFunctions";
-import BooleanVariables from "./BooleanVariables";
-import Square from "./Children/Square";
-import Highlight from "./Children/Highlight";
-import Classes from "./Classes/Classes";
-import ConditionalOutputInline from "./ConditionalOuputInLine";
-import ConditionalOutputIfElse from "./ConditionalOutputIfElse";
-import Destructing from "./Destructing";
-import DestructingImports from "./DestructingImports";
-import FilterFunction from "./FilterFunction";
-import FindFunction from "./FindFunction";
-import FindIndex from "./FindIndex";
-import ForLoops from "./ForLoops";
-import FunctionDestructing from "./FunctionDestructuring";
-import House from "./House";
-import IfElse from "./IfElse";
-import ImpliedReturn from "./ImpliedReturn";
-import JsonStringify from "./JsonStringify";
-import LegacyFunctions from "./LegacyFunctions";
-import MapFunction from "./MapFunction";
-import SimpleArrays from "./SimpleArrays";
-import Spreading from "./Spreading";
-import Styles from "./Styles";
-import TemplateLiterals from "./TemplateLiterals";
-import TernaryOperator from "./TernaryOperator";
-import VariableTypes from "./VariableTypes";
 import VariablesAndConstants from "./VariablesAndConstants";
-import "./index.css";
-import TodoItem from "./todo/ToDoItem";
-import TodoList from "./todo/TodoList";
-import PathParameters from "./PathParameters/PathParameters";
-import { useSelector } from "react-redux";
-
+import VariableTypes from "./VariableTypes";
+import MyComponent from "./BooleanVariables";
+import IfElse from "./IfElse";
+import Ternary from "./TernaryOperator";
+import ConditionalOutputIfElse from "./ConditionalOutputIfElse";
+import ConditionalOutputInline from "./ConditionalOutputInLine";
+import LegacyFunctions from "./LegacyFunctions";
+import ArrowFunctions from "./ArrowFunctions";
+import Implied from "./ImpliedReturn";
+import TemplateLiterals from "./TemplateLiterals";
+import SimpleArrays from "./SimpleArrays";
+import ArrayIndexAndLength from "./ArrayIndexAndLength";
+import AddingAndRemovingToFromArrays from "./AddingAndRemovingToFromArrays";
+import ForLoops from "./ForLoops";
+import MapFunction from "./MapFunction";
+import FindFunction from "./FindFunction";
+import ArraysComponent from "./FindIndex";
+import FilterFunction from "./FilterFunction";
+import JsonStringify from "./JsonStringify";
+import House from "./House";
+import TodoList from "./todos/TodoList";
+import Spreading from "./Spreading";
+import Destructing from "./Destructing";
+import FunctionDestructing from "./FunctionDestructing";
+import DestructingImports from "./DestructingImports";
+import Classes from "./Classes";
+import Styles from "./Styles";
+import Add from "./Add";
+import Square from "./Square";
+import Highlight from "./HighLight";
+import PathParameters from "./PathParameters";
 
 export default function Lab3() {
-  console.log('Hello World!');
-  const { todos } = useSelector((state: any) => state.todosReducer);
-
-  return (
-    <div id="wd-lab3">
-      <h2>Lab 3</h2>
-      <VariablesAndConstants />
-      <VariableTypes />
-      <BooleanVariables />
-      <IfElse />
-      <TernaryOperator />
-      <ConditionalOutputIfElse />
-      <ConditionalOutputInline />
-      <LegacyFunctions />
-      <ArrowFunctions />
-      <ImpliedReturn />
-      <TemplateLiterals />
-      <SimpleArrays />
-      <ArrayIndexAndLength />
-      <AddingAndRemovingToFromArrays />
-      <ForLoops />
-      <MapFunction />
-      <FindFunction />
-      <FindIndex />
-      <FilterFunction />
-      <JsonStringify />
-      <House />
-      <TodoItem />
-      <TodoList />
-      <Spreading />
-      <Destructing />
-      <FunctionDestructing />
-      <DestructingImports />
-      <Classes />
-      <Styles />
-      <Add a={3} b={4} />
-      <div>
+    console.log("Hello World");
+    return (
+      <div id="wd-lab3" className="container-fluid">
+        <h3>Lab 3</h3>
+        <VariablesAndConstants/>
+        <VariableTypes/>
+        <MyComponent/>
+        <IfElse/>
+        <Ternary/>
+        <ConditionalOutputIfElse/>
+        <ConditionalOutputInline/>
+        <LegacyFunctions/>
+        <ArrowFunctions/>
+        <Implied/>
+        <TemplateLiterals/>
+        <SimpleArrays/>
+        <ArrayIndexAndLength/>
+        <AddingAndRemovingToFromArrays/>
+        <ForLoops/>
+        <MapFunction/>
+        <FindFunction/>
+        <ArraysComponent/>
+        <FilterFunction/>
+        <JsonStringify/>
+        <House/>
+        <TodoList/>
+        <Spreading/>
+        <Destructing/>
+        <FunctionDestructing/>
+        <DestructingImports/>
+        <Classes/>
+        <Styles/>
+        <Add a={3} b={4} />
         <h4>Square of 4</h4>
         <Square>4</Square>
         <hr />
-      </div>
-
-      <div>
         <Highlight>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Suscipitratione eaque illo minus cum, saepe totam vel nihil repellat
-          nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores,
-          provident voluptates.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipitratione eaque illo minus cum, saepe totam
+          vel nihil repellat nemo explicabo excepturi consectetur. Modi omnis minus sequi maiores, provident voluptates.
         </Highlight>
-        <hr/>
+        <PathParameters/>
+
+
       </div>
-
-      <PathParameters />
-
-      <ul className="list-group">
-        {todos.map((todo: any) => (
-          <li className="list-group-item" key={todo.id}>
-            {todo.title}
-          </li>
-        ))}
-      </ul>
-      <hr />
-    </div>
-  );
-}
+    );
+  }
+  

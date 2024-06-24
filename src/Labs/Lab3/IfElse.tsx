@@ -1,14 +1,16 @@
-export default function IfElse() {
-    let true1 = true, false1 = false;
+import React from 'react';
 
-    return(
-       <div id="wd-if-else">
-          <h4>If Else</h4>
-          { true1 && <p>true1</p> }
-          { !false1 ? <p>!false1</p> : <p>false1</p> }
-          <hr />
+const IfElse = () => {
+  let true1 = true, false1 = false;
 
-       </div>
-    )
-   
+  return (
+    <div id="wd-if-else">
+      <h4>If Else</h4>
+      {true1 && <p>true1</p>}
+      {!false1 ? <p>!false1</p> : <p>false1</p>}
+      <hr />
+    </div>
+  );
 }
+
+export default IfElse;

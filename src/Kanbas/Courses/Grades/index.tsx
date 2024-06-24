@@ -1,107 +1,55 @@
-import { CiImport, CiExport } from "react-icons/ci";
-import { FaGear } from "react-icons/fa6";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { CiFilter } from "react-icons/ci";
-import GradeTable from "./GradeTable";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { enrollments, users, assignments, grades } from '../../Database';
+import { FaFileImport,FaFileExport,FaCog } from 'react-icons/fa';
+
 
 export default function Grades() {
+  const { cid } = useParams();
+
+  // Filter students enrolled in the current course
+  const courseStudents = enrollments
+    .filter((enrollment) => enrollment.course === cid)
+    .map((enrollment) => users.find((user) => user.id === enrollment.user));
+
   return (
-    <div>
-      <div className="d-flex flex-row justify-content-end">
-        <div>
-          <button className="btn btn-light rounded-1 border border-grey d-flex align-items-center me-2">
-            <CiImport className="fs-5 me-2" />
-            Import
-          </button>
-        </div>
-
-        <div className="dropdown">
-          <button
-            className="btn btn-light rounded-1 border border-grey d-flex align-items-center me-2 dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown"
-          >
-            <CiExport className="fs-5 me-2" />
-            Export
-          </button>
-          <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a className="dropdown-item" href="#">
-              Action
-            </a>
-            <a className="dropdown-item" href="#">
-              Another action
-            </a>
-            <a className="dropdown-item" href="#">
-              Something else here
-            </a>
-          </div>
-        </div>
-
-        <div>
-          <button className="btn btn-light rounded-1 border border-grey d-flex align-items-center me-2">
-            <FaGear className="fs-4" />
-          </button>
-        </div>
-      </div>
-
-      <div className="row mt-4">
+    <div id="wd-grades" className="p-3">
+      <div className="row">
         <div className="col">
-          <strong>Student Names</strong>
+          <h2>Grades</h2>
         </div>
-        <div className="col">
-          <strong>Assignment Names</strong>
-        </div>
-      </div>
-
-      <div className="row d-flex mt-2">
-        <div className="col input-group border rounded-2 align-items-center me-2 ps-0 ms-2">
-          <label htmlFor="student-name-search">
-            <span className="input-group-text bg-white border-0">
-              <FaMagnifyingGlass />
-            </span>
-          </label>
-          <input
-            type="text"
-            id="student-name-search"
-            className="form-control border-0"
-            placeholder="Search Students"
-          />
-          <label htmlFor="student-name-search">
-            <span className="input-group-text bg-white border-0">
-              <RiArrowDropDownLine />
-            </span>
-          </label>
-        </div>
-        <div className="col input-group border rounded-2 align-items-center ps-0 ms-2">
-          <label htmlFor="assignment-name-search">
-            <span className="input-group-text bg-white border-0">
-              <FaMagnifyingGlass />
-            </span>
-          </label>
-          <input
-            type="text"
-            id="assignment-name-search"
-            className="form-control border-0"
-            placeholder="Search Assignments"
-          />
-          <label htmlFor="assignment-name-search">
-            <span className="input-group-text bg-white border-0">
-              <RiArrowDropDownLine />
-            </span>
-          </label>
+        <div className="col text-end">
+          <button className="btn btn-primary"><FaFileImport className="me-1" />Import</button>
+          <button className="btn btn-primary me-2"><FaFileExport className="me-1" />Export</button>
+          <button className="btn btn-primary me-2"><FaCog /></button>
         </div>
       </div>
-
-      <div>
-        <button className="btn btn-light rounded-1 border border-grey d-flex align-items-center mt-3">
-          <CiFilter className="fs-5 me-2" />
-          Apply Filters
-        </button>
+      <div className="row mb-3">
       </div>
-
-      <div>
-        <GradeTable />
+      <div className="table-responsive">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              {assignments
+                .filter((assignment) => assignment.course === cid) // Filter assignments by course ID
+                .map((assignment) => (
+                  <th key={assignment._id}>{assignment.title}<small> (out of 100)</small></th>
+                ))}
+            </tr>
+          </thead>
+          <tbody>
+            {courseStudents.map((student: any) => (
+              <tr key={student.id}>
+                <td>{student.firstName} {student.lastName}</td>
+                {assignments.map((assignment: any) => {
+                  const grade = grades.find((grade: any) => grade.student === student.id && grade.assignment === assignment._id);
+                  return <td key={`${student.id}-${assignment._id}`}>{grade ? grade.grade : 'N/A'}</td>;
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

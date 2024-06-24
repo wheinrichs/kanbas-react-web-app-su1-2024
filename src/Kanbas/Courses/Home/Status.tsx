@@ -2,10 +2,10 @@ import { MdDoNotDisturbAlt } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiImport } from "react-icons/bi";
 import { LiaFileImportSolid } from "react-icons/lia";
-import { TfiTarget } from "react-icons/tfi";
-import { IoBarChart } from "react-icons/io5";
-import { CiBullhorn } from "react-icons/ci";
-import { CiBellOn } from "react-icons/ci";
+import { TfiAnnouncement } from "react-icons/tfi";
+import { SiSimpleanalytics } from "react-icons/si";
+import { IoMdHome } from "react-icons/io";
+import { IoMdNotifications } from "react-icons/io";
 
 export default function CourseStatus() {
   return (
@@ -18,7 +18,6 @@ export default function CourseStatus() {
             Unpublish
           </button>
         </div>
-
         <div className="w-50">
           <button className="btn btn-lg btn-success w-100">
             <FaCheckCircle className="me-2 fs-5" />
@@ -31,36 +30,32 @@ export default function CourseStatus() {
         <BiImport className="me-2 fs-5" />
         Import Existing Content
       </button>
-
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
         <LiaFileImportSolid className="me-2 fs-5" />
         Import from Commons
       </button>
-
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
-        <TfiTarget className="me-2 fs-5" />
-        Choose Home Page
+        <IoMdHome className="me-2 fs-5" />
+        Choose from Home Page
       </button>
-
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
-        <IoBarChart className="me-2 fs-5" />
+        <SiSimpleanalytics className="me-2 fs-5" />
         View Course Stream
       </button>
-
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
-        <CiBullhorn className="me-2 fs-5" />
+        <TfiAnnouncement className="me-2 fs-5" />
         New Announcement
       </button>
-
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
-        <IoBarChart className="me-2 fs-5" />
+        <SiSimpleanalytics className="me-2 fs-5" />
         New Analytics
       </button>
-
       <button className="btn btn-lg btn-secondary w-100 mt-1 text-start">
-        <CiBellOn className="me-2 fs-5" />
+        <IoMdNotifications className="me-2 fs-5" />
         View Course Notifications
       </button>
     </div>
   );
 }
+
+  

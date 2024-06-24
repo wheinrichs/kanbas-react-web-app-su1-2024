@@ -1,3 +1,4 @@
+export{};
 export default function VariableTypes() {
     let numberVariable = 123;
     let floatingPointNumber = 234.345;
@@ -15,9 +16,7 @@ export default function VariableTypes() {
         booleanVariable = { booleanVariable + "" }<br/>
         isNumber = { isNumber }<br/>
         isString = { isString }<br/>
-        isBoolean = { isBoolean }<br/>
-        <hr />
-
+        isBoolean = { isBoolean }<hr/>
       </div>
     );
   }
