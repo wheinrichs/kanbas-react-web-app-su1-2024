@@ -2,36 +2,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router";
 import * as db from "../../Database";
 import { setQuizQuestions } from "./reducer";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as client from "./Editor/QuestionEditor/client";
 import { Link } from "react-router-dom";
 import { FaPencil } from "react-icons/fa6";
+import { updateSourceFile } from "typescript";
 
 export default function QuizTake() {
   const dispatch = useDispatch();
   const { cid, id } = useParams();
-  // TODO: NOT going to use the quiz id right now (which is "id") since the current params of the link
-  // aren't associated with an existing quiz... so we are going to use the database id below... temporarily
-  const qid = "9876";
+  // TODO: NOT going to use the quiz id right now (which is "id")-- we are going to use the database id... temporarily
+  const qid = id;
+  const { pathname } = useLocation();
 
   const { quiz_questions } = useSelector((state: any) => state.quizReducer);
 
-  const fetchQuizQuestions = () => {
+  const fetchQuizQuestions = async () => {
     // Add database fetch
-    // Local fetch
-    dispatch(
-      setQuizQuestions(
-        db.quizQuestionsSample.filter((quiz) => quiz.quiz_id === qid)
-      )
-    );
+    const quizQuestionsNew = await client.fetchQuizQuestions(qid);
+    // Local set
+    dispatch(setQuizQuestions(quizQuestionsNew));
+    console.log(quiz_questions);
   };
 
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(quiz_questions[0]);
-  const [selectedAnswers, setSelectedAnswers] = useState<number[][]>(
+  const [currentQuestion, setCurrentQuestion] = useState<any>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<any[][]>(
     Array(quiz_questions.length).fill([-1])
   );
   const [quizFinished, setQuizFinished] = useState(false);
   const [timeStarted, setTimeStarted] = useState<string>("");
+
+  const textInputRef = useRef<string>("");
 
   useEffect(() => {
     // Set the start time once when the component mounts
@@ -41,7 +43,9 @@ export default function QuizTake() {
   }, []);
 
   useEffect(() => {
-    setCurrentQuestion(quiz_questions[currentQuestionNumber]);
+    if (quiz_questions.length > 0) {
+      setCurrentQuestion(quiz_questions[currentQuestionNumber]);
+    }
   }, [currentQuestionNumber, quiz_questions]);
 
   const handleNext = () => {
@@ -63,6 +67,12 @@ export default function QuizTake() {
     setSelectedAnswers(updatedAnswers);
   };
 
+  const handleAnswerText = (answer: string) => {
+    textInputRef.current = answer;
+    const updatedAnswers = [...selectedAnswers];
+    updatedAnswers[currentQuestionNumber] = [textInputRef.current];
+    setSelectedAnswers(updatedAnswers);
+  };
   // Handling selecting multiple answers (or potentially just one) in a multiple-answer question
   const handleAnswerSelectMultiple = (index: number, isChecked: boolean) => {
     const updatedAnswers = [...selectedAnswers];
@@ -166,7 +176,7 @@ export default function QuizTake() {
             currentQuestion.type === "multiple" &&
             currentQuestion.answers.length > 1 &&
             currentQuestion.choices.map((q: any, i: number) => (
-              <div>
+              <div key={i}>
                 <hr></hr>
                 <div style={{ marginLeft: "10px" }}>
                   <input
@@ -182,12 +192,11 @@ export default function QuizTake() {
                 </div>
               </div>
             ))}
-          {/* TODO: HANDLE SHORT ANSWER QUESTIONS. ALSO HANDLE HOW THEY'RE SCORED */}
           {currentQuestion &&
             currentQuestion.type === "multiple" &&
             currentQuestion.answers.length === 1 &&
             currentQuestion.choices.map((q: any, i: number) => (
-              <div>
+              <div key={i}>
                 <hr></hr>
                 <div style={{ marginLeft: "10px" }}>
                   <input
@@ -203,6 +212,37 @@ export default function QuizTake() {
                 </div>
               </div>
             ))}
+          {currentQuestion &&
+            currentQuestion.type === "trueFalse" &&
+            currentQuestion.choices.map((q: any, i: number) => (
+              <div key={i}>
+                <hr></hr>
+                <div style={{ marginLeft: "10px" }}>
+                  <input
+                    type="radio"
+                    name={"question" + (currentQuestionNumber + 1).toString()}
+                    value={"option" + (currentQuestionNumber + 1).toString()}
+                    checked={selectedAnswers[currentQuestionNumber]?.includes(
+                      i
+                    )}
+                    onChange={() => handleAnswerSelect(i)}
+                  />
+                  <label style={{ marginLeft: "10px" }}>{q}</label>
+                </div>
+              </div>
+            ))}
+          {currentQuestion && currentQuestion.type === "fillIn" && (
+            <div>
+              <hr></hr>
+              <div style={{ marginLeft: "10px" }}>
+                <input
+                  type="text"
+                  name={"question" + (currentQuestionNumber + 1).toString()}
+                  onChange={(e) => handleAnswerText(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
         </ul>
       </div>
       <div
@@ -275,10 +315,12 @@ export default function QuizTake() {
           marginTop: "25px",
         }}
       >
-       <Link to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
-       style={{ color: "inherit", textDecoration: "none" }}>
-       <FaPencil></FaPencil> Keep Editing This Quiz
-       </Link>
+        <Link
+          to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
+          style={{ color: "inherit", textDecoration: "none" }}
+        >
+          <FaPencil></FaPencil> Keep Editing This Quiz
+        </Link>
       </div>
       <br></br>
       <h3>Questions</h3>
@@ -297,7 +339,7 @@ export default function QuizTake() {
                   border: "1px solid rgb(255, 255, 255)",
                   backgroundColor: "rgb(255, 255, 255)",
                 }}
-                className = "text-danger"
+                className="text-danger"
                 onClick={() => setCurrentQuestionNumber(i)}
               >
                 <b>Question {i + 1}</b>
