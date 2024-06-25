@@ -10,6 +10,7 @@ import { FaRocket } from "react-icons/fa6";
 
 export default function Quizzes() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
   let currentDate = new Date();
   const { cid } = useParams();
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ export default function Quizzes() {
           </div>
         </div>
       ))}
-      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
         <div>
           <button
             className="btn btn-danger"

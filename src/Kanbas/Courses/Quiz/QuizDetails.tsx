@@ -10,6 +10,7 @@ import { FaPencil } from "react-icons/fa6";
 export default function QuizDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
   const { cid, qid } = useParams();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
@@ -52,7 +53,7 @@ export default function QuizDetails() {
 
   return (
     <div>
-      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
         <div
           style={{
             width: "100%",
@@ -99,7 +100,7 @@ export default function QuizDetails() {
         </div>
       )}
 
-      {(currentUser.role === "USER" || currentUser.role === "STUDENT") && (
+      {(currentUser.role !== "ADMIN" || currentUser.role !== "FACULTY") && (
         <div
           style={{
             width: "100%",

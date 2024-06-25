@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import * as client from "../Courses/client";
 import * as enrollmentClient from "../Courses/Enrollments/client";
 import { useDispatch, useSelector } from "react-redux";
+import { setCurrentCourses } from "../Courses/reducer";
 
 export default function Dashboard({
   courses,
@@ -20,7 +21,7 @@ export default function Dashboard({
   updateCourse: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-
+  const dispatch = useDispatch();
   const [publishedCourses, setPublishedCourses] = useState<any[]>([]);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const fetchEnrolledCourses = async () => {
@@ -42,6 +43,8 @@ export default function Dashboard({
   useEffect(() => {
     fetchPublishedCourses();
     fetchEnrolledCourses();
+    dispatch(setCurrentCourses(courses))
+
   }, [courses]);
   return (
     <div id="wd-dashboard">
