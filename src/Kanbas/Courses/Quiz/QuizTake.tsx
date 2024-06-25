@@ -10,6 +10,7 @@ import { updateSourceFile } from "typescript";
 
 export default function QuizTake() {
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { cid, id } = useParams();
   // TODO: NOT going to use the quiz id right now (which is "id")-- we are going to use the database id... temporarily
   const qid = id;
