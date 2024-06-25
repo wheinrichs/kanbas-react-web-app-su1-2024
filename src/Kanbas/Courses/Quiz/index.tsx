@@ -7,7 +7,6 @@ import * as client from "./client";
 import { useEffect, useState } from "react";
 import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
 import { FaRocket } from "react-icons/fa6";
-import * as client2 from "../client";
 
 export default function Quizzes() {
   let currentDate = new Date();
@@ -20,20 +19,6 @@ export default function Quizzes() {
     courseID: cid,
   });
   const dispatch = useDispatch();
-
-  // const [courses, setCourses] = useState<any[]>([]);
-
-  // const fetchCourses = async () => {
-  //   const courses = await client2.fetchAllCourses();
-  //   setCourses(courses);
-  // };
-
-  // useEffect(() => {
-  //   fetchCourses();
-  // }, []);
-
-  // const course = courses.find((course) => course._id === cid);
-  // const courseNumber = course.number;
 
   const createNewQuizLocalAndServer = async () => {
     const newQuiz = await client.createQuiz(quiz);
@@ -49,7 +34,6 @@ export default function Quizzes() {
 
   useEffect(() => {
     fetchQuizzes();
-    console.log(quizzes);
   }, []);
 
   return (

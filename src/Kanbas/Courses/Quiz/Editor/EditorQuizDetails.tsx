@@ -34,13 +34,6 @@ export default function EditorQuizDetails({
           ></input>
         </div>
         <div className="mt-3">Quiz Instructions:</div>
-
-        {/* <textarea
-          className="form-control mt-1"
-          value={quiz.instructions && quiz.instructions}
-          placeholder="Enter instructions here"
-          onChange={(e) => setQuiz({ ...quiz, instructions: e.target.value })}
-        ></textarea> */}
         <RichTextEditor
           initialData={quiz.instructions || ""}
           setter={setQuiz}

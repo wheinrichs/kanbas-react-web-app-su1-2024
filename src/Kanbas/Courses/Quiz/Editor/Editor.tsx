@@ -11,31 +11,24 @@ export default function Editor() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [newQuestionIDs, setNewQuestionIDs] = useState([]);
-  const [currentQuiz, setCurrentQuiz] = useState({
-    title: "",
-    points: "",
-    courseID: cid,
-  });
+  const [currentQuiz, setCurrentQuiz] = useState({});
 
   // Need to pass this state variable to keep track of questions you need to remove if the user clicks cancel
   const [questionsToAdd, setQuestionsToAdd] = useState({});
 
   const saveLocalAndServerQuiz = async () => {
-    console.log(cid);
     const newQuiz = await client.updateQuiz(qid, currentQuiz);
     setCurrentQuiz(newQuiz);
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details`);
   };
 
   const publishLocalAndServerQuiz = async () => {
-    console.log(cid);
     const newQuiz = await client.updateQuiz(qid, currentQuiz);
     setCurrentQuiz(newQuiz);
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   };
 
   const cancelQuizEdit = async () => {
-    console.log(cid);
     newQuestionIDs &&
       newQuestionIDs.map((questionID) => {
         client.deleteQuizQuestionsByQuestionID(questionID);
@@ -45,13 +38,11 @@ export default function Editor() {
   };
 
   const fetchCurrentQuiz = async () => {
-    console.log(cid);
     const newFetchedQuiz = await client.fetchQuiz(qid);
     setCurrentQuiz(newFetchedQuiz);
   };
 
   useEffect(() => {
-    console.log(cid);
     fetchCurrentQuiz();
   }, []);
 
