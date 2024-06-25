@@ -11,11 +11,14 @@ export default function QuizDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   // this might break it
-  const [currentQuiz, setCurrentQuiz] = useState<any>({    title: "",
+  const [currentQuiz, setCurrentQuiz] = useState<any>({
+    title: "",
     points: "",
-    courseID: cid});
+    courseID: cid,
+  });
   // title: "Sample title",
   // points: "15",
   // courseID: "6669b6d40ac49e5be88cf459",
@@ -49,52 +52,74 @@ export default function QuizDetails() {
 
   return (
     <div>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-end",
-          columnGap: "10px",
-        }}
-      >
-        <button
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+        <div
           style={{
-            backgroundColor: "green",
-            border: "1px solid rgb(204, 204, 204)",
-            borderRadius: "5px",
-            padding: "5px 15px",
-            color: "white",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            columnGap: "10px",
           }}
         >
-          Published
-        </button>
+          <button
+            style={{
+              backgroundColor: "green",
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+              color: "white",
+            }}
+          >
+            Published
+          </button>
 
-        <button
+          <button
+            style={{
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+            }}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+          >
+            Preview
+          </button>
+
+          <button
+            style={{
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+            }}
+          >
+            {" "}
+            <FaPencil /> Edit
+          </button>
+          <hr></hr>
+        </div>
+      )}
+
+      {(currentUser.role === "USER" || currentUser.role === "STUDENT") && (
+        <div
           style={{
-            border: "1px solid rgb(204, 204, 204)",
-            borderRadius: "5px",
-            padding: "5px 15px",
-          }}
-          onClick={() =>
-            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)
-          }
-        >
-          Preview
-        </button>
-
-        <button
-          style={{
-            border: "1px solid rgb(204, 204, 204)",
-            borderRadius: "5px",
-            padding: "5px 15px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            columnGap: "10px",
           }}
         >
-          {" "}
-          <FaPencil /> Edit
-        </button>
-      </div>
+          <button
+            style={{
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+            }}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+          >
+            Take Quiz
+          </button>
+        </div>
+      )}
 
-      <hr></hr>
       <h1>{currentQuiz.title}</h1>
       <div style={{ display: "flex", columnGap: "10px" }}>
         <div

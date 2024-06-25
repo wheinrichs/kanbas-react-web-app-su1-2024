@@ -9,6 +9,7 @@ import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
 import { FaRocket } from "react-icons/fa6";
 
 export default function Quizzes() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   let currentDate = new Date();
   const { cid } = useParams();
   const navigate = useNavigate();
@@ -97,17 +98,18 @@ export default function Quizzes() {
           </div>
         </div>
       ))}
-
-      <div>
-        <button
-          className="btn btn-danger"
-          onClick={() => createNewQuizLocalAndServer()}
-          style={{marginTop: "20px", marginBottom: "20px"}}
-        >
-          + Quiz
-        </button>
-        <SampleInteractQuizGrade />
-      </div>
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+        <div>
+          <button
+            className="btn btn-danger"
+            onClick={() => createNewQuizLocalAndServer()}
+            style={{ marginTop: "20px", marginBottom: "20px" }}
+          >
+            + Quiz
+          </button>
+          <SampleInteractQuizGrade />
+        </div>
+      )}
     </div>
   );
 }

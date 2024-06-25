@@ -19,7 +19,6 @@ export default function Dashboard({
   deleteCourse: (courseId: string) => void;
   updateCourse: () => void;
 }) {
-  const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const [publishedCourses, setPublishedCourses] = useState<any[]>([]);
@@ -28,7 +27,6 @@ export default function Dashboard({
     const courses = await enrollmentClient.findMyEnrollments();
     setEnrolledCourses(courses);
   };
-  console.log(enrolledCourses.map(courseInner => courseInner._id));
   const fetchPublishedCourses = async () => {
     const courses = await client.fetchPublishedCourses();
     setPublishedCourses(courses);
