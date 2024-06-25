@@ -100,7 +100,7 @@ export default function QuizDetails() {
         </div>
       )}
 
-      {(currentUser.role !== "ADMIN" || currentUser.role !== "FACULTY") && (
+      {(currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY") && (
         <div
           style={{
             width: "100%",
