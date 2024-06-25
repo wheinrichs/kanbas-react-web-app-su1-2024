@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import Editor from "./Editor/Editor";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { addQuiz, setQuizzes } from "./reducer";
-import * as client from "./client";
 import { useEffect, useState } from "react";
+import { FaBan, FaRocket, FaCheckCircle, FaEllipsisV } from "react-icons/fa";
+import { addQuiz, setQuizzes, deleteQuiz } from "./reducer";
+import * as client from "./client";
 import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
-import { FaRocket } from "react-icons/fa6";
+import * as client2 from "../client";
+import * as client3 from "./Editor/client";
 
 export default function Quizzes() {
   let currentDate = new Date();
@@ -14,11 +15,21 @@ export default function Quizzes() {
   const navigate = useNavigate();
   const { quizzes } = useSelector((state: any) => state.quizReducer);
   const [quiz, setQuiz] = useState({
-    title: "New Quiz",
+    title: "",
     points: "",
     courseID: cid,
   });
+  const [quizStates, setQuizStates] = useState<any>({});
   const dispatch = useDispatch();
+
+  const removeQuiz = async (quizToDelete: any) => {
+    try {
+      await client3.deleteQuiz(quizToDelete._id);
+      dispatch(deleteQuiz(quizToDelete._id));
+    } catch (error) {
+      console.error("Failed to delete the quiz", error);
+    }
+  };
 
   const createNewQuizLocalAndServer = async () => {
     const newQuiz = await client.createQuiz(quiz);
@@ -34,16 +45,43 @@ export default function Quizzes() {
 
   useEffect(() => {
     fetchQuizzes();
+    console.log(quizzes);
   }, []);
+
+  useEffect(() => {
+    const initialStates = quizzes.reduce((acc: any, quiz: any) => {
+      acc[quiz._id] = true; // true for FaBan, false for FaCheckCircle
+      return acc;
+    }, {});
+    setQuizStates(initialStates);
+  }, [quizzes]);
+
+  const toggleIcon = (quizId: string) => {
+    setQuizStates((prevStates: any) => ({
+      ...prevStates,
+      [quizId]: !prevStates[quizId],
+    }));
+  };
+
+  const navigateToDetails = (quizId: string) => {
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/details`);
+  };
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Quiz Section</h1>
-      <hr></hr>
-
+      <hr />
+      <button
+        className="btn btn-danger"
+        onClick={createNewQuizLocalAndServer}
+        style={{ marginTop: "20px", marginBottom: "20px", width: "10%" }}
+      >
+        + Quiz
+      </button>
       <div
         style={{
           marginTop: "12px",
+          paddingTop: "20px",
           backgroundColor: "rgb(245, 245, 245)",
           border: "1px solid rgb(199, 205, 209)",
           padding: "12px 6px 12px",
@@ -51,7 +89,7 @@ export default function Quizzes() {
           alignItems: "center",
         }}
       >
-        Assignment Quizzes
+        <h6>▾ Assignment Quizzes</h6>
       </div>
       {quizzes.map((quiz: any) => (
         <div
@@ -69,7 +107,7 @@ export default function Quizzes() {
         >
           <div style={{ display: "flex", alignItems: "center" }}>
             <div>
-              <FaRocket></FaRocket>
+              <FaRocket style={{ color: quizStates[quiz._id] ? "black" : "green" }} />
             </div>
             <div style={{ marginRight: "24px", marginLeft: "12px" }}>
               <h4 style={{ fontSize: "16px", margin: "0px" }}>
@@ -88,24 +126,64 @@ export default function Quizzes() {
                 </span>
                 <span>
                   {" "}
-                  <b>Due</b> {quiz.due_date ? quiz.due_date.toString() : "?"}
+                  <b>Due</b>           {!quiz.due_date
+            ? "N/A"
+            : new Date(quiz.due_date).toLocaleDateString("en-US")}
                 </span>
-                <span>{quiz.points ? quiz.points : "?"} Points</span>
+                <span>{quiz.points ? quiz.points : "?"} pts</span>
                 <span>? Questions</span>
               </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              columnGap: "20px",
+              marginRight: "20px",
+              alignItems: "center",
+            }}
+          >
+            {quizStates[quiz._id] ? (
+              <FaBan onClick={() => toggleIcon(quiz._id)} />
+            ) : (
+              <FaCheckCircle onClick={() => toggleIcon(quiz._id)} style={{ color: "green" }} />
+            )}
+            <div className="dropdown">
+              <button
+                className="btn btn-secondary dropdown-toggle"
+                type="button"
+                id={`dropdownMenuButton-${quiz._id}`}
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <FaEllipsisV />
+              </button>
+              <ul className="dropdown-menu" aria-labelledby={`dropdownMenuButton-${quiz._id}`}>
+                <li>
+                  <button className="dropdown-item"
+                  onClick={() => navigateToDetails(quiz._id)}>
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button className="dropdown-item"
+                  onClick={() => removeQuiz(quiz)}>
+                    Delete
+                  </button>
+                </li>
+                <li>
+                  <button className="dropdown-item">
+                    Publish
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
       ))}
 
-      <div>
-        <button
-          className="btn btn-danger"
-          onClick={() => createNewQuizLocalAndServer()}
-          style={{marginTop: "20px", marginBottom: "20px"}}
-        >
-          + Quiz
-        </button>
+      <div style={{ marginTop: "20px", marginBottom: "20px" }}>
         <SampleInteractQuizGrade />
       </div>
     </div>

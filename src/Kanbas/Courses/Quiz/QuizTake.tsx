@@ -1,42 +1,33 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router";
-import * as db from "../../Database";
-import { setQuizQuestions } from "./reducer";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import * as client from "./Editor/QuestionEditor/client";
 import { Link } from "react-router-dom";
 import { FaPencil } from "react-icons/fa6";
-import { updateSourceFile } from "typescript";
+import { setQuizQuestions } from "./reducer";
 
 export default function QuizTake() {
   const dispatch = useDispatch();
   const { cid, id } = useParams();
-  // TODO: NOT going to use the quiz id right now (which is "id")-- we are going to use the database id... temporarily
   const qid = id;
   const { pathname } = useLocation();
 
   const { quiz_questions } = useSelector((state: any) => state.quizReducer);
 
   const fetchQuizQuestions = async () => {
-    // Add database fetch
     const quizQuestionsNew = await client.fetchQuizQuestions(qid);
-    // Local set
     dispatch(setQuizQuestions(quizQuestionsNew));
-    console.log(quiz_questions);
   };
 
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState<any>({});
-  const [selectedAnswers, setSelectedAnswers] = useState<any[][]>(
-    Array(quiz_questions.length).fill([-1])
-  );
+  const [selectedAnswers, setSelectedAnswers] = useState<any[][]>([]);
   const [quizFinished, setQuizFinished] = useState(false);
   const [timeStarted, setTimeStarted] = useState<string>("");
-
-  const textInputRef = useRef<string>("");
+  const [questionStatus, setQuestionStatus] = useState<boolean[]>([]);
+  const [grade, setGrade] = useState<number | null>(null); // Store the grade
 
   useEffect(() => {
-    // Set the start time once when the component mounts
     const startTime = new Date().toLocaleString();
     fetchQuizQuestions();
     setTimeStarted(startTime);
@@ -45,6 +36,9 @@ export default function QuizTake() {
   useEffect(() => {
     if (quiz_questions.length > 0) {
       setCurrentQuestion(quiz_questions[currentQuestionNumber]);
+      if (selectedAnswers.length === 0) {
+        setSelectedAnswers(Array(quiz_questions.length).fill([-1]));
+      }
     }
   }, [currentQuestionNumber, quiz_questions]);
 
@@ -60,24 +54,29 @@ export default function QuizTake() {
     }
   };
 
-  // Handle selecting a single answer in a single-choice question
   const handleAnswerSelect = (index: number) => {
+    console.log("selected answers", selectedAnswers);
+    console.log("there are this many questions ", quiz_questions.length);
     const updatedAnswers = [...selectedAnswers];
     updatedAnswers[currentQuestionNumber] = [index];
     setSelectedAnswers(updatedAnswers);
   };
 
-  const handleAnswerText = (answer: string) => {
-    textInputRef.current = answer;
-    const updatedAnswers = [...selectedAnswers];
-    updatedAnswers[currentQuestionNumber] = [textInputRef.current];
-    setSelectedAnswers(updatedAnswers);
+  const handleAnswerText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const answer = e.target.value;
+    setSelectedAnswers((prevSelectedAnswers) => {
+      const updatedAnswers = [...prevSelectedAnswers];
+      updatedAnswers[currentQuestionNumber] = [answer];
+      return updatedAnswers;
+    });
+    console.log("selected answers", selectedAnswers);
   };
-  // Handling selecting multiple answers (or potentially just one) in a multiple-answer question
-  const handleAnswerSelectMultiple = (index: number, isChecked: boolean) => {
-    const updatedAnswers = [...selectedAnswers];
 
-    let theseAnswers = [...updatedAnswers[currentQuestionNumber]];
+  const handleAnswerSelectMultiple = (index: number, isChecked: boolean) => {
+    console.log("selected answers", selectedAnswers);
+    console.log("there are this many questions ", quiz_questions.length);
+    const updatedAnswers = [...selectedAnswers];
+    let theseAnswers = updatedAnswers[currentQuestionNumber];
 
     if (isChecked) {
       if (theseAnswers.includes(-1)) {
@@ -95,41 +94,50 @@ export default function QuizTake() {
     setSelectedAnswers(updatedAnswers);
   };
 
-  // helper function for handling multiple-answer questions
   const isChecked = (index: number) => {
     return selectedAnswers[currentQuestionNumber]?.includes(index) || false;
   };
 
-  // calculating the final grade
-  // TODO: STORE THE GRADE IN THE DATABASE UNDER THE USER ENTRY. CURRENTLY, IT'S JUST DISPLAYED AND STORED.
-  // ALSO DISABLE THE QUIZ FUNCTIONALITY ONCE COMPLETED?
-  // ALSO PREVENT THIS VALUE FROM POSSIBLY CHANGING?
   const calculateGrade = () => {
     let correctQuestions = quiz_questions.length;
-    if (quizFinished) {
-      for (let i = 0; i < quiz_questions.length; i++) {
-        for (let j = 0; j < quiz_questions[i].answers.length; j++) {
-          if (
-            !quiz_questions[i].answers.includes(
+    const status = [];
+
+    for (let i = 0; i < quiz_questions.length; i++) {
+      let isCorrect = true;
+      for (let j = 0; j < quiz_questions[i].answers.length; j++) {
+        if (
+          (quiz_questions[i].type === "fillIn" &&
+            quiz_questions[i].answers[0].includes(selectedAnswers[i][j])) ||
+          (quiz_questions[i].type !== "fillIn" &&
+            quiz_questions[i].answers.includes(
               quiz_questions[i].choices[selectedAnswers[i][j]]
-            ) ||
-            selectedAnswers[i].includes(-1)
-          ) {
-            correctQuestions -= 1;
-            break;
-          }
+            ))
+        ) {
+          // Correct answer
+        } else {
+          // Incorrect answer
+          isCorrect = false;
+          correctQuestions -= 1;
+          break;
         }
       }
+      status.push(isCorrect);
     }
+    setQuestionStatus(status);
     return ((correctQuestions * 1.0) / quiz_questions.length) * 100.0;
+  };
+
+  const handleSubmitQuiz = () => {
+    setQuizFinished(true);
+    const calculatedGrade = calculateGrade();
+    setGrade(calculatedGrade);
   };
 
   return (
     <div>
       <h1>
-        <b>{currentQuestion.title}</b>
+        <b>Quiz Title</b>
       </h1>
-      {/* TODO: add icons, like exclamation point logo, for style */}
       <div
         style={{
           backgroundColor: "rgb(248, 233, 229)",
@@ -139,12 +147,12 @@ export default function QuizTake() {
       >
         This is a preview of the published version of the quiz.
       </div>
-      <br></br>
+      <br />
       Started: {timeStarted}
       <h1>
         <b>Quiz Instructions</b>
       </h1>
-      <hr></hr>
+      <hr />
       <div
         style={{
           border: "1px solid rgb(204, 204, 204)",
@@ -155,21 +163,30 @@ export default function QuizTake() {
         <div
           style={{
             borderBottom: "1px solid rgb(204, 204, 204)",
-            backgroundColor: "rgb(245, 245, 245)",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
             padding: "20px",
+            backgroundColor: quizFinished
+              ? questionStatus[currentQuestionNumber]
+                ? "lightgreen"
+                : "lightcoral"
+              : "rgb(245, 245, 245)",
           }}
         >
           <h3>
             <b>Question {currentQuestionNumber + 1}</b>
           </h3>
-
           <h4>{currentQuestion.points} pts</h4>
         </div>
-        <br></br>
-        <div style={{ marginLeft: "20px" }}>{currentQuestion.question}</div>
+        <br />
+        <div
+          style={{
+            marginLeft: "20px",
+          }}
+        >
+          {currentQuestion.question}
+        </div>
 
         <ul className="list-group mt-3">
           {currentQuestion &&
@@ -177,8 +194,12 @@ export default function QuizTake() {
             currentQuestion.answers.length > 1 &&
             currentQuestion.choices.map((q: any, i: number) => (
               <div key={i}>
-                <hr></hr>
-                <div style={{ marginLeft: "10px" }}>
+                <hr />
+                <div
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
                   <input
                     type="checkbox"
                     name={"question" + (currentQuestionNumber + 1).toString()}
@@ -187,6 +208,7 @@ export default function QuizTake() {
                     onChange={(e) =>
                       handleAnswerSelectMultiple(i, e.target.checked)
                     }
+                    disabled={quizFinished}
                   />
                   <label style={{ marginLeft: "10px" }}>{q}</label>
                 </div>
@@ -197,8 +219,13 @@ export default function QuizTake() {
             currentQuestion.answers.length === 1 &&
             currentQuestion.choices.map((q: any, i: number) => (
               <div key={i}>
-                <hr></hr>
-                <div style={{ marginLeft: "10px" }}>
+                <hr />
+                <div
+                  style={{
+                    marginLeft: "10px",
+                 
+                  }}
+                >
                   <input
                     type="radio"
                     name={"question" + (currentQuestionNumber + 1).toString()}
@@ -207,6 +234,7 @@ export default function QuizTake() {
                       i
                     )}
                     onChange={() => handleAnswerSelect(i)}
+                    disabled={quizFinished}
                   />
                   <label style={{ marginLeft: "10px" }}>{q}</label>
                 </div>
@@ -216,8 +244,12 @@ export default function QuizTake() {
             currentQuestion.type === "trueFalse" &&
             currentQuestion.choices.map((q: any, i: number) => (
               <div key={i}>
-                <hr></hr>
-                <div style={{ marginLeft: "10px" }}>
+                <hr />
+                <div
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
                   <input
                     type="radio"
                     name={"question" + (currentQuestionNumber + 1).toString()}
@@ -226,6 +258,7 @@ export default function QuizTake() {
                       i
                     )}
                     onChange={() => handleAnswerSelect(i)}
+                    disabled={quizFinished}
                   />
                   <label style={{ marginLeft: "10px" }}>{q}</label>
                 </div>
@@ -233,12 +266,17 @@ export default function QuizTake() {
             ))}
           {currentQuestion && currentQuestion.type === "fillIn" && (
             <div>
-              <hr></hr>
-              <div style={{ marginLeft: "10px" }}>
+              <hr />
+              <div
+                style={{
+                  marginLeft: "10px",
+                }}
+              >
                 <input
                   type="text"
                   name={"question" + (currentQuestionNumber + 1).toString()}
-                  onChange={(e) => handleAnswerText(e.target.value)}
+                  onChange={handleAnswerText}
+                  disabled={quizFinished}
                 />
               </div>
             </div>
@@ -252,7 +290,6 @@ export default function QuizTake() {
           marginTop: "20px",
         }}
       >
-        {/* // clicking any further backward or forward if you are at the first or last question wont do anything but it might be better to disable the button */}
         <button
           style={{
             border: "1px solid rgb(204, 204, 204)",
@@ -293,14 +330,15 @@ export default function QuizTake() {
             backgroundColor: "rgb(245, 245, 245)",
             padding: "5px 15px",
           }}
-          onClick={() => setQuizFinished(true)}
+          onClick={handleSubmitQuiz} // Use the handleSubmitQuiz function
         >
           Submit Quiz
         </button>
       </div>
-      {quizFinished && (
+      {quizFinished && grade !== null && (
         <div>
-          You've submitted your quiz! Your score is a {calculateGrade()}%!
+          <br></br>
+          <h5>You've submitted your quiz! Your score is a {grade}%!</h5>
         </div>
       )}
       <div
@@ -322,7 +360,7 @@ export default function QuizTake() {
           <FaPencil></FaPencil> Keep Editing This Quiz
         </Link>
       </div>
-      <br></br>
+      <br />
       <h3>Questions</h3>
       <div style={{ marginLeft: "30px" }}>
         <span
@@ -333,7 +371,7 @@ export default function QuizTake() {
           }}
         >
           {quiz_questions.map((q: any, i: number) => (
-            <div style={{ marginLeft: "10px" }}>
+            <div style={{ marginLeft: "10px" }} key={i}>
               <button
                 style={{
                   border: "1px solid rgb(255, 255, 255)",

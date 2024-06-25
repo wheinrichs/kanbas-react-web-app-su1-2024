@@ -13,9 +13,11 @@ export default function QuizDetails() {
   const { cid, qid } = useParams();
 
   // this might break it
-  const [currentQuiz, setCurrentQuiz] = useState<any>({    title: "",
+  const [currentQuiz, setCurrentQuiz] = useState<any>({
+    title: "",
     points: "",
-    courseID: cid});
+    courseID: cid,
+  });
   // title: "Sample title",
   // points: "15",
   // courseID: "6669b6d40ac49e5be88cf459",
@@ -75,9 +77,7 @@ export default function QuizDetails() {
             borderRadius: "5px",
             padding: "5px 15px",
           }}
-          onClick={() =>
-            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)
-          }
+          onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
         >
           Preview
         </button>
@@ -88,6 +88,9 @@ export default function QuizDetails() {
             borderRadius: "5px",
             padding: "5px 15px",
           }}
+          onClick={() =>
+            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details/editor`)
+          }
         >
           {" "}
           <FaPencil /> Edit
@@ -127,29 +130,41 @@ export default function QuizDetails() {
               : currentQuiz.assignment_group}
           </span>
           <span>
-            {!currentQuiz.shuffle ? "N/A" : currentQuiz.shuffle.toString()}
+            {!currentQuiz.shuffle ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
           </span>
           <span>
-            {!currentQuiz.time_limit ? "N/A" : currentQuiz.shuffle.toString()}
+            {!currentQuiz.time_limit
+              ? "N/A"
+              : currentQuiz.shuffle
+              ? "Yes"
+              : "No"}
           </span>
           <span>
-            {!currentQuiz.attempts ? "N/A" : currentQuiz.shuffle.toString()}
+            {!currentQuiz.attempts ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
           </span>
           <span>
             {!currentQuiz.show_correct_answers
               ? "N/A"
-              : currentQuiz.shuffle.toString()}
+              : currentQuiz.shuffle
+              ? "Yes"
+              : "No"}
           </span>
           <span>
             {!currentQuiz.one_at_a_time
               ? "N/A"
-              : currentQuiz.shuffle.toString()}
+              : currentQuiz.shuffle
+              ? "Yes"
+              : "No"}
           </span>
           <span>
-            {!currentQuiz.webcam ? "N/A" : currentQuiz.shuffle.toString()}
+            {!currentQuiz.webcam ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
           </span>
           <span>
-            {!currentQuiz.lock_after ? "N/A" : currentQuiz.shuffle.toString()}
+            {!currentQuiz.lock_after
+              ? "N/A"
+              : currentQuiz.shuffle
+              ? "Yes"
+              : "No"}
           </span>
         </div>
       </div>
@@ -202,7 +217,9 @@ export default function QuizDetails() {
             padding: "16px 0px",
           }}
         >
-          {!currentQuiz.due_date ? "N/A" : currentQuiz.due_date}
+          {!currentQuiz.due_date
+            ? "N/A"
+            : new Date(currentQuiz.due_date).toLocaleDateString("en-US")}
         </span>
         <span
           style={{
@@ -220,7 +237,9 @@ export default function QuizDetails() {
             padding: "16px 0px",
           }}
         >
-          {!currentQuiz.available_date ? "N/A" : currentQuiz.available_date}
+          {!currentQuiz.available_date
+            ? "N/A"
+            : new Date(currentQuiz.available_date).toLocaleDateString("en-US")}
         </span>
         <span
           style={{
@@ -229,7 +248,9 @@ export default function QuizDetails() {
             padding: "16px 0px",
           }}
         >
-          {!currentQuiz.until_date ? "N/A" : currentQuiz.until_date}
+          {!currentQuiz.until_date
+            ? "N/A"
+            : new Date(currentQuiz.until_date).toLocaleDateString("en-US")}
         </span>
       </div>
     </div>
