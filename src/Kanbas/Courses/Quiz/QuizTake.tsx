@@ -131,15 +131,17 @@ export default function QuizTake() {
         <b>{currentQuestion.title}</b>
       </h1>
       {/* TODO: add icons, like exclamation point logo, for style */}
-      <div
-        style={{
-          backgroundColor: "rgb(248, 233, 229)",
-          padding: "10px",
-          borderRadius: "5px",
-        }}
-      >
-        This is a preview of the published version of the quiz.
-      </div>
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+        <div
+          style={{
+            backgroundColor: "rgb(248, 233, 229)",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
+          This is a preview of the published version of the quiz.
+        </div>
+      )}
       <br></br>
       Started: {timeStarted}
       <h1>
@@ -304,25 +306,27 @@ export default function QuizTake() {
           You've submitted your quiz! Your score is a {calculateGrade()}%!
         </div>
       )}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          border: "1px solid rgb(204, 204, 204)",
-          backgroundColor: "rgb(245, 245, 245)",
-          alignItems: "center",
-          columnGap: "5px",
-          padding: "5px 15px",
-          marginTop: "25px",
-        }}
-      >
-        <Link
-          to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
-          style={{ color: "inherit", textDecoration: "none" }}
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            border: "1px solid rgb(204, 204, 204)",
+            backgroundColor: "rgb(245, 245, 245)",
+            alignItems: "center",
+            columnGap: "5px",
+            padding: "5px 15px",
+            marginTop: "25px",
+          }}
         >
-          <FaPencil></FaPencil> Keep Editing This Quiz
-        </Link>
-      </div>
+          <Link
+            to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <FaPencil></FaPencil> Keep Editing This Quiz
+          </Link>
+        </div>
+      )}
       <br></br>
       <h3>Questions</h3>
       <div style={{ marginLeft: "30px" }}>
