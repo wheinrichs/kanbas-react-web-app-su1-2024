@@ -4,6 +4,9 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { CiFilter } from "react-icons/ci";
 import GradeTable from "./GradeTable";
+import { useParams } from 'react-router-dom';
+import { enrollments, users, assignments, grades } from '../../Database';
+import { FaFileImport,FaFileExport,FaCog } from 'react-icons/fa';
 
 export default function Grades() {
   return (

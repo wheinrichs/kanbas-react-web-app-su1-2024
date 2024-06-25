@@ -6,51 +6,52 @@ export default function GradeTable() {
   const courseStudentsIDs = enrollments.filter(
     (student) => student.course === cid
   );
-  const courseStudents = users.filter((user) =>
-    courseStudentsIDs.find((ID) => ID.user === user._id)
-  );
+
   const courseAssignments = assignments.filter(
     (assignment) => assignment.course === cid
   );
+
+  const courseStudents = enrollments
+    .filter((enrollment) => enrollment.course === cid)
+    .map((enrollment) => users.find((user) => user._id === enrollment.user));
+
   return (
     <div>
       <div className="table-responsive">
-        <table className="table table-striped table-bordered mt-3">
+        <table className="table table-striped">
           <thead>
             <tr>
-              <td>
-                <strong>Student Name</strong>
-              </td>
-              {courseAssignments &&
-                courseAssignments.map((assignment) => (
-                  <td>
-                    {assignment._id} <br />
-                    Out of {assignment.points}
-                  </td>
+              <th>Student Name</th>
+              {assignments
+                .filter((assignment) => assignment.course === cid) // Filter assignments by course ID
+                .map((assignment) => (
+                  <th key={assignment._id}>
+                    {assignment.title}
+                    <small> (out of 100)</small>
+                  </th>
                 ))}
             </tr>
           </thead>
-
           <tbody>
-            {courseStudents &&
-              courseStudents.map((student) => (
-                <tr>
-                  <td className="text-danger">
-                    {student.firstName} {student.lastName}
-                  </td>
-                  {courseAssignments.map((assignment) => (
-                    <td>
-                      {
-                        grades.find(
-                          (grade) =>
-                            student._id === grade.student &&
-                            grade.assignment === assignment._id
-                        )?.grade
-                      }
+            {courseStudents.map((student: any) => (
+              <tr key={student.id}>
+                <td>
+                  {student.firstName} {student.lastName}
+                </td>
+                {assignments.map((assignment: any) => {
+                  const grade = grades.find(
+                    (grade: any) =>
+                      grade.student === student.id &&
+                      grade.assignment === assignment._id
+                  );
+                  return (
+                    <td key={`${student.id}-${assignment._id}`}>
+                      {grade ? grade.grade : "N/A"}
                     </td>
-                  ))}
-                </tr>
-              ))}
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
