@@ -8,6 +8,9 @@ import { setQuizQuestions } from "./reducer";
 
 export default function QuizTake() {
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
+  console.log( currentCourses );
   const { cid, id } = useParams();
   const qid = id;
   const { pathname } = useLocation();
@@ -138,16 +141,19 @@ export default function QuizTake() {
       <h1>
         <b>Quiz Title</b>
       </h1>
-      <div
-        style={{
-          backgroundColor: "rgb(248, 233, 229)",
-          padding: "10px",
-          borderRadius: "5px",
-        }}
-      >
-        This is a preview of the published version of the quiz.
-      </div>
-      <br />
+      {/* TODO: add icons, like exclamation point logo, for style */}
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+        <div
+          style={{
+            backgroundColor: "rgb(248, 233, 229)",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
+          This is a preview of the published version of the quiz.
+        </div>
+      )}
+      <br></br>
       Started: {timeStarted}
       <h1>
         <b>Quiz Instructions</b>
@@ -341,26 +347,28 @@ export default function QuizTake() {
           <h5>You've submitted your quiz! Your score is a {grade}%!</h5>
         </div>
       )}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-start",
-          border: "1px solid rgb(204, 204, 204)",
-          backgroundColor: "rgb(245, 245, 245)",
-          alignItems: "center",
-          columnGap: "5px",
-          padding: "5px 15px",
-          marginTop: "25px",
-        }}
-      >
-        <Link
-          to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
-          style={{ color: "inherit", textDecoration: "none" }}
+      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-start",
+            border: "1px solid rgb(204, 204, 204)",
+            backgroundColor: "rgb(245, 245, 245)",
+            alignItems: "center",
+            columnGap: "5px",
+            padding: "5px 15px",
+            marginTop: "25px",
+          }}
         >
-          <FaPencil></FaPencil> Keep Editing This Quiz
-        </Link>
-      </div>
-      <br />
+          <Link
+            to={"/Kanbas/Courses/" + cid + "/Quizzes/Editor/" + qid}
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            <FaPencil></FaPencil> Keep Editing This Quiz
+          </Link>
+        </div>
+      )}
+      <br></br>
       <h3>Questions</h3>
       <div style={{ marginLeft: "30px" }}>
         <span

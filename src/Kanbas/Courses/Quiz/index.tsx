@@ -10,6 +10,8 @@ import * as client2 from "../client";
 import * as client3 from "./Editor/client";
 
 export default function Quizzes() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
   let currentDate = new Date();
   const { cid } = useParams();
   const navigate = useNavigate();
@@ -71,6 +73,7 @@ export default function Quizzes() {
     <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Quiz Section</h1>
       <hr />
+      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
       <button
         className="btn btn-danger"
         onClick={createNewQuizLocalAndServer}
@@ -78,6 +81,7 @@ export default function Quizzes() {
       >
         + Quiz
       </button>
+      )}
       <div
         style={{
           marginTop: "12px",

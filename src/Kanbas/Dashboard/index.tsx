@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "../Courses/client";
 import * as enrollmentClient from "../Courses/Enrollments/client";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentCourses } from "../Courses/reducer";
 
 export default function Dashboard({
   courses,
@@ -18,6 +20,8 @@ export default function Dashboard({
   deleteCourse: (courseId: string) => void;
   updateCourse: () => void;
 }) {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const dispatch = useDispatch();
   const [publishedCourses, setPublishedCourses] = useState<any[]>([]);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   const fetchEnrolledCourses = async () => {
@@ -39,11 +43,15 @@ export default function Dashboard({
   useEffect(() => {
     fetchPublishedCourses();
     fetchEnrolledCourses();
-  }, []);
+    dispatch(setCurrentCourses(courses))
+
+  }, [courses]);
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY") && (
+        <div>
       <h5>
         New Course
         <button
@@ -78,7 +86,6 @@ export default function Dashboard({
       <h2 id="wd-dashboard-published">
         My Courses ({publishedCourses.length})
       </h2>
-      <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
           {publishedCourses.map((course) => (
@@ -144,10 +151,16 @@ export default function Dashboard({
           ))}
         </div>
       </div>
+      <br/>
+      <br/>
+      <hr />
+      </div>
+
+)}
       <h2 id="wd-dashboard-published">
         Course I'm enrolled in ({enrolledCourses.length})
       </h2>
-      <hr />
+
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
           {enrolledCourses.map((course) => (
@@ -203,11 +216,13 @@ export default function Dashboard({
           ))}
         </div>
       </div>
-      <h2 id="wd-dashboard-allCourses">All Courses ({courses.length})</h2>
-      <hr />
+      <br/>
+      <br/>
+      <hr/>
+      <h2 id="wd-dashboard-allCourses">All Courses ({courses.length - enrolledCourses.length})</h2>
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses.map((course) => (
+          {courses.map((course) => (!enrolledCourses.map(courseInner => courseInner._id).find((id) => id === course._id) && (
             <div
               key={course._id}
               className="wd-dashboard-course col"
@@ -249,6 +264,7 @@ export default function Dashboard({
               </div>
               </Link>
             </div>
+          )
           ))}
         </div>
       </div>
