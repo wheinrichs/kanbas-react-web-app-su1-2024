@@ -11,29 +11,37 @@ export default function Editor() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [newQuestionIDs, setNewQuestionIDs] = useState([]);
-  const [currentQuiz, setCurrentQuiz] = useState({});
+  const [currentQuiz, setCurrentQuiz] = useState({new: true});
 
   // Need to pass this state variable to keep track of questions you need to remove if the user clicks cancel
   const [questionsToAdd, setQuestionsToAdd] = useState({});
 
   const saveLocalAndServerQuiz = async () => {
-    const newQuiz = await client.updateQuiz(qid, currentQuiz);
+    const newQuiz = await client.updateQuiz(qid, {
+      ...currentQuiz,
+      new: false,
+    });
     setCurrentQuiz(newQuiz);
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details`);
   };
 
   const publishLocalAndServerQuiz = async () => {
-    const newQuiz = await client.updateQuiz(qid, currentQuiz);
+    const newQuiz = await client.updateQuiz(qid, {
+      ...currentQuiz,
+      new: false,
+    });
     setCurrentQuiz(newQuiz);
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   };
 
   const cancelQuizEdit = async () => {
-    newQuestionIDs &&
-      newQuestionIDs.map((questionID) => {
-        client.deleteQuizQuestionsByQuestionID(questionID);
-      });
-    const response = await client.deleteQuiz(qid);
+    if(currentQuiz.new === true) {
+      newQuestionIDs &&
+        newQuestionIDs.map((questionID) => {
+          client.deleteQuizQuestionsByQuestionID(questionID);
+        });
+      const response = await client.deleteQuiz(qid);
+    }
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   };
 
