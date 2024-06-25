@@ -229,7 +229,9 @@ export default function Dashboard({
                     }}
                   >
                     <button
-                      onClick={() => enrollInCourse(course._id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        enrollInCourse(course._id);}}
                       className="btn btn-success float-end"
                     >
                       {" "}
