@@ -90,6 +90,7 @@ export default function QuizDetails() {
               borderRadius: "5px",
               padding: "5px 15px",
             }}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)}
           >
             {" "}
             <FaPencil /> Edit

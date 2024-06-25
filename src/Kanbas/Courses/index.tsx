@@ -12,10 +12,9 @@ import PeopleTable from "./People/Table";
 import Editor from "./Quiz/Editor/Editor";
 import QuizTake from "./Quiz/QuizTake";
 import QuizDetails from "./Quiz/QuizDetails";
+import QuizProtectedRoute from "./Quiz/QuizProtectedRoute";
 
-
-
-export default function Courses({ courses }: {courses: any[];}) {
+export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
@@ -28,7 +27,9 @@ export default function Courses({ courses }: {courses: any[];}) {
       </div>
       <div className="d-flex flex-row">
         <RxDragHandleHorizontal className="fs-1 me-2" />
-        <h2>{course && course.name} &gt; {pathname.split("/")[4]}</h2>
+        <h2>
+          {course && course.name} &gt; {pathname.split("/")[4]}
+        </h2>
       </div>
       <hr />
       <div className="d-flex">
@@ -49,7 +50,8 @@ export default function Courses({ courses }: {courses: any[];}) {
             <Route path="People/:uid" element={<PeopleTable />} />
             <Route path="Quizzes/:id" element={<QuizTake />} />
             <Route path="Quizzes/:qid/details" element={<QuizDetails />} />
-            <Route path="Quizzes/Editor/:qid" element={<Editor />} />
+            
+              <Route path="Quizzes/Editor/:qid" element={<QuizProtectedRoute><Editor /></QuizProtectedRoute>} />
           </Routes>
         </div>
       </div>
