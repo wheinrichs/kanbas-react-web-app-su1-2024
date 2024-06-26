@@ -36,8 +36,6 @@ export default function QuizTake() {
     await client2.writeQuizGrade(grade);
   };
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-
   useEffect(() => {
     const startTime = new Date().toLocaleString();
     fetchQuizQuestions();

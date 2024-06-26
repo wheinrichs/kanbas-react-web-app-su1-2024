@@ -33,8 +33,6 @@ export default function Quizzes() {
   }>({});
   const dispatch = useDispatch();
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-
   const removeQuiz = async (quizToDelete: any) => {
     try {
       await client3.deleteQuiz(quizToDelete._id);
