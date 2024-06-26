@@ -22,12 +22,14 @@ export default function QuizDetails() {
     const userGradesResponse = await client.getQuizGradeByUserID(
       currentUser._id
     );
+    console.log("grades set");
+
     if (currentQuiz.attempts) {
       const attempts = userGradesResponse.filter(
         (g: any) => g.quizID === qid
       ).length;
       console.log("Attempts: ", attempts)
-      setCanTake(attempts < currentQuiz.attempts);
+      setCanTake(attempts < currentQuiz.numberOfAttempts);
     }
     setUserGrades(userGradesResponse);
   };
@@ -38,15 +40,22 @@ export default function QuizDetails() {
     courseID: cid,
   });
 
+  console.log("Quiz attempts: ", currentQuiz.numberOfAttempts);
+
   const fetchCurrentQuiz = async () => {
     const newFetchedQuiz = await client.fetchQuiz(qid);
     setCurrentQuiz(newFetchedQuiz);
+    console.log("current quiz set");
   };
 
   useEffect(() => {
-    fetchUserGrades();
     fetchCurrentQuiz();
+    fetchUserGrades();
   }, []);
+
+  useEffect(() => {
+    fetchUserGrades();
+  }, [currentQuiz])
 
   console.log("Can you take? ", canTake)
 
@@ -112,9 +121,6 @@ export default function QuizDetails() {
             justifyContent: "flex-end",
             columnGap: "10px",
           }}
-          onClick={() =>
-            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details/editor`)
-          }
         >
           <button
             style={{
