@@ -28,6 +28,8 @@ export default function Quizzes() {
     title: "",
     points: "",
     courseID: cid,
+    until_date: "",
+    available_date: "",
   });
   const [quizStates, setQuizStates] = useState<{ [key: string]: boolean }>({});
   const [questionsLength, setQuestionsLength] = useState<{
@@ -126,6 +128,17 @@ export default function Quizzes() {
     setPublish(!publish);
   };
 
+  const checkQuizAvailability = (quiz: any) => {
+    if (currentDate < new Date(quiz.available_date)) {
+      return (`Not available until ${new Date(quiz.available_date).toLocaleDateString()}`);
+    } else if (currentDate <= new Date(quiz.until_date)) {
+      return ("Available");
+    } else {
+      return ("Closed");
+    }
+    // if (quiz.available_date)
+  };
+
   console.log(JSON.stringify(quizzes.map((m: any) => m.published)));
 
   return (
@@ -135,14 +148,14 @@ export default function Quizzes() {
       {(currentUser.role === "ADMIN" ||
         currentUser._id ===
           currentCourses.find((c: any) => c._id === cid).author) && (
-        <button
-          className="btn btn-danger"
-          onClick={createNewQuizLocalAndServer}
-          style={{ marginTop: "20px", marginBottom: "20px", width: "10%" }}
-        >
-          + Quiz
-        </button>
-      )}
+          <button
+            className="btn btn-danger"
+            onClick={createNewQuizLocalAndServer}
+            style={{ marginTop: "20px", marginBottom: "20px", width: "10%" }}
+          >
+            + Quiz
+          </button>
+        )}
       <div
         style={{
           marginTop: "12px",
@@ -178,9 +191,11 @@ export default function Quizzes() {
             </div>
             <div style={{ marginRight: "24px", marginLeft: "12px" }}>
               <h4 style={{ fontSize: "16px", margin: "0px" }}>
-                {currentUser.role === "ADMIN" ||
+                {(currentUser.role === "ADMIN" ||
                 currentUser._id ===
-                  currentCourses.find((c: any) => c._id === cid).author || quiz.published ? (
+                  currentCourses.find((c: any) => c._id === cid).author ||
+                (quiz.published && new Date(quiz.available_date) <= currentDate &&
+                currentDate <= new Date(quiz.until_date))) ? (
                   <Link
                     to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/details`}
                   >
@@ -195,9 +210,7 @@ export default function Quizzes() {
                 style={{ fontSize: "12px", display: "flex", columnGap: "12px" }}
               >
                 <span>
-                  {new Date(quiz.available_date) > currentDate
-                    ? "Available"
-                    : "Closed"}
+                  {checkQuizAvailability(quiz)}
                 </span>
                 <span>
                   {" "}
