@@ -6,7 +6,7 @@ import { FaBan, FaRocket, FaCheckCircle, FaEllipsisV } from "react-icons/fa";
 import { addQuiz, setQuizzes, deleteQuiz } from "./reducer";
 import * as client from "./client";
 import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
-import * as client3 from "./Editor/client";
+import * as clientEditor from "./Editor/client";
 import * as client4 from "./Editor/QuestionEditor/client";
 
 // Define the Grade type
@@ -17,7 +17,9 @@ interface Grade {
 
 export default function Quizzes() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
+  const { currentCourses } = useSelector(
+    (state: any) => state.currentCoursesReducer
+  );
   let currentDate = new Date();
   const { cid } = useParams();
   const navigate = useNavigate();
@@ -33,9 +35,12 @@ export default function Quizzes() {
   }>({});
   const dispatch = useDispatch();
 
+  //trigger rerender
+  const [publish, setPublish] = useState(true);
+
   const removeQuiz = async (quizToDelete: any) => {
     try {
-      await client3.deleteQuiz(quizToDelete._id);
+      await clientEditor.deleteQuiz(quizToDelete._id);
       dispatch(deleteQuiz(quizToDelete._id));
     } catch (error) {
       console.error("Failed to delete the quiz", error);
@@ -72,7 +77,7 @@ export default function Quizzes() {
   useEffect(() => {
     fetchQuizzes();
     fetchGrades();
-  }, []);
+  }, [publish]);
 
   useEffect(() => {
     quizzes.forEach((quiz: any) => {
@@ -96,25 +101,47 @@ export default function Quizzes() {
     const recentGrades = allGrades.filter((g) => g.quizID === qid);
     if (recentGrades.length === 0) return "Not Taken Yet"; // Handle case with no grades
     const recentGrade = recentGrades[recentGrades.length - 1];
-    return (recentGrade.grade + "%");
+    return recentGrade.grade + "%";
   };
 
   const navigateToDetails = (quizId: string) => {
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/details`);
   };
 
+  const publishQuiz = async (qid: any, currentQuiz: any) => {
+    const newQuiz = await clientEditor.updateQuiz(qid, {
+      ...currentQuiz,
+      published: true,
+    });
+    //trigger rerender
+    setPublish(!publish);
+  };
+
+  const unpublishQuiz = async (qid: any, currentQuiz: any) => {
+    const newQuiz = await clientEditor.updateQuiz(qid, {
+      ...currentQuiz,
+      published: false,
+    });
+    //trigger rerender
+    setPublish(!publish);
+  };
+
+  console.log(JSON.stringify(quizzes.map((m: any) => m.published)));
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Quiz Section</h1>
       <hr />
-      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
-      <button
-        className="btn btn-danger"
-        onClick={createNewQuizLocalAndServer}
-        style={{ marginTop: "20px", marginBottom: "20px", width: "10%" }}
-      >
-        + Quiz
-      </button>
+      {(currentUser.role === "ADMIN" ||
+        currentUser._id ===
+          currentCourses.find((c: any) => c._id === cid).author) && (
+        <button
+          className="btn btn-danger"
+          onClick={createNewQuizLocalAndServer}
+          style={{ marginTop: "20px", marginBottom: "20px", width: "10%" }}
+        >
+          + Quiz
+        </button>
       )}
       <div
         style={{
@@ -189,11 +216,11 @@ export default function Quizzes() {
               alignItems: "center",
             }}
           >
-            {quizStates[quiz._id] ? (
-              <FaBan onClick={() => toggleIcon(quiz._id)} />
+            {!quiz.published ? (
+              <FaBan onClick={() => publishQuiz(quiz._id, quiz)} />
             ) : (
               <FaCheckCircle
-                onClick={() => toggleIcon(quiz._id)}
+                onClick={() => unpublishQuiz(quiz._id, quiz)}
                 style={{ color: "green" }}
               />
             )}
@@ -228,7 +255,21 @@ export default function Quizzes() {
                   </button>
                 </li>
                 <li>
-                  <button className="dropdown-item">Publish</button>
+                  {quiz.published ? (
+                    <button
+                      className="dropdown-item"
+                      onClick={() => unpublishQuiz(quiz._id, quiz)}
+                    >
+                      Unpublish
+                    </button>
+                  ) : (
+                    <button
+                      className="dropdown-item"
+                      onClick={() => publishQuiz(quiz._id, quiz)}
+                    >
+                      Publish
+                    </button>
+                  )}
                 </li>
               </ul>
             </div>

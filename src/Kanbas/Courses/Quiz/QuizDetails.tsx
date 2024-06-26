@@ -19,7 +19,6 @@ export default function QuizDetails() {
   const [userGrades, setUserGrades] = useState([]);
   const [canTake, setCanTake] = useState(true);
 
-  // This state is ONLY used to rerender
   const [publish, setPublish] = useState(true)
 
   const fetchUserGrades = async () => {
