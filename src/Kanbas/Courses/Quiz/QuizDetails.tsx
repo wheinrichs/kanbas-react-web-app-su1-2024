@@ -10,7 +10,9 @@ import { FaPencil } from "react-icons/fa6";
 export default function QuizDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
   const { cid, qid } = useParams();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const [currentQuiz, setCurrentQuiz] = useState<any>({
     title: "",
@@ -32,53 +34,78 @@ export default function QuizDetails() {
 
   return (
     <div>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "flex-end",
-          columnGap: "10px",
-        }}
-      >
-        <button
+      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
+        <div
           style={{
-            backgroundColor: "green",
-            border: "1px solid rgb(204, 204, 204)",
-            borderRadius: "5px",
-            padding: "5px 15px",
-            color: "white",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            columnGap: "10px",
           }}
         >
-          Published
-        </button>
+          <button
+            style={{
+              backgroundColor: "green",
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+              color: "white",
+            }}
+          >
+            Published
+          </button>
 
-        <button
-          style={{
-            border: "1px solid rgb(204, 204, 204)",
-            borderRadius: "5px",
-            padding: "5px 15px",
-          }}
-          onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
-        >
-          Preview
-        </button>
+          <button
+            style={{
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+            }}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+          >
+            Preview
+          </button>
 
-        <button
+          <button
+            style={{
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+            }}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)}
+          >
+            {" "}
+            <FaPencil /> Edit
+          </button>
+          <hr></hr>
+        </div>
+      )}
+
+      {(currentUser.role !== "ADMIN" || currentUser.role !== "FACULTY") && (
+        <div
           style={{
-            border: "1px solid rgb(204, 204, 204)",
-            borderRadius: "5px",
-            padding: "5px 15px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            columnGap: "10px",
           }}
           onClick={() =>
             navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details/editor`)
           }
         >
-          {" "}
-          <FaPencil /> Edit
-        </button>
-      </div>
+          <button
+            style={{
+              border: "1px solid rgb(204, 204, 204)",
+              borderRadius: "5px",
+              padding: "5px 15px",
+            }}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+          >
+            Take Quiz
+          </button>
+        </div>
+      )}
 
-      <hr></hr>
       <h1>{currentQuiz.title}</h1>
       <div style={{ display: "flex", columnGap: "10px" }}>
         <div
