@@ -15,7 +15,7 @@ interface Grade {
   grade: number;
 }
 
-export default function Quizzes() {
+export default function Quizzes(course: any) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { currentCourses } = useSelector(
     (state: any) => state.currentCoursesReducer
@@ -39,6 +39,7 @@ export default function Quizzes() {
 
   //trigger rerender
   const [publish, setPublish] = useState(true);
+  const [courseAuthor, setCourseAuthor] = useState();
 
   const removeQuiz = async (quizToDelete: any) => {
     try {
@@ -79,7 +80,7 @@ export default function Quizzes() {
   useEffect(() => {
     fetchQuizzes();
     fetchGrades();
-  }, [publish]);
+  }, [publish, currentCourses]);
 
   useEffect(() => {
     quizzes.forEach((quiz: any) => {
@@ -139,7 +140,7 @@ export default function Quizzes() {
     // if (quiz.available_date)
   };
 
-  console.log(JSON.stringify(quizzes.map((m: any) => m.published)));
+  console.log(course.author);
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -147,7 +148,7 @@ export default function Quizzes() {
       <hr />
       {(currentUser.role === "ADMIN" ||
         currentUser._id ===
-          currentCourses.find((c: any) => c._id === cid).author) && (
+          (course.author)) && (
           <button
             className="btn btn-danger"
             onClick={createNewQuizLocalAndServer}
@@ -193,7 +194,7 @@ export default function Quizzes() {
               <h4 style={{ fontSize: "16px", margin: "0px" }}>
                 {(currentUser.role === "ADMIN" ||
                 currentUser._id ===
-                  currentCourses.find((c: any) => c._id === cid).author ||
+                  course.author ||
                 (quiz.published && new Date(quiz.available_date) <= currentDate &&
                 currentDate <= new Date(quiz.until_date))) ? (
                   <Link
@@ -231,7 +232,7 @@ export default function Quizzes() {
 
           {(currentUser.role === "ADMIN" ||
             currentUser._id ===
-              currentCourses.find((c: any) => c._id === cid).author) && (
+              course.author) && (
             <div
               style={{
                 display: "flex",
@@ -301,7 +302,7 @@ export default function Quizzes() {
           )}
           {currentUser.role !== "ADMIN" &&
             currentUser._id !==
-              currentCourses.find((c: any) => c._id === cid).author && (
+              course.author && (
               <div className="me-2">
                 {!quiz.published ? (
                   <FaBan />

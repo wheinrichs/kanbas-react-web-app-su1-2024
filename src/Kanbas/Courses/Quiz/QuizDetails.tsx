@@ -8,7 +8,7 @@ import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
 import * as clientEditor from "./Editor/client"
 
-export default function QuizDetails() {
+export default function QuizDetails(course: any) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentCourses } = useSelector(
@@ -50,11 +50,7 @@ export default function QuizDetails() {
   useEffect(() => {
     fetchCurrentQuiz();
     fetchUserGrades();
-  }, [publish]);
-
-  useEffect(() => {
-    fetchUserGrades();
-  }, [currentQuiz]);
+  }, [publish, currentQuiz]);
 
   const publishQuiz = async () => {
     const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: true});
@@ -74,7 +70,7 @@ export default function QuizDetails() {
     <div>
       {(currentUser.role === "ADMIN" ||
         currentUser._id ===
-          currentCourses.find((c: any) => c._id === cid).author) && (
+          course.author) && (
         <div
           style={{
             width: "100%",
