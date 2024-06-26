@@ -22,6 +22,8 @@ export default function EditorQuizDetails({
     return `${year}-${month}-${day}`;
   }
 
+  console.log(quiz)
+
   return (
     <div>
       <div className="container">
@@ -206,16 +208,34 @@ export default function EditorQuizDetails({
                 </label>
               </div>
             </div>
-            <input
-              id={`attempts${quiz._id}`}
-              type="checkbox"
-              checked={quiz.attempts}
-              className="form-check-input me-2"
-              onChange={(e) => setQuiz({ ...quiz, attempts: e.target.checked })}
-            ></input>
-            <label className="form-check-label" htmlFor={`attempts${quiz._id}`}>
-              Allow Multiple Attemps
-            </label>
+            <div className="d-flex flex-row align-items-center">
+              <input
+                id={`attempts${quiz._id}`}
+                type="checkbox"
+                checked={quiz.attempts}
+                className="form-check-input me-2"
+                onChange={(e) =>
+                  setQuiz({ ...quiz, attempts: e.target.checked })
+                }
+              ></input>
+              <label
+                className="form-check-label"
+                htmlFor={`attempts${quiz._id}`}
+              >
+                Allow Multiple Attemps
+              </label>
+              {quiz.attempts &&
+              <div className="ms-1">
+                <input
+                  id={`multipleAttempts${quiz._id}`}
+                  className="form-control"
+                  type="number"
+                  value={quiz.numberOfAttempts && quiz.numberOfAttempts}
+                  onChange={(e) => setQuiz({ ...quiz, numberOfAttempts: e.target.value })}
+                ></input>
+              </div>
+}
+            </div>
           </div>
         </div>
         <div className="row mt-3 align-items-center">

@@ -10,34 +10,33 @@ import { FaPencil } from "react-icons/fa6";
 export default function QuizDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
+  const { currentCourses } = useSelector(
+    (state: any) => state.currentCoursesReducer
+  );
   const { cid, qid } = useParams();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const [userGrades, setUserGrades] = useState([]);
+  const [canTake, setCanTake] = useState(true);
 
-  // this might break it
+  const fetchUserGrades = async () => {
+    const userGradesResponse = await client.getQuizGradeByUserID(
+      currentUser._id
+    );
+    if (currentQuiz.attempts) {
+      const attempts = userGradesResponse.filter(
+        (g: any) => g.quizID === qid
+      ).length;
+      console.log("Attempts: ", attempts)
+      setCanTake(attempts < currentQuiz.attempts);
+    }
+    setUserGrades(userGradesResponse);
+  };
+
   const [currentQuiz, setCurrentQuiz] = useState<any>({
     title: "",
     points: "",
     courseID: cid,
   });
-  // title: "Sample title",
-  // points: "15",
-  // courseID: "6669b6d40ac49e5be88cf459",
-  // available_date: "1/28/2024 11:00 PM",
-  // due_date: "1/31/2024 11:00 PM",
-  // instructions: "meow",
-  // type: "gradedQuiz",
-  // assignment_group: "quizzes",
-  // shuffle: true,
-  // time_limit: true,
-  // time: "20",
-  // attempts: false,
-  // until_date: "1/31/2024 11:00 PM",
-  // show_correct_answers: false,
-  // one_at_a_time: true,
-  // webcam: false,
-  // lock_after: false,
-  // access_code: "meow",
 
   const fetchCurrentQuiz = async () => {
     const newFetchedQuiz = await client.fetchQuiz(qid);
@@ -45,15 +44,18 @@ export default function QuizDetails() {
   };
 
   useEffect(() => {
-    console.log(cid);
-    console.log(qid);
-    console.log(currentQuiz);
+    fetchUserGrades();
     fetchCurrentQuiz();
   }, []);
 
+  console.log("Can you take? ", canTake)
+
+
   return (
     <div>
-      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
+      {(currentUser.role === "ADMIN" ||
+        currentUser._id ===
+          currentCourses.find((c: any) => c._id === cid).author) && (
         <div
           style={{
             width: "100%",
@@ -91,7 +93,9 @@ export default function QuizDetails() {
               borderRadius: "5px",
               padding: "5px 15px",
             }}
-            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)}
+            onClick={() =>
+              navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)
+            }
           >
             {" "}
             <FaPencil /> Edit
@@ -100,7 +104,7 @@ export default function QuizDetails() {
         </div>
       )}
 
-      {(currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY") && (
+      {currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY" && canTake && (
         <div
           style={{
             width: "100%",
@@ -120,6 +124,18 @@ export default function QuizDetails() {
             Take Quiz
           </button>
         </div>
+      )}
+
+      {!canTake && (
+                <div
+                style={{
+                  backgroundColor: "rgb(248, 233, 229)",
+                  padding: "10px",
+                  borderRadius: "5px",
+                }}
+              >
+                You can not take this quiz again
+              </div>
       )}
 
       <h1>{currentQuiz.title}</h1>

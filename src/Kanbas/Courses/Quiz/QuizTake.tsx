@@ -12,7 +12,6 @@ export default function QuizTake() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
-  console.log( currentCourses );
   const { cid, id } = useParams();
   // TODO: NOT going to use the quiz id right now (which is "id")-- we are going to use the database id... temporarily
   const qid = id;
@@ -25,7 +24,6 @@ export default function QuizTake() {
     const quizQuestionsNew = await client.fetchQuizQuestions(qid);
     // Local set
     dispatch(setQuizQuestions(quizQuestionsNew));
-    console.log(quiz_questions);
   };
 
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
