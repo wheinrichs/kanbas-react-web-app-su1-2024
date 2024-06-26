@@ -173,14 +173,22 @@ export default function Quizzes() {
           <div style={{ display: "flex", alignItems: "center" }}>
             <div>
               <FaRocket
-                style={{ color: quizStates[quiz._id] ? "black" : "green" }}
+                style={{ color: !quiz.published ? "black" : "green" }}
               />
             </div>
             <div style={{ marginRight: "24px", marginLeft: "12px" }}>
               <h4 style={{ fontSize: "16px", margin: "0px" }}>
-                <Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/details`}>
-                  {quiz.title}
-                </Link>
+                {currentUser.role === "ADMIN" ||
+                currentUser._id ===
+                  currentCourses.find((c: any) => c._id === cid).author || quiz.published ? (
+                  <Link
+                    to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/details`}
+                  >
+                    {quiz.title}
+                  </Link>
+                ) : (
+                  quiz.title
+                )}
               </h4>
 
               <div
@@ -208,72 +216,87 @@ export default function Quizzes() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              columnGap: "20px",
-              marginRight: "20px",
-              alignItems: "center",
-            }}
-          >
-            {!quiz.published ? (
-              <FaBan onClick={() => publishQuiz(quiz._id, quiz)} />
-            ) : (
-              <FaCheckCircle
-                onClick={() => unpublishQuiz(quiz._id, quiz)}
-                style={{ color: "green" }}
-              />
-            )}
-            <div className="dropdown">
-              <button
-                className="btn btn-secondary dropdown-toggle"
-                type="button"
-                id={`dropdownMenuButton-${quiz._id}`}
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <FaEllipsisV />
-              </button>
-              <ul
-                className="dropdown-menu"
-                aria-labelledby={`dropdownMenuButton-${quiz._id}`}
-              >
-                <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => navigateToDetails(quiz._id)}
-                  >
-                    Edit
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item"
-                    onClick={() => removeQuiz(quiz)}
-                  >
-                    Delete
-                  </button>
-                </li>
-                <li>
-                  {quiz.published ? (
+          {(currentUser.role === "ADMIN" ||
+            currentUser._id ===
+              currentCourses.find((c: any) => c._id === cid).author) && (
+            <div
+              style={{
+                display: "flex",
+                columnGap: "20px",
+                marginRight: "20px",
+                alignItems: "center",
+              }}
+            >
+              {!quiz.published ? (
+                <FaBan onClick={() => publishQuiz(quiz._id, quiz)} />
+              ) : (
+                <FaCheckCircle
+                  onClick={() => unpublishQuiz(quiz._id, quiz)}
+                  style={{ color: "green" }}
+                />
+              )}
+              <div className="dropdown">
+                <button
+                  className="btn btn-secondary dropdown-toggle"
+                  type="button"
+                  id={`dropdownMenuButton-${quiz._id}`}
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <FaEllipsisV />
+                </button>
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby={`dropdownMenuButton-${quiz._id}`}
+                >
+                  <li>
                     <button
                       className="dropdown-item"
-                      onClick={() => unpublishQuiz(quiz._id, quiz)}
+                      onClick={() => navigateToDetails(quiz._id)}
                     >
-                      Unpublish
+                      Edit
                     </button>
-                  ) : (
+                  </li>
+                  <li>
                     <button
                       className="dropdown-item"
-                      onClick={() => publishQuiz(quiz._id, quiz)}
+                      onClick={() => removeQuiz(quiz)}
                     >
-                      Publish
+                      Delete
                     </button>
-                  )}
-                </li>
-              </ul>
+                  </li>
+                  <li>
+                    {quiz.published ? (
+                      <button
+                        className="dropdown-item"
+                        onClick={() => unpublishQuiz(quiz._id, quiz)}
+                      >
+                        Unpublish
+                      </button>
+                    ) : (
+                      <button
+                        className="dropdown-item"
+                        onClick={() => publishQuiz(quiz._id, quiz)}
+                      >
+                        Publish
+                      </button>
+                    )}
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
+          )}
+          {currentUser.role !== "ADMIN" &&
+            currentUser._id !==
+              currentCourses.find((c: any) => c._id === cid).author && (
+              <div className="me-2">
+                {!quiz.published ? (
+                  <FaBan />
+                ) : (
+                  <FaCheckCircle style={{ color: "green" }} />
+                )}
+              </div>
+            )}
         </div>
       ))}
 
