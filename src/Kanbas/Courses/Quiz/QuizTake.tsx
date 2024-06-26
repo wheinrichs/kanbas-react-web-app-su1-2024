@@ -11,7 +11,6 @@ export default function QuizTake() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
-  console.log( currentCourses );
   const { cid, id } = useParams();
   const qid = id;
   const { pathname } = useLocation();
