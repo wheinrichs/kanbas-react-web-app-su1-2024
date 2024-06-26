@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
+import * as clientEditor from "./Editor/client"
 
 export default function QuizDetails() {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ export default function QuizDetails() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [userGrades, setUserGrades] = useState([]);
   const [canTake, setCanTake] = useState(true);
+
+  // This state is ONLY used to rerender
+  const [publish, setPublish] = useState(true)
 
   const fetchUserGrades = async () => {
     const userGradesResponse = await client.getQuizGradeByUserID(
@@ -38,20 +42,34 @@ export default function QuizDetails() {
     courseID: cid,
   });
 
-
   const fetchCurrentQuiz = async () => {
     const newFetchedQuiz = await client.fetchQuiz(qid);
     setCurrentQuiz(newFetchedQuiz);
+    setPublish(newFetchedQuiz.published);
   };
 
   useEffect(() => {
     fetchCurrentQuiz();
     fetchUserGrades();
-  }, []);
+  }, [publish]);
 
   useEffect(() => {
     fetchUserGrades();
-  }, [currentQuiz])
+  }, [currentQuiz]);
+
+  const publishQuiz = async () => {
+    const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: true});
+    setCurrentQuiz(newQuiz);
+    setPublish(true);
+  }
+
+  const unpublishQuiz = async () => {
+    const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: false});
+    setCurrentQuiz(newQuiz);
+    setPublish(false);
+  }
+
+  console.log(currentQuiz.published);
 
   return (
     <div>
@@ -66,7 +84,8 @@ export default function QuizDetails() {
             columnGap: "10px",
           }}
         >
-          <button
+          {publish ? (
+            <button
             style={{
               backgroundColor: "green",
               border: "1px solid rgb(204, 204, 204)",
@@ -74,9 +93,19 @@ export default function QuizDetails() {
               padding: "5px 15px",
               color: "white",
             }}
+            onClick={() => unpublishQuiz()}
+
           >
             Published
           </button>
+          ) : (
+            <button
+              className="btn btn-danger"
+              onClick={() => publishQuiz()}
+            >
+              Unpublished
+            </button>
+          )}
 
           <button
             style={{
@@ -106,39 +135,43 @@ export default function QuizDetails() {
         </div>
       )}
 
-      {currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY" && canTake && (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-            columnGap: "10px",
-          }}
-        >
-          <button
+      {currentUser.role !== "ADMIN" &&
+        currentUser.role !== "FACULTY" &&
+        canTake && (
+          <div
             style={{
-              border: "1px solid rgb(204, 204, 204)",
-              borderRadius: "5px",
-              padding: "5px 15px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              columnGap: "10px",
             }}
-            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
           >
-            Take Quiz
-          </button>
-        </div>
-      )}
+            <button
+              style={{
+                border: "1px solid rgb(204, 204, 204)",
+                borderRadius: "5px",
+                padding: "5px 15px",
+              }}
+              onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+            >
+              Take Quiz
+            </button>
+          </div>
+        )}
 
-      {currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY" && !canTake && (
-                <div
-                style={{
-                  backgroundColor: "rgb(248, 233, 229)",
-                  padding: "10px",
-                  borderRadius: "5px",
-                }}
-              >
-                You can not take this quiz again
-              </div>
-      )}
+      {currentUser.role !== "ADMIN" &&
+        currentUser.role !== "FACULTY" &&
+        !canTake && (
+          <div
+            style={{
+              backgroundColor: "rgb(248, 233, 229)",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            You can not take this quiz again
+          </div>
+        )}
 
       <h1>{currentQuiz.title}</h1>
       <div style={{ display: "flex", columnGap: "10px" }}>

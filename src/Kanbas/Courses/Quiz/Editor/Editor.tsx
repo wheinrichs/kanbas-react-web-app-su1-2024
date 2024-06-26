@@ -29,6 +29,7 @@ export default function Editor() {
     const newQuiz = await client.updateQuiz(qid, {
       ...currentQuiz,
       new: false,
+      published: true,
     });
     setCurrentQuiz(newQuiz);
     navigate(`/Kanbas/Courses/${cid}/Quizzes`);
