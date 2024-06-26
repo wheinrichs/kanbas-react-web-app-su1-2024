@@ -6,8 +6,14 @@ import { FaBan, FaRocket, FaCheckCircle, FaEllipsisV } from "react-icons/fa";
 import { addQuiz, setQuizzes, deleteQuiz } from "./reducer";
 import * as client from "./client";
 import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
-import * as client2 from "../client";
 import * as client3 from "./Editor/client";
+import * as client4 from "./Editor/QuestionEditor/client";
+
+// Define the Grade type
+interface Grade {
+  quizID: string;
+  grade: number;
+}
 
 export default function Quizzes() {
   let currentDate = new Date();
@@ -19,8 +25,13 @@ export default function Quizzes() {
     points: "",
     courseID: cid,
   });
-  const [quizStates, setQuizStates] = useState<any>({});
+  const [quizStates, setQuizStates] = useState<{ [key: string]: boolean }>({});
+  const [questionsLength, setQuestionsLength] = useState<{
+    [key: string]: number;
+  }>({});
   const dispatch = useDispatch();
+
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const removeQuiz = async (quizToDelete: any) => {
     try {
@@ -43,12 +54,30 @@ export default function Quizzes() {
     dispatch(setQuizzes(newQuizzes));
   };
 
+  const [allGrades, setAllGrades] = useState<Grade[]>([]); // Type the state
+
+  const fetchGrades = async () => {
+    const fetchedAllGrades = await client.getQuizGradeByUserID(currentUser._id);
+    setAllGrades(fetchedAllGrades);
+  };
+
+  const fetchQuizQuestionsLength = async (qid: string) => {
+    const quizQuestions = await client4.fetchQuizQuestions(qid);
+    setQuestionsLength((prev) => ({
+      ...prev,
+      [qid]: quizQuestions.length,
+    }));
+  };
+
   useEffect(() => {
     fetchQuizzes();
-    console.log(quizzes);
+    fetchGrades();
   }, []);
 
   useEffect(() => {
+    quizzes.forEach((quiz: any) => {
+      fetchQuizQuestionsLength(quiz._id);
+    });
     const initialStates = quizzes.reduce((acc: any, quiz: any) => {
       acc[quiz._id] = true; // true for FaBan, false for FaCheckCircle
       return acc;
@@ -57,10 +86,17 @@ export default function Quizzes() {
   }, [quizzes]);
 
   const toggleIcon = (quizId: string) => {
-    setQuizStates((prevStates: any) => ({
+    setQuizStates((prevStates) => ({
       ...prevStates,
       [quizId]: !prevStates[quizId],
     }));
+  };
+
+  const getRecentQuizGrade = (qid: string) => {
+    const recentGrades = allGrades.filter((g) => g.quizID === qid);
+    if (recentGrades.length === 0) return "Not Taken Yet"; // Handle case with no grades
+    const recentGrade = recentGrades[recentGrades.length - 1];
+    return (recentGrade.grade + "%");
   };
 
   const navigateToDetails = (quizId: string) => {
@@ -107,7 +143,9 @@ export default function Quizzes() {
         >
           <div style={{ display: "flex", alignItems: "center" }}>
             <div>
-              <FaRocket style={{ color: quizStates[quiz._id] ? "black" : "green" }} />
+              <FaRocket
+                style={{ color: quizStates[quiz._id] ? "black" : "green" }}
+              />
             </div>
             <div style={{ marginRight: "24px", marginLeft: "12px" }}>
               <h4 style={{ fontSize: "16px", margin: "0px" }}>
@@ -126,12 +164,17 @@ export default function Quizzes() {
                 </span>
                 <span>
                   {" "}
-                  <b>Due</b>           {!quiz.due_date
-            ? "N/A"
-            : new Date(quiz.due_date).toLocaleDateString("en-US")}
+                  <b>Due</b>{" "}
+                  {!quiz.due_date
+                    ? "N/A"
+                    : new Date(quiz.due_date).toLocaleDateString("en-US")}
                 </span>
                 <span>{quiz.points ? quiz.points : "?"} pts</span>
-                <span>? Questions</span>
+                <span>{questionsLength[quiz._id] ?? 0} Questions</span>
+                <span>
+                  {" "}
+                  | <b>Last Attempt: </b> {getRecentQuizGrade(quiz._id)}
+                </span>
               </div>
             </div>
           </div>
@@ -147,7 +190,10 @@ export default function Quizzes() {
             {quizStates[quiz._id] ? (
               <FaBan onClick={() => toggleIcon(quiz._id)} />
             ) : (
-              <FaCheckCircle onClick={() => toggleIcon(quiz._id)} style={{ color: "green" }} />
+              <FaCheckCircle
+                onClick={() => toggleIcon(quiz._id)}
+                style={{ color: "green" }}
+              />
             )}
             <div className="dropdown">
               <button
@@ -159,23 +205,28 @@ export default function Quizzes() {
               >
                 <FaEllipsisV />
               </button>
-              <ul className="dropdown-menu" aria-labelledby={`dropdownMenuButton-${quiz._id}`}>
+              <ul
+                className="dropdown-menu"
+                aria-labelledby={`dropdownMenuButton-${quiz._id}`}
+              >
                 <li>
-                  <button className="dropdown-item"
-                  onClick={() => navigateToDetails(quiz._id)}>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => navigateToDetails(quiz._id)}
+                  >
                     Edit
                   </button>
                 </li>
                 <li>
-                  <button className="dropdown-item"
-                  onClick={() => removeQuiz(quiz)}>
+                  <button
+                    className="dropdown-item"
+                    onClick={() => removeQuiz(quiz)}
+                  >
                     Delete
                   </button>
                 </li>
                 <li>
-                  <button className="dropdown-item">
-                    Publish
-                  </button>
+                  <button className="dropdown-item">Publish</button>
                 </li>
               </ul>
             </div>
@@ -183,9 +234,9 @@ export default function Quizzes() {
         </div>
       ))}
 
-      <div style={{ marginTop: "20px", marginBottom: "20px" }}>
+      {/* <div style={{ marginTop: "20px", marginBottom: "20px" }}>
         <SampleInteractQuizGrade />
-      </div>
+      </div> */}
     </div>
   );
 }

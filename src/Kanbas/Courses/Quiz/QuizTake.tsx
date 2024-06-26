@@ -1,16 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import * as client from "./Editor/QuestionEditor/client";
 import { Link } from "react-router-dom";
 import { FaPencil } from "react-icons/fa6";
 import { setQuizQuestions } from "./reducer";
+import * as client2 from "./client";
 
 export default function QuizTake() {
   const dispatch = useDispatch();
   const { cid, id } = useParams();
   const qid = id;
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const { quiz_questions } = useSelector((state: any) => state.quizReducer);
 
@@ -26,6 +28,12 @@ export default function QuizTake() {
   const [timeStarted, setTimeStarted] = useState<string>("");
   const [questionStatus, setQuestionStatus] = useState<boolean[]>([]);
   const [grade, setGrade] = useState<number | null>(null); // Store the grade
+
+  const addGrade = async (grade: any) => {
+    await client2.writeQuizGrade(grade);
+  };
+
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   useEffect(() => {
     const startTime = new Date().toLocaleString();
@@ -76,7 +84,7 @@ export default function QuizTake() {
     console.log("selected answers", selectedAnswers);
     console.log("there are this many questions ", quiz_questions.length);
     const updatedAnswers = [...selectedAnswers];
-    let theseAnswers = updatedAnswers[currentQuestionNumber];
+    let theseAnswers = updatedAnswers[currentQuestionNumber] || [];
 
     if (isChecked) {
       if (theseAnswers.includes(-1)) {
@@ -104,12 +112,12 @@ export default function QuizTake() {
 
     for (let i = 0; i < quiz_questions.length; i++) {
       let isCorrect = true;
-      for (let j = 0; j < quiz_questions[i].answers.length; j++) {
+      for (let j = 0; j < quiz_questions[i].answers?.length; j++) {
         if (
           (quiz_questions[i].type === "fillIn" &&
-            quiz_questions[i].answers[0].includes(selectedAnswers[i][j])) ||
+            quiz_questions[i].answers[0]?.includes(selectedAnswers[i][j])) ||
           (quiz_questions[i].type !== "fillIn" &&
-            quiz_questions[i].answers.includes(
+            quiz_questions[i].answers?.includes(
               quiz_questions[i].choices[selectedAnswers[i][j]]
             ))
         ) {
@@ -124,6 +132,17 @@ export default function QuizTake() {
       status.push(isCorrect);
     }
     setQuestionStatus(status);
+
+    console.log("selected answers is ", selectedAnswers);
+    const newGrade = {
+      userID: currentUser._id,
+      quizID: qid,
+      grade: ((correctQuestions * 1.0) / quiz_questions.length) * 100.0,
+      studentChoices: selectedAnswers,
+    };
+
+    addGrade(newGrade);
+
     return ((correctQuestions * 1.0) / quiz_questions.length) * 100.0;
   };
 
@@ -131,6 +150,8 @@ export default function QuizTake() {
     setQuizFinished(true);
     const calculatedGrade = calculateGrade();
     setGrade(calculatedGrade);
+    console.log(calculateGrade);
+    navigate(`/Kanbas/Courses/${cid}/Quizzes`);
   };
 
   return (
@@ -191,7 +212,7 @@ export default function QuizTake() {
         <ul className="list-group mt-3">
           {currentQuestion &&
             currentQuestion.type === "multiple" &&
-            currentQuestion.answers.length > 1 &&
+            currentQuestion.answers?.length > 1 &&
             currentQuestion.choices.map((q: any, i: number) => (
               <div key={i}>
                 <hr />
@@ -216,14 +237,13 @@ export default function QuizTake() {
             ))}
           {currentQuestion &&
             currentQuestion.type === "multiple" &&
-            currentQuestion.answers.length === 1 &&
+            currentQuestion.answers?.length === 1 &&
             currentQuestion.choices.map((q: any, i: number) => (
               <div key={i}>
                 <hr />
                 <div
                   style={{
                     marginLeft: "10px",
-                 
                   }}
                 >
                   <input

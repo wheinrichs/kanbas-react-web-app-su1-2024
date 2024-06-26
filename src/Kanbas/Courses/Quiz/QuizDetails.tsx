@@ -12,30 +12,11 @@ export default function QuizDetails() {
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
 
-  // this might break it
   const [currentQuiz, setCurrentQuiz] = useState<any>({
     title: "",
     points: "",
     courseID: cid,
   });
-  // title: "Sample title",
-  // points: "15",
-  // courseID: "6669b6d40ac49e5be88cf459",
-  // available_date: "1/28/2024 11:00 PM",
-  // due_date: "1/31/2024 11:00 PM",
-  // instructions: "meow",
-  // type: "gradedQuiz",
-  // assignment_group: "quizzes",
-  // shuffle: true,
-  // time_limit: true,
-  // time: "20",
-  // attempts: false,
-  // until_date: "1/31/2024 11:00 PM",
-  // show_correct_answers: false,
-  // one_at_a_time: true,
-  // webcam: false,
-  // lock_after: false,
-  // access_code: "meow",
 
   const fetchCurrentQuiz = async () => {
     const newFetchedQuiz = await client.fetchQuiz(qid);
