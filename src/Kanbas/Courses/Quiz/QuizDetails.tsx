@@ -135,7 +135,7 @@ export default function QuizDetails() {
         </div>
       )}
 
-      {!canTake && (
+      {currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY" && !canTake && (
                 <div
                 style={{
                   backgroundColor: "rgb(248, 233, 229)",
