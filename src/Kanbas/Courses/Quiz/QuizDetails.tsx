@@ -32,6 +32,12 @@ export default function QuizDetails(course: any) {
       ).length;
       setCanTake(attempts < currentQuiz.numberOfAttempts);
     }
+    else {
+      const attempts = userGradesResponse.filter(
+        (g: any) => g.quizID === qid
+      ).length;
+      setCanTake(attempts < 1);
+    }
     setUserGrades(userGradesResponse);
   };
 
