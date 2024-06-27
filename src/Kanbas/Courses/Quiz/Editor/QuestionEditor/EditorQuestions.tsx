@@ -24,7 +24,7 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
     quizID: qid,
     type: "multiple",
     title: "",
-    points: "",
+    points: "0",
     question: "",
     editing: "true",
   });
@@ -35,7 +35,7 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
       quizID: qid,
       type: "multiple",
       title: "",
-      points: "",
+      points: "0",
       question: "",
       editing: "true",
     });
@@ -81,7 +81,7 @@ export default function EditorQuestions({newQuestionIDs, setNewQuestionIDs} : {n
 
   return (
     <div>
-      <h4 className="mt-3" >{`Total Quiz Points: ${points}`}</h4>
+      <h4 className="mt-3" >{`Total Quiz Points: ${quiz_questions.reduce((accumulator: any, {points}: any) => accumulator + parseInt(points), 0)}`}</h4>
 
       <ul className="list-group mt-3">
         {quiz_questions &&
