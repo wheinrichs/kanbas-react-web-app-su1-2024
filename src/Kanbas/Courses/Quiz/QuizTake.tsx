@@ -81,11 +81,21 @@ export default function QuizTake() {
     const answer = e.target.value;
     setSelectedAnswers((prevSelectedAnswers) => {
       const updatedAnswers = [...prevSelectedAnswers];
-      updatedAnswers[currentQuestionNumber] = [answer];
-      return updatedAnswers;
+      if (prevSelectedAnswers[currentQuestionNumber][0] == -1 as any && prevSelectedAnswers[currentQuestionNumber].length === 1) {
+        updatedAnswers[currentQuestionNumber]= []
+        for(let i=0; i < currentQuestion.choices.length; i++) {
+          updatedAnswers[currentQuestionNumber]=[...updatedAnswers[currentQuestionNumber], -1]
+        }
+      }
+      if((prevSelectedAnswers[currentQuestionNumber].length - 1) >= blankIndex) {
+        updatedAnswers[currentQuestionNumber][blankIndex] = answer;
+      }
+        return updatedAnswers;
     });
-    console.log("selected answers", selectedAnswers);
   };
+  console.log("selected answers", selectedAnswers);
+
+
 
   const handleAnswerSelectMultiple = (index: number, isChecked: boolean) => {
     console.log("selected answers", selectedAnswers);
