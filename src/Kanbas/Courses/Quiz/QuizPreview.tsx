@@ -129,6 +129,13 @@ export default function QuizPreview() {
     });
   };
 
+  const renderFillInBlankQuizPreviewBlank = (currentPrevAns: any) => {
+    if (currentPrevAns === -1) {
+      return ""
+    }
+    return currentPrevAns
+  }
+
   const isChecked = (index: number) => {
     return selectedAnswers[currentQuestionNumber]?.includes(index) || false;
   };
@@ -304,7 +311,7 @@ export default function QuizPreview() {
                 <input
                   type="text"
                   name={"question" + (currentQuestionNumber + 1).toString()}
-                  value={selectedAnswers[currentQuestionNumber]?.[blankIndex] || ""}
+                  value={renderFillInBlankQuizPreviewBlank(selectedAnswers[currentQuestionNumber]?.[blankIndex])}
                   readOnly={quizFinished}
                   onChange={(e) => (handleAnswerText(e, blankIndex))}
                   style={{

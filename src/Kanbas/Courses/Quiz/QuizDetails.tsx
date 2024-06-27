@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
-import * as clientEditor from "./Editor/client"
+import * as clientEditor from "./Editor/client";
 import * as client5 from "../client";
 
 export default function QuizDetails(course: any) {
@@ -18,13 +18,12 @@ export default function QuizDetails(course: any) {
   const [userGrades, setUserGrades] = useState([]);
   const [canTake, setCanTake] = useState(true);
 
-  const [publish, setPublish] = useState(true)
+  const [publish, setPublish] = useState(true);
 
   const getRecentQuizGrade = () => {
     const recentGrades = userGrades.filter((g: any) => g.quizID === qid);
     if (recentGrades.length === 0) return "Not Taken Yet"; // Handle case with no grades
     const recentGrade = recentGrades[recentGrades.length - 1] as any;
-    console.log(recentGrade.grade)
     return recentGrade.grade + "%";
   };
 
@@ -38,8 +37,7 @@ export default function QuizDetails(course: any) {
         (g: any) => g.quizID === qid
       ).length;
       setCanTake(attempts < currentQuiz.numberOfAttempts);
-    }
-    else {
+    } else {
       const attempts = userGradesResponse.filter(
         (g: any) => g.quizID === qid
       ).length;
@@ -72,61 +70,61 @@ export default function QuizDetails(course: any) {
   }, [publish, currentQuiz]);
 
   const publishQuiz = async () => {
-    const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: true});
+    const newQuiz = await clientEditor.updateQuiz(qid, {
+      ...currentQuiz,
+      published: true,
+    });
     setCurrentQuiz(newQuiz);
     setPublish(true);
-  }
+  };
 
   const unpublishQuiz = async () => {
-    const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: false});
+    const newQuiz = await clientEditor.updateQuiz(qid, {
+      ...currentQuiz,
+      published: false,
+    });
     setCurrentQuiz(newQuiz);
     setPublish(false);
-  }
+  };
 
   const parseAssignmentGroup = () => {
-    if(currentQuiz.assignment_group === "quizzes") {
+    if (currentQuiz.assignment_group === "quizzes") {
       return "Quizzes";
-    }
-    else if(currentQuiz.assignment_group === "exams") {
+    } else if (currentQuiz.assignment_group === "exams") {
       return "Exams";
-    }
-    else if(currentQuiz.assignment_group === "assignments") {
+    } else if (currentQuiz.assignment_group === "assignments") {
       return "Assignments";
-    }
-    else if(currentQuiz.assignment_group === "projects") {
+    } else if (currentQuiz.assignment_group === "projects") {
       return "Projects";
-    }
-    else {
+    } else {
       return "N/A";
     }
-  }
+  };
 
   const parseQuizType = () => {
-    if(currentQuiz.type === "gradedQuiz") {
+    if (currentQuiz.type === "gradedQuiz") {
       return "Graded Quiz";
-    }
-    else if(currentQuiz.type === "practiceQuiz") {
+    } else if (currentQuiz.type === "practiceQuiz") {
       return "Practice Quiz";
-    }
-    else if(currentQuiz.type === "gradedSurvey") {
+    } else if (currentQuiz.type === "gradedSurvey") {
       return "Graded Survey";
-    }
-    else if(currentQuiz.type === "ungradedSurvey") {
+    } else if (currentQuiz.type === "ungradedSurvey") {
       return "Ungraded Survey";
-    }
-    else {
+    } else {
       return "N/A";
     }
-  }
+  };
 
   const isAuthorized = () => {
-    return course && (currentUser.role === "ADMIN" || currentUser._id === course.author);
+    return (
+      course &&
+      (currentUser.role === "ADMIN" || currentUser._id === course.author)
+    );
   };
 
   return (
     <div>
       {publishedCourses.length > 0 && isAuthorized() && (
-
         <div
           style={{
             width: "100%",
@@ -137,23 +135,19 @@ export default function QuizDetails(course: any) {
         >
           {publish ? (
             <button
-            style={{
-              backgroundColor: "green",
-              border: "1px solid rgb(204, 204, 204)",
-              borderRadius: "5px",
-              padding: "5px 15px",
-              color: "white",
-            }}
-            onClick={() => unpublishQuiz()}
-
-          >
-            Published
-          </button>
-          ) : (
-            <button
-              className="btn btn-danger"
-              onClick={() => publishQuiz()}
+              style={{
+                backgroundColor: "green",
+                border: "1px solid rgb(204, 204, 204)",
+                borderRadius: "5px",
+                padding: "5px 15px",
+                color: "white",
+              }}
+              onClick={() => unpublishQuiz()}
             >
+              Published
+            </button>
+          ) : (
+            <button className="btn btn-danger" onClick={() => publishQuiz()}>
               Unpublished
             </button>
           )}
@@ -164,10 +158,23 @@ export default function QuizDetails(course: any) {
               borderRadius: "5px",
               padding: "5px 15px",
             }}
-            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`)}
+            onClick={() =>
+              navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`)
+            }
           >
-            Preview
+            View Last Preview
           </button>
+
+          <button
+              style={{
+                border: "1px solid rgb(204, 204, 204)",
+                borderRadius: "5px",
+                padding: "5px 15px",
+              }}
+              onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+            >
+              New Preview Quiz
+            </button>
 
           <button
             style={{
@@ -175,7 +182,9 @@ export default function QuizDetails(course: any) {
               borderRadius: "5px",
               padding: "5px 15px",
             }}
-            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)}
+            onClick={() =>
+              navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)
+            }
           >
             {" "}
             <FaPencil /> Edit
@@ -183,16 +192,17 @@ export default function QuizDetails(course: any) {
           <hr></hr>
         </div>
       )}
-      
-      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY" || ((currentUser.role === "USER" || currentUser.role === "STUDENT") && canTake)) && (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-            columnGap: "10px",
-          }}
-        >
+
+      {(currentUser.role === "USER" || currentUser.role === "STUDENT") &&
+        canTake && (
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+              columnGap: "10px",
+            }}
+          >
             <button
               style={{
                 border: "1px solid rgb(204, 204, 204)",
@@ -246,41 +256,22 @@ export default function QuizDetails(course: any) {
         >
           <span>{parseQuizType()}</span>
           <span>{!currentQuiz.points ? "N/A" : currentQuiz.points}</span>
+          <span>{parseAssignmentGroup()}</span>
+          <span>{!currentQuiz.shuffle ? "No" : "Yes"}</span>
           <span>
-            {parseAssignmentGroup()}
+            {!currentQuiz.time_limit ? "No" : `Yes ${currentQuiz.time} Minutes`}
           </span>
-          <span>
-            {!currentQuiz.shuffle ? "No" : "Yes" }
-          </span>
-          <span>
-            {!currentQuiz.time_limit
-              ? "No" : `Yes ${currentQuiz.time} Minutes`}
-          </span>
-          <span>
-            {!currentQuiz.attempts ? "No" : "Yes"}
-          </span>
+          <span>{!currentQuiz.attempts ? "No" : "Yes"}</span>
           <span>
             {!currentQuiz.attempts ? "1" : currentQuiz.numberOfAttempts}
           </span>
-          <span>
-            {currentQuiz.show_correct_answers?  "Yes"
-              : "No"}
-          </span>
-          <span>
-            {currentQuiz.one_at_a_time
-              ? "Yes" : "No"}
-          </span>
+          <span>{currentQuiz.show_correct_answers ? "Yes" : "No"}</span>
+          <span>{currentQuiz.one_at_a_time ? "Yes" : "No"}</span>
           <span>
             {currentQuiz.access_code ? currentQuiz.access_code : "None"}
           </span>
-          <span>
-            {currentQuiz.webcam ? "Yes" : "No"}
-          </span>
-          <span>
-            {currentQuiz.lock_after
-              ? "Yes"
-              : "No"}
-          </span>
+          <span>{currentQuiz.webcam ? "Yes" : "No"}</span>
+          <span>{currentQuiz.lock_after ? "Yes" : "No"}</span>
         </div>
       </div>
 
@@ -372,10 +363,10 @@ export default function QuizDetails(course: any) {
       {(currentUser.role === "USER" || currentUser.role === "STUDENT") && (
         <div>
           <Link to={"/Kanbas/Courses/" + cid + "/Quizzes/" + qid + "/preview"}>
-      Last Attempt: {getRecentQuizGrade()}
-      </Link>
-      </div>
-    )}
+            Last Attempt: {getRecentQuizGrade()}
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
