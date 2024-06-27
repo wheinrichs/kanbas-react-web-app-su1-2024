@@ -124,7 +124,7 @@ export default function QuizDetails(course: any) {
 
   return (
     <div>
-      {publishedCourses.length > 0 && isAuthorized() && (
+      {isAuthorized() && (
         <div
           style={{
             width: "100%",
