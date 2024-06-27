@@ -227,6 +227,7 @@ export default function QuizDetails(course: any) {
           <span>Shuffle Answers </span>
           <span>Time Limit</span>
           <span>Multiple Attempts</span>
+          <span>Number of Attempts</span>
           <span>Show Correct Answers</span>
           <span>One Question at a Time</span>
           <span>Webcam Required </span>
@@ -248,7 +249,10 @@ export default function QuizDetails(course: any) {
               ? "No" : `Yes ${currentQuiz.time} Minutes`}
           </span>
           <span>
-            {!currentQuiz.attempts ? "No" : `Yes ${currentQuiz.numberOfAttempts} Total Attempts`}
+            {!currentQuiz.attempts ? "No" : "Yes"}
+          </span>
+          <span>
+            {!currentQuiz.attempts ? "1" : currentQuiz.numberOfAttempts}
           </span>
           <span>
             {currentQuiz.show_correct_answers?  "Yes"

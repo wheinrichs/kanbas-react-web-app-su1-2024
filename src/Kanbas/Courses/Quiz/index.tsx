@@ -25,7 +25,6 @@ export default function Quizzes(course: any) {
   const navigate = useNavigate();
   const { quizzes } = useSelector((state: any) => state.quizReducer);
   const [quiz, setQuiz] = useState({
-    title: "",
     points: "",
     courseID: cid,
     until_date: "",
