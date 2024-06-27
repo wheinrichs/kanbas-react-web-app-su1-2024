@@ -27,8 +27,8 @@ export default function Profile() {
   const saveProfile = async () => {
     try {
       const updatedProfile = await client.updateProfile(profile);
-      console.log("Updated profile:", updatedProfile); // Log updated profile
-      setProfile(updatedProfile);
+      console.log("Updated profile:", profile); // Log updated profile
+      dispatch(setCurrentUser(profile));
       navigate("/Kanbas/Dashboard");
     } catch (err: any) {
       console.error("Error updating profile:", err); // Log error
@@ -36,7 +36,7 @@ export default function Profile() {
   };
   useEffect(() => {
     fetchProfile();
-  }, []);
+  }, [setCurrentUser]);
   return (
     <div>
       <h1>Profile</h1>
