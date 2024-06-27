@@ -120,9 +120,9 @@ export default function Quizzes(course: any) {
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/details`);
   };
 
-  if (publishedCourses.length === 0) {
-    return <div>Loading...</div>;
-  }
+  // if (publishedCourses.length === 0) {
+  //   return <div>Loading...</div>;
+  // }
   
   const publishQuiz = async (qid: any, currentQuiz: any) => {
     const newQuiz = await clientEditor.updateQuiz(qid, {
