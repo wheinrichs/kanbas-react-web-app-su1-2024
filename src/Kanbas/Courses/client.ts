@@ -15,6 +15,7 @@ export const fetchAllCourses = async () => {
     throw error;
   }
 };
+
 export const fetchPublishedCourses = async () => {
   try {
     const response = await axiosWithCredentials.get(`${COURSES_API}/published`);

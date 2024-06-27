@@ -6,9 +6,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
+import * as clientEditor from "./Editor/client"
 import * as client5 from "../client";
 
-export default function QuizDetails() {
+export default function QuizDetails(course: any) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [publishedCourses, setPublishedCourses] = useState<any[]>([]);
@@ -17,12 +18,24 @@ export default function QuizDetails() {
   const [userGrades, setUserGrades] = useState([]);
   const [canTake, setCanTake] = useState(true);
 
+  const [publish, setPublish] = useState(true)
+
   const fetchUserGrades = async () => {
-    const userGradesResponse = await client.getQuizGradeByUserID(currentUser._id);
+    const userGradesResponse = await client.getQuizGradeByUserID(
+      currentUser._id
+    );
+
     if (currentQuiz.attempts) {
-      const attempts = userGradesResponse.filter((g: any) => g.quizID === qid).length;
-      console.log("Attempts: ", attempts);
-      setCanTake(attempts < currentQuiz.attempts);
+      const attempts = userGradesResponse.filter(
+        (g: any) => g.quizID === qid
+      ).length;
+      setCanTake(attempts < currentQuiz.numberOfAttempts);
+    }
+    else {
+      const attempts = userGradesResponse.filter(
+        (g: any) => g.quizID === qid
+      ).length;
+      setCanTake(attempts < 1);
     }
     setUserGrades(userGradesResponse);
   };
@@ -41,22 +54,73 @@ export default function QuizDetails() {
   const fetchCurrentQuiz = async () => {
     const newFetchedQuiz = await client.fetchQuiz(qid);
     setCurrentQuiz(newFetchedQuiz);
+    setPublish(newFetchedQuiz.published);
   };
 
   useEffect(() => {
-    fetchUserGrades();
     fetchCurrentQuiz();
+    fetchUserGrades();
     fetchPublishedCourses();
-  }, []);
+  }, [publish, currentQuiz]);
+
+  const publishQuiz = async () => {
+    const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: true});
+    setCurrentQuiz(newQuiz);
+    setPublish(true);
+  }
+
+  const unpublishQuiz = async () => {
+    const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: false});
+    setCurrentQuiz(newQuiz);
+    setPublish(false);
+  }
+
+  const parseAssignmentGroup = () => {
+    if(currentQuiz.assignment_group === "quizzes") {
+      return "Quizzes";
+    }
+    else if(currentQuiz.assignment_group === "exams") {
+      return "Exams";
+    }
+    else if(currentQuiz.assignment_group === "assignments") {
+      return "Assignments";
+    }
+    else if(currentQuiz.assignment_group === "projects") {
+      return "Projects";
+    }
+    else {
+      return "N/A";
+    }
+  }
+
+  const parseQuizType = () => {
+    if(currentQuiz.type === "gradedQuiz") {
+      return "Graded Quiz";
+    }
+    else if(currentQuiz.type === "practiceQuiz") {
+      return "Practice Quiz";
+    }
+    else if(currentQuiz.type === "gradedSurvey") {
+      return "Graded Survey";
+    }
+    else if(currentQuiz.type === "ungradedSurvey") {
+      return "Ungraded Survey";
+    }
+    else {
+      return "N/A";
+    }
+  }
 
   const isAuthorized = () => {
-    const course = publishedCourses.find((c: any) => c._id === cid);
     return course && (currentUser.role === "ADMIN" || currentUser._id === course.author);
   };
+
+  console.log(currentQuiz.published);
 
   return (
     <div>
       {publishedCourses.length > 0 && isAuthorized() && (
+
         <div
           style={{
             width: "100%",
@@ -65,7 +129,8 @@ export default function QuizDetails() {
             columnGap: "10px",
           }}
         >
-          <button
+          {publish ? (
+            <button
             style={{
               backgroundColor: "green",
               border: "1px solid rgb(204, 204, 204)",
@@ -73,9 +138,19 @@ export default function QuizDetails() {
               padding: "5px 15px",
               color: "white",
             }}
+            onClick={() => unpublishQuiz()}
+
           >
             Published
           </button>
+          ) : (
+            <button
+              className="btn btn-danger"
+              onClick={() => publishQuiz()}
+            >
+              Unpublished
+            </button>
+          )}
 
           <button
             style={{
@@ -103,7 +178,7 @@ export default function QuizDetails() {
         </div>
       )}
       
-      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY" || (currentUser.role === "STUDENT" && canTake)) && (
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY" || ((currentUser.role === "USER" || currentUser.role === "STUDENT") && canTake)) && (
         <div
           style={{
             width: "100%",
@@ -112,18 +187,18 @@ export default function QuizDetails() {
             columnGap: "10px",
           }}
         >
-          <button
-            style={{
-              border: "1px solid rgb(204, 204, 204)",
-              borderRadius: "5px",
-              padding: "5px 15px",
-            }}
-            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
-          >
-            Take Quiz
-          </button>
-        </div>
-      )}
+            <button
+              style={{
+                border: "1px solid rgb(204, 204, 204)",
+                borderRadius: "5px",
+                padding: "5px 15px",
+              }}
+              onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+            >
+              Take Quiz
+            </button>
+          </div>
+        )}
 
       {!canTake && (
         <div
@@ -153,55 +228,50 @@ export default function QuizDetails() {
           <span>Shuffle Answers </span>
           <span>Time Limit</span>
           <span>Multiple Attempts</span>
+          <span>Number of Attempts</span>
           <span>Show Correct Answers</span>
           <span>One Question at a Time</span>
+          <span>Access Code</span>
           <span>Webcam Required </span>
           <span>Lock Questions After Answering</span>
         </div>
         <div
           style={{ display: "flex", flexDirection: "column", rowGap: "10px" }}
         >
-          <span>{!currentQuiz.type ? "N/A" : currentQuiz.type}</span>
+          <span>{parseQuizType()}</span>
           <span>{!currentQuiz.points ? "N/A" : currentQuiz.points}</span>
           <span>
-            {!currentQuiz.assignment_group
-              ? "N/A"
-              : currentQuiz.assignment_group}
+            {parseAssignmentGroup()}
           </span>
           <span>
-            {!currentQuiz.shuffle ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
+            {!currentQuiz.shuffle ? "No" : "Yes" }
           </span>
           <span>
             {!currentQuiz.time_limit
-              ? "N/A"
-              : currentQuiz.shuffle
-              ? "Yes"
+              ? "No" : `Yes ${currentQuiz.time} Minutes`}
+          </span>
+          <span>
+            {!currentQuiz.attempts ? "No" : "Yes"}
+          </span>
+          <span>
+            {!currentQuiz.attempts ? "1" : currentQuiz.numberOfAttempts}
+          </span>
+          <span>
+            {currentQuiz.show_correct_answers?  "Yes"
               : "No"}
           </span>
           <span>
-            {!currentQuiz.attempts ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
+            {currentQuiz.one_at_a_time
+              ? "Yes" : "No"}
           </span>
           <span>
-            {!currentQuiz.show_correct_answers
-              ? "N/A"
-              : currentQuiz.shuffle
-              ? "Yes"
-              : "No"}
+            {currentQuiz.access_code ? currentQuiz.access_code : "None"}
           </span>
           <span>
-            {!currentQuiz.one_at_a_time
-              ? "N/A"
-              : currentQuiz.shuffle
-              ? "Yes"
-              : "No"}
+            {currentQuiz.webcam ? "Yes" : "No"}
           </span>
           <span>
-            {!currentQuiz.webcam ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
-          </span>
-          <span>
-            {!currentQuiz.lock_after
-              ? "N/A"
-              : currentQuiz.shuffle
+            {currentQuiz.lock_after
               ? "Yes"
               : "No"}
           </span>

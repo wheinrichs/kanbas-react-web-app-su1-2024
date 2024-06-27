@@ -20,6 +20,7 @@ export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+
   return (
     <div id="wd-courses">
       <br />
@@ -47,13 +48,12 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:id" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
-            <Route path="Quizzes" element={<Quizzes />} />
+            <Route path="Quizzes" element={<Quizzes {...course}/>} />
             <Route path="People" element={<PeopleTable />} />
             <Route path="People/:uid" element={<PeopleTable />} />
             <Route path="Quizzes/:id" element={<QuizTake />} />
             <Route path="Quizzes/:id/preview" element={<QuizPreview />} />
-            <Route path="Quizzes/:qid/details" element={<QuizDetails />} />
-
+            <Route path="Quizzes/:qid/details" element={<QuizDetails {...course} />} />
             <Route
               path="Quizzes/Editor/:qid"
               element={

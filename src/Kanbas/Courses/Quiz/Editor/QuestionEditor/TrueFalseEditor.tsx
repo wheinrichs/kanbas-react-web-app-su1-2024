@@ -12,13 +12,7 @@ export default function TrueFalseEditor({
   setAnswerArray: (answeArrayr: any) => void;
 }) {
   const setCorrectAnswer = (e: any, a: any) => {
-    if (e.target.checked) {
-      setAnswerArray([...answerArray, e.target.value] as any);
-    } else {
-      setAnswerArray(
-        answerArray.filter((ans: any) => ans !== e.target.value) as any
-      );
-    }
+    setAnswerArray([e.target.value] as any);
   };
 
   useEffect(() => {
@@ -37,7 +31,8 @@ export default function TrueFalseEditor({
                 <input
                   id={`${question._id}.${qa}`}
                   className="form-check-input me-2"
-                  type="checkbox"
+                  type="radio"
+                  name={question._id}
                   value={qai}
                   checked={answerArray.includes(qai.toString())}
                   onChange={(e) => {
