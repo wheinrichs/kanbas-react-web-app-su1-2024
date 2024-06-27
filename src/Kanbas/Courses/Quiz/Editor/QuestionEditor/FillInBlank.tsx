@@ -90,6 +90,14 @@ export default function FillInBlank({
                   }}
                   value={qas}
                 ></input>
+                <div className="ms-4">
+                  Case Sensitive
+                  </div>
+                  <input
+                  className="form-check-input me-2"
+                  type="checkbox"
+                >
+                  </input>
               </div>
               ))}
               <div className="d-flex align-items-center">
