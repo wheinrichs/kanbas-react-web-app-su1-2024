@@ -360,7 +360,7 @@ export default function QuizDetails(course: any) {
         </span>
       </div>
       <br />
-      {(currentUser.role === "USER" || currentUser.role === "STUDENT") && (
+      {(currentUser.role === "USER" || currentUser.role === "STUDENT" && getRecentQuizGrade() !== "Not Taken Yet") && (
         <div>
           <Link to={"/Kanbas/Courses/" + cid + "/Quizzes/" + qid + "/preview"}>
             Last Attempt: {getRecentQuizGrade()}
