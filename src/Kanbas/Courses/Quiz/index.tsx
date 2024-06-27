@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { FaBan, FaRocket, FaCheckCircle, FaEllipsisV } from "react-icons/fa";
 import { addQuiz, setQuizzes, deleteQuiz } from "./reducer";
 import * as client from "./client";
-import SampleInteractQuizGrade from "./SampleInteractQuizGrade";
 import * as client3 from "./Editor/client";
 import * as client4 from "./Editor/QuestionEditor/client";
+import * as client5 from "../client";
 
 // Define the Grade type
 interface Grade {
@@ -17,7 +17,6 @@ interface Grade {
 
 export default function Quizzes() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { currentCourses } = useSelector((state: any) => state.currentCoursesReducer);
   let currentDate = new Date();
   const { cid } = useParams();
   const navigate = useNavigate();
@@ -27,6 +26,8 @@ export default function Quizzes() {
     points: "",
     courseID: cid,
   });
+  const [publishedCourses, setPublishedCourses] = useState<any[]>([]);
+  
   const [quizStates, setQuizStates] = useState<{ [key: string]: boolean }>({});
   const [questionsLength, setQuestionsLength] = useState<{
     [key: string]: number;
@@ -56,6 +57,11 @@ export default function Quizzes() {
 
   const [allGrades, setAllGrades] = useState<Grade[]>([]); // Type the state
 
+  const fetchPublishedCourses = async () => {
+    const courses = await client5.fetchPublishedCourses();
+    setPublishedCourses(courses);
+  };
+
   const fetchGrades = async () => {
     const fetchedAllGrades = await client.getQuizGradeByUserID(currentUser._id);
     setAllGrades(fetchedAllGrades);
@@ -70,8 +76,10 @@ export default function Quizzes() {
   };
 
   useEffect(() => {
+    console.log(publishedCourses)
     fetchQuizzes();
     fetchGrades();
+    fetchPublishedCourses();
   }, []);
 
   useEffect(() => {
@@ -103,11 +111,15 @@ export default function Quizzes() {
     navigate(`/Kanbas/Courses/${cid}/Quizzes/${quizId}/details`);
   };
 
+  if (publishedCourses.length === 0) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Quiz Section</h1>
       <hr />
-      {(currentUser.role === "ADMIN" || currentUser._id === currentCourses.find((c: any) => c._id === cid).author) && (
+      {(currentUser.role === "ADMIN" || currentUser._id === publishedCourses.find((c: any) => c._id === cid).author) && (
       <button
         className="btn btn-danger"
         onClick={createNewQuizLocalAndServer}
@@ -235,10 +247,6 @@ export default function Quizzes() {
           </div>
         </div>
       ))}
-
-      {/* <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <SampleInteractQuizGrade />
-      </div> */}
     </div>
   );
 }

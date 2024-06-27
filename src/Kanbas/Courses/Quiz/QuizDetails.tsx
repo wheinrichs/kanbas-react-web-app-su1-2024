@@ -1,35 +1,35 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import * as db from "../../Database";
 import { setQuizzes } from "./reducer";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
+import * as client5 from "../client";
 
 export default function QuizDetails() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currentCourses } = useSelector(
-    (state: any) => state.currentCoursesReducer
-  );
+  const [publishedCourses, setPublishedCourses] = useState<any[]>([]);
   const { cid, qid } = useParams();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [userGrades, setUserGrades] = useState([]);
   const [canTake, setCanTake] = useState(true);
 
   const fetchUserGrades = async () => {
-    const userGradesResponse = await client.getQuizGradeByUserID(
-      currentUser._id
-    );
+    const userGradesResponse = await client.getQuizGradeByUserID(currentUser._id);
     if (currentQuiz.attempts) {
-      const attempts = userGradesResponse.filter(
-        (g: any) => g.quizID === qid
-      ).length;
-      console.log("Attempts: ", attempts)
+      const attempts = userGradesResponse.filter((g: any) => g.quizID === qid).length;
+      console.log("Attempts: ", attempts);
       setCanTake(attempts < currentQuiz.attempts);
     }
     setUserGrades(userGradesResponse);
+  };
+
+  const fetchPublishedCourses = async () => {
+    const courses = await client5.fetchPublishedCourses();
+    setPublishedCourses(courses);
   };
 
   const [currentQuiz, setCurrentQuiz] = useState<any>({
@@ -46,16 +46,17 @@ export default function QuizDetails() {
   useEffect(() => {
     fetchUserGrades();
     fetchCurrentQuiz();
+    fetchPublishedCourses();
   }, []);
 
-  console.log("Can you take? ", canTake)
-
+  const isAuthorized = () => {
+    const course = publishedCourses.find((c: any) => c._id === cid);
+    return course && (currentUser.role === "ADMIN" || currentUser._id === course.author);
+  };
 
   return (
     <div>
-      {(currentUser.role === "ADMIN" ||
-        currentUser._id ===
-          currentCourses.find((c: any) => c._id === cid).author) && (
+      {publishedCourses.length > 0 && isAuthorized() && (
         <div
           style={{
             width: "100%",
@@ -82,7 +83,7 @@ export default function QuizDetails() {
               borderRadius: "5px",
               padding: "5px 15px",
             }}
-            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`)}
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`)}
           >
             Preview
           </button>
@@ -93,9 +94,7 @@ export default function QuizDetails() {
               borderRadius: "5px",
               padding: "5px 15px",
             }}
-            onClick={() =>
-              navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)
-            }
+            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/Editor/${qid}`)}
           >
             {" "}
             <FaPencil /> Edit
@@ -103,8 +102,8 @@ export default function QuizDetails() {
           <hr></hr>
         </div>
       )}
-
-      {currentUser.role !== "ADMIN" && currentUser.role !== "FACULTY" && canTake && (
+      
+      {(currentUser.role === "ADMIN" || currentUser.role === "FACULTY" || (currentUser.role === "STUDENT" && canTake)) && (
         <div
           style={{
             width: "100%",
@@ -112,9 +111,6 @@ export default function QuizDetails() {
             justifyContent: "flex-end",
             columnGap: "10px",
           }}
-          onClick={() =>
-            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/details/editor`)
-          }
         >
           <button
             style={{
@@ -130,15 +126,15 @@ export default function QuizDetails() {
       )}
 
       {!canTake && (
-                <div
-                style={{
-                  backgroundColor: "rgb(248, 233, 229)",
-                  padding: "10px",
-                  borderRadius: "5px",
-                }}
-              >
-                You can not take this quiz again
-              </div>
+        <div
+          style={{
+            backgroundColor: "rgb(248, 233, 229)",
+            padding: "10px",
+            borderRadius: "5px",
+          }}
+        >
+          You cannot take this quiz again
+        </div>
       )}
 
       <h1>{currentQuiz.title}</h1>
