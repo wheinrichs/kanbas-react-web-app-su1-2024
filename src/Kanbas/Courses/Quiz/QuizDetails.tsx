@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import * as client from "./client";
 import { FaPencil } from "react-icons/fa6";
 import * as clientEditor from "./Editor/client"
+import { parse } from "path";
 
 export default function QuizDetails(course: any) {
   const navigate = useNavigate();
@@ -68,6 +69,42 @@ export default function QuizDetails(course: any) {
     const newQuiz = await clientEditor.updateQuiz(qid, {...currentQuiz, published: false});
     setCurrentQuiz(newQuiz);
     setPublish(false);
+  }
+
+  const parseAssignmentGroup = () => {
+    if(currentQuiz.assignment_group === "quizzes") {
+      return "Quizzes";
+    }
+    else if(currentQuiz.assignment_group === "exams") {
+      return "Exams";
+    }
+    else if(currentQuiz.assignment_group === "assignments") {
+      return "Assignments";
+    }
+    else if(currentQuiz.assignment_group === "projects") {
+      return "Projects";
+    }
+    else {
+      return "N/A";
+    }
+  }
+
+  const parseQuizType = () => {
+    if(currentQuiz.type === "gradedQuiz") {
+      return "Graded Quiz";
+    }
+    else if(currentQuiz.type === "practiceQuiz") {
+      return "Practice Quiz";
+    }
+    else if(currentQuiz.type === "gradedSurvey") {
+      return "Graded Survey";
+    }
+    else if(currentQuiz.type === "ungradedSurvey") {
+      return "Ungraded Survey";
+    }
+    else {
+      return "N/A";
+    }
   }
 
   console.log(currentQuiz.published);
@@ -198,47 +235,34 @@ export default function QuizDetails(course: any) {
         <div
           style={{ display: "flex", flexDirection: "column", rowGap: "10px" }}
         >
-          <span>{!currentQuiz.type ? "N/A" : currentQuiz.type}</span>
+          <span>{parseQuizType()}</span>
           <span>{!currentQuiz.points ? "N/A" : currentQuiz.points}</span>
           <span>
-            {!currentQuiz.assignment_group
-              ? "N/A"
-              : currentQuiz.assignment_group}
+            {parseAssignmentGroup()}
           </span>
           <span>
-            {!currentQuiz.shuffle ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
+            {!currentQuiz.shuffle ? "No" : "Yes" }
           </span>
           <span>
             {!currentQuiz.time_limit
-              ? "N/A"
-              : currentQuiz.shuffle
-              ? "Yes"
+              ? "No" : `Yes ${currentQuiz.time} Minutes`}
+          </span>
+          <span>
+            {!currentQuiz.attempts ? "No" : `Yes ${currentQuiz.numberOfAttempts} Total Attempts`}
+          </span>
+          <span>
+            {currentQuiz.show_correct_answers?  "Yes"
               : "No"}
           </span>
           <span>
-            {!currentQuiz.attempts ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
+            {currentQuiz.one_at_a_time
+              ? "Yes" : "No"}
           </span>
           <span>
-            {!currentQuiz.show_correct_answers
-              ? "N/A"
-              : currentQuiz.shuffle
-              ? "Yes"
-              : "No"}
+            {currentQuiz.webcam ? "Yes" : "No"}
           </span>
           <span>
-            {!currentQuiz.one_at_a_time
-              ? "N/A"
-              : currentQuiz.shuffle
-              ? "Yes"
-              : "No"}
-          </span>
-          <span>
-            {!currentQuiz.webcam ? "N/A" : currentQuiz.shuffle ? "Yes" : "No"}
-          </span>
-          <span>
-            {!currentQuiz.lock_after
-              ? "N/A"
-              : currentQuiz.shuffle
+            {currentQuiz.lock_after
               ? "Yes"
               : "No"}
           </span>

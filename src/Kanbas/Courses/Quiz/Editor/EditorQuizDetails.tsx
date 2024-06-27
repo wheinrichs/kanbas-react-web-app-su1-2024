@@ -118,7 +118,7 @@ export default function EditorQuizDetails({
             <br />
 
             <input
-              id={`lcok${quiz._id}`}
+              id={`lock${quiz._id}`}
               type="checkbox"
               checked={quiz.lock_after}
               className="form-check-input me-2"
