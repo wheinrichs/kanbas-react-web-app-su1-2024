@@ -20,6 +20,14 @@ export default function QuizDetails(course: any) {
 
   const [publish, setPublish] = useState(true)
 
+  const getRecentQuizGrade = () => {
+    const recentGrades = userGrades.filter((g: any) => g.quizID === qid);
+    if (recentGrades.length === 0) return "Not Taken Yet"; // Handle case with no grades
+    const recentGrade = recentGrades[recentGrades.length - 1] as any;
+    console.log(recentGrade.grade)
+    return recentGrade.grade + "%";
+  };
+
   const fetchUserGrades = async () => {
     const userGradesResponse = await client.getQuizGradeByUserID(
       currentUser._id
@@ -360,6 +368,14 @@ export default function QuizDetails(course: any) {
             : new Date(currentQuiz.until_date).toLocaleDateString("en-US")}
         </span>
       </div>
+      <br />
+      {(currentUser.role === "USER" || currentUser.role === "STUDENT") && (
+        <div>
+          <Link to={"/Kanbas/Courses/" + cid + "/Quizzes/" + qid + "/preview"}>
+      Last Attempt: {getRecentQuizGrade()}
+      </Link>
+      </div>
+    )}
     </div>
   );
 }

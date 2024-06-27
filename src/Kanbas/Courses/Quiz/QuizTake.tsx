@@ -139,8 +139,10 @@ export default function QuizTake() {
               quiz_questions[i].choices[selectedAnswers[i][j]]
             ))
         ) {
+          console.log("Correct answer")
           // Correct answer
         } else {
+          console.log("Incorrect answer")
           // Incorrect answer
           isCorrect = false;
           correctQuestions -= 1;

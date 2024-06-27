@@ -304,7 +304,7 @@ export default function QuizPreview() {
                 <input
                   type="text"
                   name={"question" + (currentQuestionNumber + 1).toString()}
-                  value={selectedAnswers[currentQuestionNumber]?.[0] || ""}
+                  value={selectedAnswers[currentQuestionNumber]?.[blankIndex] || ""}
                   readOnly={quizFinished}
                   onChange={(e) => (handleAnswerText(e, blankIndex))}
                   style={{
