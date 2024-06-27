@@ -122,7 +122,7 @@ export default function QuizTake() {
   const isChecked = (index: number) => {
     return selectedAnswers[currentQuestionNumber]?.includes(index) || false;
   };
-
+  console.log("quiz questions object is:", quiz_questions);
   const calculateGrade = () => {
     let correctQuestions = quiz_questions.length;
     const status = [];
@@ -130,11 +130,12 @@ export default function QuizTake() {
     for (let i = 0; i < quiz_questions.length; i++) {
       let isCorrect = true;
       for (let j = 0; j < quiz_questions[i].answers?.length; j++) {
+        console.log(selectedAnswers[i][j])
         if (
           (quiz_questions[i].type === "fillIn" &&
-            quiz_questions[i].answers[0]?.includes(selectedAnswers[i][j])) ||
+            quiz_questions[i].answers[j]?.includes(selectedAnswers[i][j])) ||
           (quiz_questions[i].type !== "fillIn" &&
-            quiz_questions[i].answers?.includes(
+            quiz_questions[i].answers[j]?.includes(
               quiz_questions[i].choices[selectedAnswers[i][j]]
             ))
         ) {

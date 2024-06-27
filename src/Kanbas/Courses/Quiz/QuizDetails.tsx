@@ -115,8 +115,6 @@ export default function QuizDetails(course: any) {
     return course && (currentUser.role === "ADMIN" || currentUser._id === course.author);
   };
 
-  console.log(currentQuiz.published);
-
   return (
     <div>
       {publishedCourses.length > 0 && isAuthorized() && (
