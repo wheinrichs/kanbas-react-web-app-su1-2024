@@ -77,7 +77,7 @@ export default function QuizTake() {
     setSelectedAnswers(updatedAnswers);
   };
 
-  const handleAnswerText = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAnswerText = (e: React.ChangeEvent<HTMLInputElement>, blankIndex: any) => {
     const answer = e.target.value;
     setSelectedAnswers((prevSelectedAnswers) => {
       const updatedAnswers = [...prevSelectedAnswers];
@@ -286,18 +286,22 @@ export default function QuizTake() {
           {currentQuestion && currentQuestion.type === "fillIn" && (
             <div>
               <hr />
+              {currentQuestion.choices.map((blank: any, blankIndex: any) => (
+                
               <div
                 style={{
                   marginLeft: "10px",
+                  marginBottom: "5px"
                 }}
               >
                 <input
                   type="text"
-                  name={"question" + (currentQuestionNumber + 1).toString()}
-                  onChange={handleAnswerText}
+                  name={"question" + (currentQuestionNumber + 1).toString()+"blank"+(blankIndex)}
+                  onChange={(e) => (handleAnswerText(e, blankIndex))}
                   disabled={quizFinished}
                 />
               </div>
+              ))}
             </div>
           )}
         </ul>
