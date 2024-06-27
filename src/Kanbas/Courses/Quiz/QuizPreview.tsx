@@ -112,6 +112,23 @@ export default function QuizPreview() {
     setSelectedAnswers(updatedAnswers);
   };
 
+  const handleAnswerText = (e: React.ChangeEvent<HTMLInputElement>, blankIndex: any) => {
+    const answer = e.target.value;
+    setSelectedAnswers((prevSelectedAnswers) => {
+      const updatedAnswers = [...prevSelectedAnswers];
+      if (prevSelectedAnswers[currentQuestionNumber][0] == -1 as any && prevSelectedAnswers[currentQuestionNumber].length === 1) {
+        updatedAnswers[currentQuestionNumber]= []
+        for(let i=0; i < currentQuestion.choices.length; i++) {
+          updatedAnswers[currentQuestionNumber]=[...updatedAnswers[currentQuestionNumber], -1]
+        }
+      }
+      if((prevSelectedAnswers[currentQuestionNumber].length - 1) >= blankIndex) {
+        updatedAnswers[currentQuestionNumber][blankIndex] = answer;
+      }
+        return updatedAnswers;
+    });
+  };
+
   const isChecked = (index: number) => {
     return selectedAnswers[currentQuestionNumber]?.includes(index) || false;
   };
@@ -129,9 +146,9 @@ export default function QuizPreview() {
         }
         if (
           (quiz_questions[i].type === "fillIn" &&
-            quiz_questions[i].answers[0]?.includes(selectedAnswers[i][j])) ||
+            quiz_questions[i].answers[j]?.includes(selectedAnswers[i][j])) ||
           (quiz_questions[i].type !== "fillIn" &&
-            quiz_questions[i].answers?.includes(
+            quiz_questions[i].answers[j]?.includes(
               quiz_questions[i].choices[selectedAnswers[i][j]]
             ))
         ) {
@@ -278,6 +295,7 @@ export default function QuizPreview() {
           {currentQuestion && currentQuestion.type === "fillIn" && (
             <div>
               <hr />
+              {currentQuestion.choices.map((blank: any, blankIndex: any) => (
               <div
                 style={{
                   marginLeft: "10px",
@@ -288,11 +306,12 @@ export default function QuizPreview() {
                   name={"question" + (currentQuestionNumber + 1).toString()}
                   value={selectedAnswers[currentQuestionNumber]?.[0] || ""}
                   readOnly={quizFinished}
+                  onChange={(e) => (handleAnswerText(e, blankIndex))}
                   style={{
                     backgroundColor: "lightgrey",
                   }}
                 />
-              </div>
+              </div>))}
             </div>
           )}
         </ul>

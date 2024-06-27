@@ -198,7 +198,7 @@ export default function QuizDetails(course: any) {
           </div>
         )}
 
-      {!canTake && (
+      {!canTake && !isAuthorized() && (
         <div
           style={{
             backgroundColor: "rgb(248, 233, 229)",
