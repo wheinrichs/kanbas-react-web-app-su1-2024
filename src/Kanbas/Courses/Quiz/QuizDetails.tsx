@@ -230,6 +230,7 @@ export default function QuizDetails(course: any) {
           <span>Number of Attempts</span>
           <span>Show Correct Answers</span>
           <span>One Question at a Time</span>
+          <span>Access Code</span>
           <span>Webcam Required </span>
           <span>Lock Questions After Answering</span>
         </div>
@@ -261,6 +262,9 @@ export default function QuizDetails(course: any) {
           <span>
             {currentQuiz.one_at_a_time
               ? "Yes" : "No"}
+          </span>
+          <span>
+            {currentQuiz.access_code ? currentQuiz.access_code : "None"}
           </span>
           <span>
             {currentQuiz.webcam ? "Yes" : "No"}
